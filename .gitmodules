@@ -1,0 +1,9 @@
+[submodule "MykaEngine/vendor/imgui"]
+	path = MykaEngine/vendor/imgui
+	url = https://github.com/ocornut/imgui.git
+[submodule "MykaEngine/vendor/glfw"]
+	path = MykaEngine/vendor/glfw
+	url = https://github.com/glfw/glfw.git
+[submodule "MykaEngine/vendor/spdlog"]
+	path = MykaEngine/vendor/spdlog
+	url = https://github.com/gabime/spdlog.git
