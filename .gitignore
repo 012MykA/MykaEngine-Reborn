@@ -3,3 +3,6 @@
 build/
 
 glad/
+
+# ImGui
+imgui.ini
