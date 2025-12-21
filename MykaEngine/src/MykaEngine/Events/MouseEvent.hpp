@@ -4,7 +4,6 @@
 
 namespace Myka
 {
-
 	class MYKA_API MouseMovedEvent : public Event
 	{
 	public:

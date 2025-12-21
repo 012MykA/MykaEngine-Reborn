@@ -4,6 +4,7 @@
 #include "MykaEngine/Log.hpp"
 
 #include <glad/glad.h>
+#include "MykaEngine/Input.hpp"
 
 namespace Myka
 {
@@ -30,8 +31,6 @@ namespace Myka
 		EventDispatcher dispatcher(e);
 		dispatcher.Dispatch<WindowCloseEvent>(BIND_EVENT_FN(OnWindowClose));
 
-		// MYKA_CORE_TRACE("{0}", e.ToString()); // TODO: remove
-
 		for (auto it = m_LayerStack.end(); it != m_LayerStack.begin();)
 		{
 			(*--it)->OnEvent(e);
@@ -43,13 +42,13 @@ namespace Myka
 	void Application::PushLayer(Layer *layer)
 	{
 		m_LayerStack.PushLayer(layer);
-		layer->OnAttache();
+		layer->OnAttach();
 	}
 
 	void Application::PushOverlay(Layer *overlay)
 	{
 		m_LayerStack.PushOverlay(overlay);
-		overlay->OnAttache();
+		overlay->OnAttach();
 	}
 
 	bool Application::OnWindowClose(WindowCloseEvent &e)

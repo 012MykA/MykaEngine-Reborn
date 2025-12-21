@@ -8,12 +8,17 @@ public:
 
 	void OnUpdate() override
 	{
-		// MYKA_INFO("ExampleLayer::OnUpdate"); // TODO: remove
+		if (Myka::Input::IsKeyPressed(MYKA_KEY_TAB))
+			MYKA_TRACE("Tab key is pressed!");
 	}
 
 	void OnEvent(Myka::Event& event) override
 	{
-		// MYKA_TRACE("ExampleLayer::OnEvent"); // TODO: remove
+		if (event.GetEventType() == Myka::EventType::KeyPressed)
+		{
+			Myka::KeyPressedEvent& e = (Myka::KeyPressedEvent&)event;
+			MYKA_TRACE("{0}", e.GetKeyCode());
+		}
 	}
 };
 

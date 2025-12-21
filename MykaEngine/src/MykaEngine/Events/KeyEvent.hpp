@@ -11,7 +11,7 @@ namespace Myka
 		inline int GetKeyCode() const { return m_KeyCode; }
 
 		EVENT_CLASS_CATEGORY(EventCategoryKeyboard | EventCategoryInput)
-        
+
 	protected:
 		KeyEvent(int keycode)
 			: m_KeyCode(keycode) {}
@@ -48,10 +48,26 @@ namespace Myka
 		std::string ToString() const override
 		{
 			std::stringstream ss;
-			ss << "KeyReleasedEvent: " << m_KeyCode;
+			ss << "KeyReleasedEvent: " << (int)m_KeyCode;
 			return ss.str();
 		}
 
 		EVENT_CLASS_TYPE(KeyReleased)
+	};
+
+	class MYKA_API KeyTypedEvent : public KeyEvent
+	{
+	public:
+		KeyTypedEvent(unsigned int codepoint)
+			: KeyEvent(codepoint) {}
+
+		std::string ToString() const override
+		{
+			std::stringstream ss;
+			ss << "KeyTypedEvent: " << m_KeyCode;
+			return ss.str();
+		}
+
+		EVENT_CLASS_TYPE(KeyTyped)
 	};
 } // namespace Myka
