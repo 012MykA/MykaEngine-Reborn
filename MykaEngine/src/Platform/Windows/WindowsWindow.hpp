@@ -2,8 +2,8 @@
 
 #include "MykaEngine/Window.hpp"
 #include "MykaEngine/Log.hpp"
+#include "MykaEngine/Renderer/GraphicsContext.hpp"
 
-#include <glad/glad.h>
 #include <GLFW/glfw3.h>
 
 namespace Myka
@@ -31,6 +31,7 @@ namespace Myka
 
     private:
         GLFWwindow *m_Window;
+        GraphicsContext* m_Context;
 
         struct WindowData
         {

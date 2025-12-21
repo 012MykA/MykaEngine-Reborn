@@ -39,5 +39,4 @@ namespace Myka
 
         static Window* Create(const WindowProps& props = WindowProps());
     };
-
 } // namespace Myka

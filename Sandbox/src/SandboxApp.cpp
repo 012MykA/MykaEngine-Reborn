@@ -1,4 +1,5 @@
 #include <MykaEngine.hpp>
+#include <imgui.h>
 
 class ExampleLayer : public Myka::Layer
 {
@@ -6,20 +7,16 @@ private:
 public:
 	ExampleLayer() : Layer("Example") {}
 
-	void OnUpdate() override
+	void OnUpdate() override {}
+
+	void OnImGuiRender() override
 	{
-		if (Myka::Input::IsKeyPressed(MYKA_KEY_TAB))
-			MYKA_TRACE("Tab key is pressed!");
+		ImGui::Begin("Hello");
+		ImGui::Text("MykaEngine LOL");
+		ImGui::End();
 	}
 
-	void OnEvent(Myka::Event& event) override
-	{
-		if (event.GetEventType() == Myka::EventType::KeyPressed)
-		{
-			Myka::KeyPressedEvent& e = (Myka::KeyPressedEvent&)event;
-			MYKA_TRACE("{0}", e.GetKeyCode());
-		}
-	}
+	void OnEvent(Myka::Event& event) override {}
 };
 
 class Sandbox : public Myka::Application
