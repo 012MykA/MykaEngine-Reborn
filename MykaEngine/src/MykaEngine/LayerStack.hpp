@@ -8,7 +8,7 @@ namespace Myka
     class LayerStack
     {
     public:
-        LayerStack();
+        LayerStack() {}
         ~LayerStack();
 
         void PushLayer(Layer *layer);
@@ -21,6 +21,6 @@ namespace Myka
 
     private:
         std::vector<Layer *> m_Layers;
-        std::vector<Layer *>::iterator m_LayerInsert;
+        unsigned int m_LayerInsertIndex = 0;
     };
 } // namespace Myka

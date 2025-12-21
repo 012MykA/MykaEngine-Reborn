@@ -4,6 +4,7 @@
 #include "MykaEngine/Window.hpp"
 #include "MykaEngine/Events/ApplicationEvent.hpp"
 #include "MykaEngine/LayerStack.hpp"
+#include "MykaEngine/ImGui/ImGuiLayer.hpp"
 
 #include <memory>
 
@@ -30,6 +31,7 @@ namespace Myka
 		bool OnWindowClose(WindowCloseEvent &e);
 
 		std::unique_ptr<Window> m_Window;
+		ImGuiLayer* m_ImGuiLayer;
 		bool m_Running = true;
 		LayerStack m_LayerStack;
 
