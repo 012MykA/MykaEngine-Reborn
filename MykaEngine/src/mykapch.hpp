@@ -11,6 +11,7 @@
 #include <vector>
 #include <unordered_map>
 #include <unordered_set>
+#include <cinttypes>
 
 
 #ifdef MYKA_PLATFORM_WINDOWS
