@@ -7,3 +7,6 @@
 [submodule "MykaEngine/vendor/spdlog"]
 	path = MykaEngine/vendor/spdlog
 	url = https://github.com/gabime/spdlog.git
+[submodule "MykaEngine/vendor/glm"]
+	path = MykaEngine/vendor/glm
+	url = https://github.com/g-truc/glm.git

@@ -34,6 +34,7 @@ target_include_directories(imgui
 
 # glfw / spdlog
 add_subdirectory(vendor/glfw)
+add_subdirectory(vendor/glm)
 add_subdirectory(vendor/spdlog)
 
 file(GLOB_RECURSE ENGINE_SOURCES
@@ -54,6 +55,7 @@ target_include_directories(MykaEngine
         ${CMAKE_CURRENT_SOURCE_DIR}/src
         ${CMAKE_CURRENT_SOURCE_DIR}/vendor/imgui
         ${CMAKE_CURRENT_SOURCE_DIR}/vendor/imgui/backends
+        ${CMAKE_CURRENT_SOURCE_DIR}/vendor/glm
 )
 
 target_link_libraries(MykaEngine
