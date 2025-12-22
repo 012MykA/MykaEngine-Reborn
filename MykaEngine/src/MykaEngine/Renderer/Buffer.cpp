@@ -1,7 +1,7 @@
 #include "Buffer.hpp"
 
 #include "MykaEngine/Log.hpp"
-#include "MykaEngine/Renderer/Renderer.hpp"
+#include "Renderer.hpp"
 #include "Platform/OpenGL/OpenGLBuffer.hpp"
 
 namespace Myka

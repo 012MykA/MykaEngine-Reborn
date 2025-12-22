@@ -6,12 +6,6 @@
 #include "MykaEngine/LayerStack.hpp"
 #include "MykaEngine/ImGui/ImGuiLayer.hpp"
 
-// TODO: remove
-#include "MykaEngine/Renderer/Shader.hpp"
-#include "MykaEngine/Renderer/Buffer.hpp"
-#include "MykaEngine/Renderer/VertexArray.hpp"
-#include "MykaEngine/Renderer/OrthographicCamera.hpp"
-
 #include <memory>
 
 namespace Myka
@@ -40,14 +34,6 @@ namespace Myka
 		ImGuiLayer* m_ImGuiLayer;
 		bool m_Running = true;
 		LayerStack m_LayerStack;
-
-		// TODO: remove
-		std::shared_ptr<Shader> m_Shader;
-		std::shared_ptr<VertexArray> m_VertexArray;
-		std::shared_ptr<VertexBuffer> m_VertexBuffer;
-		std::shared_ptr<IndexBuffer> m_IndexBuffer;
-
-		OrthographicCamera m_Camera;
 	private:
 		static Application *s_Instance;
 	};

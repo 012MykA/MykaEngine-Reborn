@@ -1,8 +1,8 @@
 #pragma once
 
 #include "RenderCommand.hpp"
-#include "MykaEngine/Renderer/Shader.hpp"
-#include "MykaEngine/Renderer/OrthographicCamera.hpp"
+#include "Shader.hpp"
+#include "OrthographicCamera.hpp"
 
 namespace Myka
 {

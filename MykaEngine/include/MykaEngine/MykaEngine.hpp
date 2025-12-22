@@ -1,13 +1,29 @@
 #pragma once
 
 // for use by MykaEngine applications
-
 #include "MykaEngine/Application.hpp"
-#include "MykaEngine/Input.hpp"
-#include "MykaEngine/MouseButtonCodes.hpp"
-#include "MykaEngine/KeyCodes.hpp"
 #include "MykaEngine/Layer.hpp"
 #include "MykaEngine/Log.hpp"
+
+
+// --- Input -------------------------------
+#include "MykaEngine/Input.hpp"
+#include "MykaEngine/KeyCodes.hpp"
+#include "MykaEngine/MouseButtonCodes.hpp"
+// -----------------------------------------
+
+
+// --- Renderer --------------------------------------
+#include "MykaEngine/Renderer/Renderer.hpp"
+#include "MykaEngine/Renderer/RenderCommand.hpp"
+
+#include "MykaEngine/Renderer/Buffer.hpp"
+#include "MykaEngine/Renderer/Shader.hpp"
+#include "MykaEngine/Renderer/VertexArray.hpp"
+
+#include "MykaEngine/Renderer/OrthographicCamera.hpp"
+// ---------------------------------------------------
+
 
 // --- Entry Point -------------
 #include "MykaEngine/EntryPoint.hpp"

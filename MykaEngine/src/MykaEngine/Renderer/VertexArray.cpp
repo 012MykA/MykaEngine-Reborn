@@ -1,6 +1,6 @@
 #include "VertexArray.hpp"
 
-#include "MykaEngine/Renderer/Renderer.hpp"
+#include "Renderer.hpp"
 
 #include "Platform/OpenGL/OpenGLVertexArray.hpp"
 

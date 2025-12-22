@@ -1,6 +1,6 @@
 #pragma once
 
-#include "MykaEngine/Renderer/VertexArray.hpp"
+#include "VertexArray.hpp"
 
 #include <glm/glm.hpp>
 

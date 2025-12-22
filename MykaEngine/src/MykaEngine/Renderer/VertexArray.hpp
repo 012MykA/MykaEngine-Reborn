@@ -1,6 +1,6 @@
 #pragma once
 
-#include "MykaEngine/Renderer/Buffer.hpp"
+#include "Buffer.hpp"
 
 #include <memory>
 
