@@ -3,8 +3,8 @@
 #include "MykaEngine/Events/ApplicationEvent.hpp"
 #include "MykaEngine/Log.hpp"
 
-#include <glad/glad.h>
 #include "MykaEngine/Input.hpp"
+#include "MykaEngine/Renderer/Renderer.hpp"
 
 namespace Myka
 {
@@ -44,6 +44,7 @@ namespace Myka
 
 		uint32_t indices[3] = {0, 1, 2};
 		m_IndexBuffer.reset(IndexBuffer::Create(indices, sizeof(indices) / sizeof(uint32_t)));
+		m_VertexArray->SetIndexBuffer(m_IndexBuffer);
 
 		std::string vertexSrc = R"(
 			#version 460 core
@@ -115,13 +116,15 @@ namespace Myka
 	{
 		while (m_Running)
 		{
-			glClearColor(0.1f, 0.1f, 0.1f, 1.0f);
-			glClear(GL_COLOR_BUFFER_BIT);
+			RenderCommand::SetClearColor({0.1f, 0.1f, 0.1f, 1.0f});
+			RenderCommand::Clear();
 
 			m_Shader->Bind();
-			m_VertexArray->Bind();
-			glDrawElements(GL_TRIANGLES, m_IndexBuffer->GetCount(), GL_UNSIGNED_INT, nullptr);
+			Renderer::BeginScene();
+			Renderer::Submit(m_VertexArray);
+			Renderer::EndScene();
 
+			// Layers
 			for (Layer *layer : m_LayerStack)
 				layer->OnUpdate();
 
