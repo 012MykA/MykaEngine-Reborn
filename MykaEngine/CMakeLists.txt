@@ -81,6 +81,7 @@ target_link_libraries(MykaEngine
 target_compile_definitions(MykaEngine
     PRIVATE
         MYKA_PLATFORM_WINDOWS
+        MYKA_ENABLE_ASSERTS
 )
 
 target_precompile_headers(MykaEngine

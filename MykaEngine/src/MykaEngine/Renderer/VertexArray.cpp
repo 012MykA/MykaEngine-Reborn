@@ -1,0 +1,19 @@
+#include "VertexArray.hpp"
+
+#include "MykaEngine/Renderer/Renderer.hpp"
+
+#include "Platform/OpenGL/OpenGLVertexArray.hpp"
+
+namespace Myka
+{
+    VertexArray *VertexArray::Create()
+    {
+        switch (Renderer::GetAPI())
+        {
+        case RendererAPI::None:     MYKA_CORE_ASSERT(false, "RendererAPI::None is currently not supported"); return nullptr;
+        case RendererAPI::OpenGL:   return new OpenGLVertexArray();
+
+        default:                    MYKA_CORE_ASSERT(false, "Unknown RendererAPI!"); return nullptr;
+        }
+    }
+} // namespace Myka

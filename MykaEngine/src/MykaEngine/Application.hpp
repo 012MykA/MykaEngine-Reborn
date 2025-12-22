@@ -6,8 +6,10 @@
 #include "MykaEngine/LayerStack.hpp"
 #include "MykaEngine/ImGui/ImGuiLayer.hpp"
 
-#include "MykaEngine/Renderer/Shader.hpp" // TODO: remove
-#include "MykaEngine/Renderer/Buffer.hpp" // TODO: remove
+// TODO: remove
+#include "MykaEngine/Renderer/Shader.hpp"
+#include "MykaEngine/Renderer/Buffer.hpp"
+#include "MykaEngine/Renderer/VertexArray.hpp"
 
 #include <memory>
 
@@ -39,10 +41,10 @@ namespace Myka
 		LayerStack m_LayerStack;
 
 		// TODO: remove
-		unsigned int m_VertexArray;
-		std::unique_ptr<Shader> m_Shader;
-		std::unique_ptr<VertexBuffer> m_VertexBuffer;
-		std::unique_ptr<IndexBuffer> m_IndexBuffer;
+		std::shared_ptr<Shader> m_Shader;
+		std::shared_ptr<VertexArray> m_VertexArray;
+		std::shared_ptr<VertexBuffer> m_VertexBuffer;
+		std::shared_ptr<IndexBuffer> m_IndexBuffer;
 	private:
 		static Application *s_Instance;
 	};
