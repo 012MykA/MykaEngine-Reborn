@@ -38,6 +38,7 @@ namespace Myka
 		bool m_Running = true;
 		LayerStack m_LayerStack;
 
+		// TODO: remove
 		unsigned int m_VertexArray;
 		std::unique_ptr<Shader> m_Shader;
 		std::unique_ptr<VertexBuffer> m_VertexBuffer;
