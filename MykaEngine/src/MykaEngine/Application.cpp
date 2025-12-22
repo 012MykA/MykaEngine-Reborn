@@ -1,10 +1,10 @@
 #include "Application.hpp"
 
-#include "MykaEngine/Events/ApplicationEvent.hpp"
 #include "MykaEngine/Log.hpp"
 
-#include "MykaEngine/Input.hpp"
 #include "MykaEngine/Renderer/Renderer.hpp"
+
+#include "MykaEngine/Input.hpp"
 
 namespace Myka
 {
@@ -13,7 +13,7 @@ namespace Myka
 
 	Application *Application::s_Instance = nullptr;
 
-	Application::Application()
+	Application::Application() : m_Camera(-1.6f, 1.6f, -0.9f, 0.9f)
 	{
 		MYKA_CORE_ASSERT(!s_Instance, "Application already exists!");
 		s_Instance = this;
@@ -52,12 +52,14 @@ namespace Myka
 			layout(location = 0) in vec3 a_Position;
 			layout(location = 1) in vec4 a_Color;
 
+			uniform mat4 u_ViewProjection;
+
 			out vec4 v_Color;
 
 			void main()
 			{
 				v_Color = a_Color;
-				gl_Position = vec4(a_Position, 1.0);
+				gl_Position = u_ViewProjection * vec4(a_Position, 1.0);
 			}
 		)";
 
@@ -119,9 +121,14 @@ namespace Myka
 			RenderCommand::SetClearColor({0.1f, 0.1f, 0.1f, 1.0f});
 			RenderCommand::Clear();
 
-			m_Shader->Bind();
-			Renderer::BeginScene();
-			Renderer::Submit(m_VertexArray);
+			// m_Camera.SetPosition({0.5f, 0.5f, 0.0f});
+			static float r = 0.0f;
+			m_Camera.SetRotation(r++);
+
+			Renderer::BeginScene(m_Camera);
+
+			Renderer::Submit(m_Shader, m_VertexArray);
+
 			Renderer::EndScene();
 
 			// Layers

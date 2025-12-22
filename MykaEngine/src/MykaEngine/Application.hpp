@@ -10,6 +10,7 @@
 #include "MykaEngine/Renderer/Shader.hpp"
 #include "MykaEngine/Renderer/Buffer.hpp"
 #include "MykaEngine/Renderer/VertexArray.hpp"
+#include "MykaEngine/Renderer/OrthographicCamera.hpp"
 
 #include <memory>
 
@@ -45,6 +46,8 @@ namespace Myka
 		std::shared_ptr<VertexArray> m_VertexArray;
 		std::shared_ptr<VertexBuffer> m_VertexBuffer;
 		std::shared_ptr<IndexBuffer> m_IndexBuffer;
+
+		OrthographicCamera m_Camera;
 	private:
 		static Application *s_Instance;
 	};
