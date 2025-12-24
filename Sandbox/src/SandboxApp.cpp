@@ -100,7 +100,7 @@ public:
 
 		m_TextureShader.reset(Myka::Shader::Create(textureShaderVertexSrc, textureShaderFragmentSrc));
 
-		m_Texture = Myka::Texture2D::Create("C:/dev/MykaEngine-Reborn/Sandbox/assets/textures/box.png");
+		m_Texture = Myka::Texture2D::Create("C:/dev/MykaEngine-Reborn/Sandbox/assets/textures/opengl-logo.png");
 
 		std::dynamic_pointer_cast<Myka::OpenGLShader>(m_TextureShader)->Bind();
 		std::dynamic_pointer_cast<Myka::OpenGLShader>(m_TextureShader)->UploadUniformInt("u_Texture", 0);
