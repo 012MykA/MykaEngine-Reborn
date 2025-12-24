@@ -1,5 +1,10 @@
 #include <MykaEngine.hpp>
+#include "Platform/OpenGL/OpenGLShader.hpp"
+
 #include <imgui.h>
+
+#include <glm/gtc/type_ptr.hpp>
+#include <glm/gtc/matrix_transform.hpp>
 
 class ExampleLayer : public Myka::Layer
 {
@@ -10,90 +15,143 @@ public:
 		// triangle
 		m_VertexArray.reset(Myka::VertexArray::Create());
 
-		float vertices[4 * 7] = {
-			-0.5f, -0.5f, 0.0f, 0.8f, 0.2f, 0.8f, 1.0f,
-			-0.5f, 0.5f, 0.0f, 0.2f, 0.8f, 0.2f, 1.0f,
-			0.5f, 0.5f, 0.0f, 0.2f, 0.3f, 0.8f, 1.0f,
-			0.5, -0.5, 0.0f, 0.8f, 0.8f, 0.2f, 1.0f
+		float vertices[5 * 4] = {
+			-0.5f, -0.5f, 0.0f,		0.0f, 0.0f,
+			-0.5f,  0.5f, 0.0f,		0.0f, 1.0f,
+			 0.5f,  0.5f, 0.0f,		1.0f, 1.0f,
+			 0.5,  -0.5,  0.0f,		1.0f, 0.0f
 		};
 
-		m_VertexBuffer.reset(Myka::VertexBuffer::Create(vertices, sizeof(vertices)));
+
+		Myka::Ref<Myka::VertexBuffer> m_VertexBuffer(Myka::VertexBuffer::Create(vertices, sizeof(vertices)));
 		Myka::BufferLayout layout = {
 			{Myka::ShaderDataType::Float3, "a_Position"},
-			{Myka::ShaderDataType::Float4, "a_Color"}
+			{Myka::ShaderDataType::Float2, "a_TexCoord"},
 		};
 		
 		m_VertexBuffer->SetLayout(layout);
 		m_VertexArray->AddVertexBuffer(m_VertexBuffer);
 
 		uint32_t indices[6] = {0, 1, 2, 2, 3, 0};
-		m_IndexBuffer.reset(Myka::IndexBuffer::Create(indices, sizeof(indices) / sizeof(uint32_t)));
+		Myka::Ref<Myka::IndexBuffer> m_IndexBuffer(Myka::IndexBuffer::Create(indices, sizeof(indices) / sizeof(uint32_t)));
 		m_VertexArray->SetIndexBuffer(m_IndexBuffer);
 
-		std::string vertexSrc = R"(
+		std::string flatShaderVertexSrc = R"(
 			#version 460 core
 
 			layout(location = 0) in vec3 a_Position;
-			layout(location = 1) in vec4 a_Color;
 
 			uniform mat4 u_ViewProjection;
-
-			out vec4 v_Color;
+			uniform mat4 u_Transform;
 
 			void main()
 			{
-				v_Color = a_Color;
-				gl_Position = u_ViewProjection * vec4(a_Position, 1.0);
+				gl_Position = u_ViewProjection * u_Transform * vec4(a_Position, 1.0);
 			}
 		)";
 
-		std::string fragmentSrc = R"(
+		std::string flatShaderFragmentSrc = R"(
 			#version 460 core
 
 			layout(location = 0) out vec4 FragColor;
-
-			in vec4 v_Color;
+			
+			uniform vec3 u_Color;
 
 			void main()
 			{
-				FragColor = v_Color;
+				FragColor = vec4(u_Color, 1.0);
 			}
 		)";
 
-		m_Shader.reset(new Myka::Shader(vertexSrc, fragmentSrc));
+		m_FlatColorShader.reset(Myka::Shader::Create(flatShaderVertexSrc, flatShaderFragmentSrc));
+
+		std::string textureShaderVertexSrc = R"(
+			#version 460 core
+
+			layout(location = 0) in vec3 a_Position;
+			layout(location = 1) in vec2 a_TexCoord;
+
+			uniform mat4 u_ViewProjection;
+			uniform mat4 u_Transform;
+
+			out vec2 v_TexCoord;
+
+			void main()
+			{
+				v_TexCoord = a_TexCoord;
+				gl_Position = u_ViewProjection * u_Transform * vec4(a_Position, 1.0);
+			}
+		)";
+
+		std::string textureShaderFragmentSrc = R"(
+			#version 460 core
+
+			layout(location = 0) out vec4 FragColor;
+			
+			in vec2 v_TexCoord;
+
+			uniform vec3 u_Color;
+
+			void main()
+			{
+				FragColor = vec4(v_TexCoord, 0.0, 1.0);
+			}
+		)";
+
+		m_TextureShader.reset(Myka::Shader::Create(textureShaderVertexSrc, textureShaderFragmentSrc));
 	}
 
-	void OnUpdate() override
+	void OnUpdate(Myka::Timestep ts) override
 	{
+		MYKA_TRACE("Delta time: {0}s ({1}ms)", ts.GetSeconds(), ts.GetMilliseconds());
+
 		if (Myka::Input::IsKeyPressed(MYKA_KEY_LEFT))
-			m_CameraPosition.x -= m_CameraMoveSpeed;
+			m_CameraPosition.x -= m_CameraMoveSpeed * ts;
 		if (Myka::Input::IsKeyPressed(MYKA_KEY_RIGHT))
-			m_CameraPosition.x += m_CameraMoveSpeed;
+			m_CameraPosition.x += m_CameraMoveSpeed * ts;
 		if (Myka::Input::IsKeyPressed(MYKA_KEY_DOWN))
-			m_CameraPosition.y -= m_CameraMoveSpeed;
+			m_CameraPosition.y -= m_CameraMoveSpeed * ts;
 		if (Myka::Input::IsKeyPressed(MYKA_KEY_UP))
-			m_CameraPosition.y += m_CameraMoveSpeed;
+			m_CameraPosition.y += m_CameraMoveSpeed * ts;
 			
 		if (Myka::Input::IsKeyPressed(MYKA_KEY_A))
-			m_CameraRotation -= m_CameraRotationSpeed;
+			m_CameraRotation -= m_CameraRotationSpeed * ts;
 		if (Myka::Input::IsKeyPressed(MYKA_KEY_D))
-			m_CameraRotation += m_CameraRotationSpeed;
+			m_CameraRotation += m_CameraRotationSpeed * ts;
 
 		Myka::RenderCommand::SetClearColor({0.1f, 0.1f, 0.1f, 1.0f});
 		Myka::RenderCommand::Clear();
 
+		
 		m_Camera.SetPosition(m_CameraPosition);
 		m_Camera.SetRotation(m_CameraRotation);
-
+		
 		Myka::Renderer::BeginScene(m_Camera);
 
-		Myka::Renderer::Submit(m_Shader, m_VertexArray);
+		glm::mat4 scale = glm::scale(glm::mat4(1.0f), glm::vec3(0.1f));
 
+		std::dynamic_pointer_cast<Myka::OpenGLShader>(m_FlatColorShader)->Bind();
+		std::dynamic_pointer_cast<Myka::OpenGLShader>(m_FlatColorShader)->UploadUniformFloat3("u_Color", m_SquareColor);
+
+		for (int y = 0; y < 20; ++y)
+		{
+			for (int x = 0; x < 20; ++x)
+			{
+				glm::vec3 pos(x * 0.11f, y * 0.11f, 0.0f);
+				glm::mat4 transform = glm::translate(glm::mat4(1.0f), pos) * scale;
+				Myka::Renderer::Submit(m_FlatColorShader, m_VertexArray, transform);
+			}
+		}
+
+		Myka::Renderer::Submit(m_TextureShader, m_VertexArray, glm::scale(glm::mat4(1.0f), glm::vec3(1.5f)));
 		Myka::Renderer::EndScene();
 	}
 
 	void OnImGuiRender() override
 	{
+		ImGui::Begin("Settings");
+		ImGui::ColorEdit3("Square Color", glm::value_ptr(m_SquareColor));
+		ImGui::End();
 	}
 
 	void OnEvent(Myka::Event &event) override
@@ -102,16 +160,17 @@ public:
 	}
 
 private:
-	std::shared_ptr<Myka::Shader> m_Shader;
-	std::shared_ptr<Myka::VertexArray> m_VertexArray;
-	std::shared_ptr<Myka::VertexBuffer> m_VertexBuffer;
-	std::shared_ptr<Myka::IndexBuffer> m_IndexBuffer;
+	Myka::Ref<Myka::Shader> m_FlatColorShader, m_TextureShader;
+	Myka::Ref<Myka::VertexArray> m_VertexArray;
 
 	Myka::OrthographicCamera m_Camera;
 	glm::vec3 m_CameraPosition;
 	float m_CameraRotation;
-	float m_CameraMoveSpeed = 0.1f;
-	float m_CameraRotationSpeed = 2.0f;
+
+	float m_CameraMoveSpeed = 5.0f;
+	float m_CameraRotationSpeed = 180.0f;
+
+	glm::vec3 m_SquareColor = {0.2f, 0.3f, 0.8f};
 };
 
 class Sandbox : public Myka::Application

@@ -5,6 +5,7 @@
 #include "MykaEngine/Layer.hpp"
 #include "MykaEngine/Log.hpp"
 
+#include "MykaEngine/Core/Timestep.hpp"
 
 // --- Input -------------------------------
 #include "MykaEngine/Input.hpp"

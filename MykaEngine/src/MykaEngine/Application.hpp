@@ -6,11 +6,9 @@
 #include "MykaEngine/LayerStack.hpp"
 #include "MykaEngine/ImGui/ImGuiLayer.hpp"
 
-#include <memory>
-
 namespace Myka
 {
-	class MYKA_API Application
+	class Application
 	{
 	public:
 		Application();
@@ -30,10 +28,13 @@ namespace Myka
 	private:
 		bool OnWindowClose(WindowCloseEvent &e);
 
+	private:
 		std::unique_ptr<Window> m_Window;
-		ImGuiLayer* m_ImGuiLayer;
+		ImGuiLayer *m_ImGuiLayer;
 		bool m_Running = true;
 		LayerStack m_LayerStack;
+		float m_LastFrameTime = 0.0f;
+
 	private:
 		static Application *s_Instance;
 	};

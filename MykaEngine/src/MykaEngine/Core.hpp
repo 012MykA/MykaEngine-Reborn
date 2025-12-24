@@ -1,5 +1,7 @@
 #pragma once
 
+#include <memory>
+
 #ifdef MYKA_PLATFORM_WINDOWS
 
 #if MYKA_DYNAMIC_LINK
@@ -29,3 +31,12 @@
 #define BIT(x) (1 << x)
 
 #define MYKA_BIND_EVENT_FN(fn) std::bind(&fn, this, std::placeholders::_1)
+
+namespace Myka
+{
+    template<typename T>
+    using Scope = std::unique_ptr<T>;
+
+    template<typename T>
+    using Ref = std::shared_ptr<T>;
+} // namespace Myka
