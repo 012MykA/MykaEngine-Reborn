@@ -36,6 +36,17 @@ target_include_directories(imgui
 )
 
 # -------------------------
+# stb_image
+# -------------------------
+add_library(stb_image STATIC
+    ${CMAKE_CURRENT_SOURCE_DIR}/vendor/stb_image/stb_image.cpp
+)
+
+target_include_directories(stb_image PUBLIC
+    ${CMAKE_CURRENT_SOURCE_DIR}/vendor/stb_image
+)
+
+# -------------------------
 # Dependencies
 # -------------------------
 add_subdirectory(vendor/glfw)
@@ -73,6 +84,7 @@ target_link_libraries(MykaEngine
         imgui
         spdlog
         glad
+        stb_image
     PRIVATE
         glfw
         opengl32

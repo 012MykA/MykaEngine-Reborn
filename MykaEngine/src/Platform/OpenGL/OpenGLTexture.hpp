@@ -2,6 +2,8 @@
 
 #include "MykaEngine/Renderer/Texture.hpp"
 
+#include <stb_image.h>
+
 namespace Myka
 {
     class OpenGLTexture2D : public Texture2D
@@ -13,8 +15,8 @@ namespace Myka
         virtual uint32_t GetWidth() const override { return m_Width; }
         virtual uint32_t GetHeight() const override { return m_Height; }
 
-        virtual void Bind() const override;
-    
+        virtual void Bind(uint32_t slot = 0) const override;
+
     private:
         std::string m_Path;
         uint32_t m_Width, m_Height;

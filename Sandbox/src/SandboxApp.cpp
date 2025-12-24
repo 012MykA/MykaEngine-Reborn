@@ -90,15 +90,20 @@ public:
 			
 			in vec2 v_TexCoord;
 
-			uniform vec3 u_Color;
+			uniform sampler2D u_Texture;
 
 			void main()
 			{
-				FragColor = vec4(v_TexCoord, 0.0, 1.0);
+				FragColor = texture(u_Texture, v_TexCoord);
 			}
 		)";
 
 		m_TextureShader.reset(Myka::Shader::Create(textureShaderVertexSrc, textureShaderFragmentSrc));
+
+		m_Texture = Myka::Texture2D::Create("C:/dev/MykaEngine-Reborn/Sandbox/assets/textures/box.png");
+
+		std::dynamic_pointer_cast<Myka::OpenGLShader>(m_TextureShader)->Bind();
+		std::dynamic_pointer_cast<Myka::OpenGLShader>(m_TextureShader)->UploadUniformInt("u_Texture", 0);
 	}
 
 	void OnUpdate(Myka::Timestep ts) override
@@ -143,6 +148,7 @@ public:
 			}
 		}
 
+		m_Texture->Bind();
 		Myka::Renderer::Submit(m_TextureShader, m_VertexArray, glm::scale(glm::mat4(1.0f), glm::vec3(1.5f)));
 		Myka::Renderer::EndScene();
 	}
@@ -162,6 +168,8 @@ public:
 private:
 	Myka::Ref<Myka::Shader> m_FlatColorShader, m_TextureShader;
 	Myka::Ref<Myka::VertexArray> m_VertexArray;
+
+	Myka::Ref<Myka::Texture2D> m_Texture;
 
 	Myka::OrthographicCamera m_Camera;
 	glm::vec3 m_CameraPosition;
