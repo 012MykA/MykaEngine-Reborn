@@ -63,53 +63,18 @@ public:
 			}
 		)";
 
-		m_FlatColorShader.reset(Myka::Shader::Create(flatShaderVertexSrc, flatShaderFragmentSrc));
+		m_FlatColorShader = Myka::Shader::Create("FlatColor", flatShaderVertexSrc, flatShaderFragmentSrc);
 
-		std::string textureShaderVertexSrc = R"(
-			#version 460 core
-
-			layout(location = 0) in vec3 a_Position;
-			layout(location = 1) in vec2 a_TexCoord;
-
-			uniform mat4 u_ViewProjection;
-			uniform mat4 u_Transform;
-
-			out vec2 v_TexCoord;
-
-			void main()
-			{
-				v_TexCoord = a_TexCoord;
-				gl_Position = u_ViewProjection * u_Transform * vec4(a_Position, 1.0);
-			}
-		)";
-
-		std::string textureShaderFragmentSrc = R"(
-			#version 460 core
-
-			layout(location = 0) out vec4 FragColor;
-			
-			in vec2 v_TexCoord;
-
-			uniform sampler2D u_Texture;
-
-			void main()
-			{
-				FragColor = texture(u_Texture, v_TexCoord);
-			}
-		)";
-
-		m_TextureShader.reset(Myka::Shader::Create(textureShaderVertexSrc, textureShaderFragmentSrc));
+		auto textureSHader = m_ShaderLibrary.Load("C:/dev/MykaEngine-Reborn/Sandbox/assets/shaders/Texture.glsl");
 
 		m_Texture = Myka::Texture2D::Create("C:/dev/MykaEngine-Reborn/Sandbox/assets/textures/opengl-logo.png");
 
-		std::dynamic_pointer_cast<Myka::OpenGLShader>(m_TextureShader)->Bind();
-		std::dynamic_pointer_cast<Myka::OpenGLShader>(m_TextureShader)->UploadUniformInt("u_Texture", 0);
+		std::dynamic_pointer_cast<Myka::OpenGLShader>(textureSHader)->Bind();
+		std::dynamic_pointer_cast<Myka::OpenGLShader>(textureSHader)->UploadUniformInt("u_Texture", 0);
 	}
 
 	void OnUpdate(Myka::Timestep ts) override
 	{
-		MYKA_TRACE("Delta time: {0}s ({1}ms)", ts.GetSeconds(), ts.GetMilliseconds());
-
 		if (Myka::Input::IsKeyPressed(MYKA_KEY_LEFT))
 			m_CameraPosition.x -= m_CameraMoveSpeed * ts;
 		if (Myka::Input::IsKeyPressed(MYKA_KEY_RIGHT))
@@ -148,8 +113,10 @@ public:
 			}
 		}
 
+		auto textureShader = m_ShaderLibrary.Get("Texture");
+
 		m_Texture->Bind();
-		Myka::Renderer::Submit(m_TextureShader, m_VertexArray, glm::scale(glm::mat4(1.0f), glm::vec3(1.5f)));
+		Myka::Renderer::Submit(textureShader, m_VertexArray, glm::scale(glm::mat4(1.0f), glm::vec3(1.5f)));
 		Myka::Renderer::EndScene();
 	}
 
@@ -166,7 +133,8 @@ public:
 	}
 
 private:
-	Myka::Ref<Myka::Shader> m_FlatColorShader, m_TextureShader;
+	Myka::ShaderLibrary m_ShaderLibrary;
+	Myka::Ref<Myka::Shader> m_FlatColorShader;
 	Myka::Ref<Myka::VertexArray> m_VertexArray;
 
 	Myka::Ref<Myka::Texture2D> m_Texture;
