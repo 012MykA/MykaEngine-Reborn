@@ -31,7 +31,7 @@ namespace Myka
 
     private:
         GLFWwindow *m_Window;
-        GraphicsContext* m_Context;
+        GraphicsContext *m_Context;
 
         struct WindowData
         {

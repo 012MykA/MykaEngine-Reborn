@@ -75,7 +75,7 @@ public:
 	{
 		// Update
 		m_CameraController.OnUpdate(ts);
-		
+
 		// Render
 		Myka::RenderCommand::SetClearColor({0.1f, 0.1f, 0.1f, 1.0f});
 		Myka::RenderCommand::Clear();
