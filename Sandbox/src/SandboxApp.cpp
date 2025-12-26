@@ -10,25 +10,23 @@ class ExampleLayer : public Myka::Layer
 {
 private:
 public:
-	ExampleLayer() : Layer("Example"), m_Camera(-1.6f, 1.6f, -0.9f, 0.9f), m_CameraPosition(0.0f), m_CameraRotation(0.0f)
+	ExampleLayer() : Layer("Example"), m_CameraController(1280.0f / 720.0f)
 	{
 		// triangle
 		m_VertexArray.reset(Myka::VertexArray::Create());
 
 		float vertices[5 * 4] = {
-			-0.5f, -0.5f, 0.0f,		0.0f, 0.0f,
-			-0.5f,  0.5f, 0.0f,		0.0f, 1.0f,
-			 0.5f,  0.5f, 0.0f,		1.0f, 1.0f,
-			 0.5,  -0.5,  0.0f,		1.0f, 0.0f
-		};
-
+			-0.5f, -0.5f, 0.0f, 0.0f, 0.0f,
+			-0.5f, 0.5f, 0.0f, 0.0f, 1.0f,
+			0.5f, 0.5f, 0.0f, 1.0f, 1.0f,
+			0.5, -0.5, 0.0f, 1.0f, 0.0f};
 
 		Myka::Ref<Myka::VertexBuffer> m_VertexBuffer(Myka::VertexBuffer::Create(vertices, sizeof(vertices)));
 		Myka::BufferLayout layout = {
 			{Myka::ShaderDataType::Float3, "a_Position"},
 			{Myka::ShaderDataType::Float2, "a_TexCoord"},
 		};
-		
+
 		m_VertexBuffer->SetLayout(layout);
 		m_VertexArray->AddVertexBuffer(m_VertexBuffer);
 
@@ -75,37 +73,23 @@ public:
 
 	void OnUpdate(Myka::Timestep ts) override
 	{
-		if (Myka::Input::IsKeyPressed(MYKA_KEY_LEFT))
-			m_CameraPosition.x -= m_CameraMoveSpeed * ts;
-		if (Myka::Input::IsKeyPressed(MYKA_KEY_RIGHT))
-			m_CameraPosition.x += m_CameraMoveSpeed * ts;
-		if (Myka::Input::IsKeyPressed(MYKA_KEY_DOWN))
-			m_CameraPosition.y -= m_CameraMoveSpeed * ts;
-		if (Myka::Input::IsKeyPressed(MYKA_KEY_UP))
-			m_CameraPosition.y += m_CameraMoveSpeed * ts;
-			
-		if (Myka::Input::IsKeyPressed(MYKA_KEY_A))
-			m_CameraRotation -= m_CameraRotationSpeed * ts;
-		if (Myka::Input::IsKeyPressed(MYKA_KEY_D))
-			m_CameraRotation += m_CameraRotationSpeed * ts;
-
+		// Update
+		m_CameraController.OnUpdate(ts);
+		
+		// Render
 		Myka::RenderCommand::SetClearColor({0.1f, 0.1f, 0.1f, 1.0f});
 		Myka::RenderCommand::Clear();
 
-		
-		m_Camera.SetPosition(m_CameraPosition);
-		m_Camera.SetRotation(m_CameraRotation);
-		
-		Myka::Renderer::BeginScene(m_Camera);
+		Myka::Renderer::BeginScene(m_CameraController.GetCamera());
 
 		glm::mat4 scale = glm::scale(glm::mat4(1.0f), glm::vec3(0.1f));
 
 		std::dynamic_pointer_cast<Myka::OpenGLShader>(m_FlatColorShader)->Bind();
 		std::dynamic_pointer_cast<Myka::OpenGLShader>(m_FlatColorShader)->UploadUniformFloat3("u_Color", m_SquareColor);
 
-		for (int y = 0; y < 20; ++y)
+		for (int y = 0; y < 10; ++y)
 		{
-			for (int x = 0; x < 20; ++x)
+			for (int x = 0; x < 10; ++x)
 			{
 				glm::vec3 pos(x * 0.11f, y * 0.11f, 0.0f);
 				glm::mat4 transform = glm::translate(glm::mat4(1.0f), pos) * scale;
@@ -127,9 +111,9 @@ public:
 		ImGui::End();
 	}
 
-	void OnEvent(Myka::Event &event) override
+	void OnEvent(Myka::Event &e) override
 	{
-
+		m_CameraController.OnEvent(e);
 	}
 
 private:
@@ -139,12 +123,7 @@ private:
 
 	Myka::Ref<Myka::Texture2D> m_Texture;
 
-	Myka::OrthographicCamera m_Camera;
-	glm::vec3 m_CameraPosition;
-	float m_CameraRotation;
-
-	float m_CameraMoveSpeed = 5.0f;
-	float m_CameraRotationSpeed = 180.0f;
+	Myka::OrthographicCameraController m_CameraController;
 
 	glm::vec3 m_SquareColor = {0.2f, 0.3f, 0.8f};
 };
