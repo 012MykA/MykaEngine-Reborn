@@ -1,11 +1,11 @@
 #include "Application.hpp"
 
-#include "MykaEngine/Log.hpp"
+#include "MykaEngine/Core/Log.hpp"
 #include "MykaEngine/Core/Timestep.hpp"
 
 #include "MykaEngine/Renderer/Renderer.hpp"
 
-#include "MykaEngine/Input.hpp"
+#include "MykaEngine/Core/Input.hpp"
 
 #include <GLFW/glfw3.h> // TODO: remove
 

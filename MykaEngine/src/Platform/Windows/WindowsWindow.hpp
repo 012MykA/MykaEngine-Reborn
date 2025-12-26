@@ -1,7 +1,7 @@
 #pragma once
 
-#include "MykaEngine/Window.hpp"
-#include "MykaEngine/Log.hpp"
+#include "MykaEngine/Core/Window.hpp"
+#include "MykaEngine/Core/Log.hpp"
 #include "MykaEngine/Renderer/GraphicsContext.hpp"
 
 #include <GLFW/glfw3.h>

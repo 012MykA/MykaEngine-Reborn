@@ -1,6 +1,6 @@
 #include "OpenGLTexture.hpp"
 
-#include "MykaEngine/Log.hpp"
+#include "MykaEngine/Core/Log.hpp"
 
 #include <glad/glad.h>
 

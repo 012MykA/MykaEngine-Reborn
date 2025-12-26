@@ -1,6 +1,6 @@
 #include "OpenGLContext.hpp"
 
-#include "MykaEngine/Log.hpp"
+#include "MykaEngine/Core/Log.hpp"
 
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>

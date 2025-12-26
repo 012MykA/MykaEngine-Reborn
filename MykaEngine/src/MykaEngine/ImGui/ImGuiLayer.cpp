@@ -1,5 +1,5 @@
 #include "ImGuiLayer.hpp"
-#include "MykaEngine/Application.hpp"
+#include "MykaEngine/Core/Application.hpp"
 
 // TEMPORARY
 #include <glad/glad.h>
@@ -9,12 +9,10 @@
 #include <backends/imgui_impl_glfw.h>
 #include <backends/imgui_impl_opengl3.h>
 
-#include "MykaEngine/KeyCodes.hpp"
+#include "MykaEngine/Core/KeyCodes.hpp"
 
 namespace Myka
 {
-    static ImGuiKey ImGui_ImplGlfw_KeyToImGuiKey(int keycode);
-
     ImGuiLayer::ImGuiLayer() : Layer("ImGuiLayer")
     {
     }

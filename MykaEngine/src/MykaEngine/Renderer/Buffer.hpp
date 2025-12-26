@@ -1,6 +1,6 @@
 #pragma once
 
-#include "MykaEngine/Log.hpp"
+#include "MykaEngine/Core/Log.hpp"
 
 #include <cinttypes>
 #include <vector>

@@ -1,9 +1,9 @@
 #pragma once
 
-#include "MykaEngine/Core.hpp"
-#include "MykaEngine/Window.hpp"
+#include "MykaEngine/Core/Core.hpp"
+#include "MykaEngine/Core/Window.hpp"
 #include "MykaEngine/Events/ApplicationEvent.hpp"
-#include "MykaEngine/LayerStack.hpp"
+#include "MykaEngine/Core/LayerStack.hpp"
 #include "MykaEngine/ImGui/ImGuiLayer.hpp"
 
 namespace Myka

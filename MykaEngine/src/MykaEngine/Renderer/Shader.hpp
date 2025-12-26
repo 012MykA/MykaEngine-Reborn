@@ -1,6 +1,6 @@
 #pragma once
 
-#include "MykaEngine/Core.hpp"
+#include "MykaEngine/Core/Core.hpp"
 
 #include <string>
 #include <unordered_map>

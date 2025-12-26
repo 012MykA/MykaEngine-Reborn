@@ -1,7 +1,7 @@
 #pragma once
 
-#include "MykaEngine/Core.hpp"
-#include "MykaEngine/Layer.hpp"
+#include "MykaEngine/Core/Core.hpp"
+#include "MykaEngine/Core/Layer.hpp"
 #include "MykaEngine/Events/Event.hpp"
 #include "MykaEngine/Events/ApplicationEvent.hpp"
 #include "MykaEngine/Events/MouseEvent.hpp"

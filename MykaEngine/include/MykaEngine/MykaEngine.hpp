@@ -1,17 +1,17 @@
 #pragma once
 
 // for use by MykaEngine applications
-#include "MykaEngine/Application.hpp"
-#include "MykaEngine/Layer.hpp"
-#include "MykaEngine/Log.hpp"
+#include "MykaEngine/Core/Application.hpp"
+#include "MykaEngine/Core/Layer.hpp"
+#include "MykaEngine/Core/Log.hpp"
 
 #include "MykaEngine/Core/Timestep.hpp"
 
 // --- Input -------------------------------
-#include "MykaEngine/Input.hpp"
-#include "MykaEngine/KeyCodes.hpp"
-#include "MykaEngine/MouseButtonCodes.hpp"
-#include "MykaEngine/OrthographicCameraController.hpp"
+#include "MykaEngine/Core/Input.hpp"
+#include "MykaEngine/Core/KeyCodes.hpp"
+#include "MykaEngine/Core/MouseButtonCodes.hpp"
+#include "MykaEngine/Renderer/OrthographicCameraController.hpp"
 // -----------------------------------------
 
 
@@ -29,5 +29,5 @@
 
 
 // --- Entry Point -------------
-#include "MykaEngine/EntryPoint.hpp"
+#include "MykaEngine/Core/EntryPoint.hpp"
 // -----------------------------

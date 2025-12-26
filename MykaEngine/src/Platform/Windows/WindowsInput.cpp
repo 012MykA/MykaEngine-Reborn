@@ -1,9 +1,9 @@
 #pragma once
 
 #include "WindowsInput.hpp"
+#include "MykaEngine/Core/Application.hpp"
 
 #include <GLFW/glfw3.h>
-#include "MykaEngine/Application.hpp"
 
 namespace Myka
 {

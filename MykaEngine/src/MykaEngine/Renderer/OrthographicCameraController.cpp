@@ -1,7 +1,7 @@
 #include "OrthographicCameraController.hpp"
 
-#include "MykaEngine/Input.hpp"
-#include "MykaEngine/KeyCodes.hpp"
+#include "MykaEngine/Core/Input.hpp"
+#include "MykaEngine/Core/KeyCodes.hpp"
 
 namespace Myka
 {

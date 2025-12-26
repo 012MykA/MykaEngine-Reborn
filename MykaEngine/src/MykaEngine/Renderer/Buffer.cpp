@@ -1,6 +1,6 @@
 #include "Buffer.hpp"
 
-#include "MykaEngine/Log.hpp"
+#include "MykaEngine/Core/Log.hpp"
 #include "Renderer.hpp"
 #include "Platform/OpenGL/OpenGLBuffer.hpp"
 

@@ -1,6 +1,6 @@
 #include "OpenGLShader.hpp"
 
-#include "MykaEngine/Log.hpp"
+#include "MykaEngine/Core/Log.hpp"
 
 #include <glad/glad.h>
 #include <glm/gtc/type_ptr.hpp>

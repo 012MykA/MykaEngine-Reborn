@@ -1,6 +1,6 @@
 #pragma once
 
-#include "MykaEngine/Input.hpp"
+#include "MykaEngine/Core/Input.hpp"
 
 namespace Myka
 {

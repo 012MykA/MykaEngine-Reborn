@@ -2,7 +2,7 @@
 
 #include "mykapch.hpp"
 
-#include "MykaEngine/Core.hpp"
+#include "MykaEngine/Core/Core.hpp"
 #include "MykaEngine/Events/Event.hpp"
 
 namespace Myka

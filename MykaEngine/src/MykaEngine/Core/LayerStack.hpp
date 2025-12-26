@@ -1,7 +1,7 @@
 #pragma once
 
-#include "MykaEngine/Core.hpp"
-#include "MykaEngine/Layer.hpp"
+#include "MykaEngine/Core/Core.hpp"
+#include "MykaEngine/Core/Layer.hpp"
 
 namespace Myka
 {

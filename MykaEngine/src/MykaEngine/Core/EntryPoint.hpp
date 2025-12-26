@@ -2,8 +2,8 @@
 
 #ifdef MYKA_PLATFORM_WINDOWS
 
-#include "MykaEngine/Application.hpp"
-#include "MykaEngine/Log.hpp"
+#include "MykaEngine/Core/Application.hpp"
+#include "MykaEngine/Core/Log.hpp"
 
 extern Myka::Application *Myka::CreateApplication();
 
