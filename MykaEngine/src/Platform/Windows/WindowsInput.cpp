@@ -1,5 +1,4 @@
-#pragma once
-
+#include "mykapch.hpp"
 #include "WindowsInput.hpp"
 #include "MykaEngine/Core/Application.hpp"
 

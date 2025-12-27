@@ -1,3 +1,4 @@
+#include "mykapch.hpp"
 #include "Log.hpp"
 
 namespace Myka
