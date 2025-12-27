@@ -6,7 +6,7 @@
 
 namespace Myka
 {
-    class MYKA_API Layer
+    class Layer
     {
     public:
         Layer(const std::string &name = "Layer");

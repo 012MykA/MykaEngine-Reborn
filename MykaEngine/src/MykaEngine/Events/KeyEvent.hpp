@@ -5,7 +5,7 @@
 namespace Myka
 {
 
-	class MYKA_API KeyEvent : public Event
+	class KeyEvent : public Event
 	{
 	public:
 		inline int GetKeyCode() const { return m_KeyCode; }
@@ -19,7 +19,7 @@ namespace Myka
 		int m_KeyCode;
 	};
 
-	class MYKA_API KeyPressedEvent : public KeyEvent
+	class KeyPressedEvent : public KeyEvent
 	{
 	public:
 		KeyPressedEvent(int keycode, int repeatCount)
@@ -39,7 +39,7 @@ namespace Myka
 		int m_RepeatCount;
 	};
 
-	class MYKA_API KeyReleasedEvent : public KeyEvent
+	class KeyReleasedEvent : public KeyEvent
 	{
 	public:
 		KeyReleasedEvent(int keycode)
@@ -55,7 +55,7 @@ namespace Myka
 		EVENT_CLASS_TYPE(KeyReleased)
 	};
 
-	class MYKA_API KeyTypedEvent : public KeyEvent
+	class KeyTypedEvent : public KeyEvent
 	{
 	public:
 		KeyTypedEvent(unsigned int codepoint)

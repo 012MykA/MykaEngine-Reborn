@@ -2,35 +2,56 @@
 
 #include <memory>
 
-#ifdef MYKA_PLATFORM_WINDOWS
+// Platform detection
+#ifdef _WIN32
 
-#if MYKA_DYNAMIC_LINK
+    #ifdef _WIN64
+        #define MYKA_PLATFORM_WINDOWS
+    #else
+        #error "Windows x86 is not supported!"
+    #endif
 
-#ifdef  MYKA_BUILD_DLL
-#define MYKA_API __declspec(dllexport)
+#elif defined(__linux__)
+    #define MYKA_PLATFORM_LINUX
+    #error "Linux platform is not supported!"
+
+#elif defined(__APPLE__) || defined(__MACH__)
+    #define MYKA_PLATFORM_APPLE
+    #error "Apple platform is not supported!"
+
+#elif defined(__ANDROID__)
+    #define MYKA_PLATFORM_ANDROID
+    #error "Android platform is not supported!"
+
 #else
-#define MYKA_API __declspec(dllimport)
-#endif // MYKA_BUILD_DLL
+    #error "Unknown platform!"  
 
-#else
-#define MYKA_API
-#endif // MYKA_DYNAMIC_LINK
+#endif // End Platform detection
 
-#else
-#error MykaEngine only supports Windows!
-#endif // MYKA_PLATFORM_WINDOWS
+// DLL support
+#ifdef MYKA_DYNAMIC_LINK
+    #error "Dynamic linking is not supported! Use static link instead."
+#endif // End DLL support
 
+// Debug
+#ifdef MYKA_DEBUG
+    #define MYKA_ENABLE_ASSERTS
+#endif // End Debug
+
+// Asserts
 #ifdef MYKA_ENABLE_ASSERTS
-#define MYKA_ASSERT(x, ...) { if(!(x)) { MYKA_ERROR("Assertion Failed: {0}", __VA_ARGS__); __debugbreak(); } }
-#define MYKA_CORE_ASSERT(x, ...) { if(!(x)) { MYKA_CORE_ERROR("Assertion Failed: {0}", __VA_ARGS__); __debugbreak(); } }
+    #define MYKA_ASSERT(x, ...) { if(!(x)) { MYKA_ERROR("Assertion Failed: {0}", __VA_ARGS__); __debugbreak(); } }
+    #define MYKA_CORE_ASSERT(x, ...) { if(!(x)) { MYKA_CORE_ERROR("Assertion Failed: {0}", __VA_ARGS__); __debugbreak(); } }
 #else
-#define MYKA_ASSERT(x, ...)
-#define MYKA_CORE_ASSERT(x, ...)
-#endif // MYKA_ENABLE_ASSERTS
+    #define MYKA_ASSERT(x, ...)
+    #define MYKA_CORE_ASSERT(x, ...)
+#endif // End Asserts
+
 
 #define BIT(x) (1 << x)
 
 #define MYKA_BIND_EVENT_FN(fn) std::bind(&fn, this, std::placeholders::_1)
+
 
 namespace Myka
 {
