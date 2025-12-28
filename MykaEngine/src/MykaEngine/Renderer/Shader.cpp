@@ -15,7 +15,7 @@ namespace Myka
             MYKA_CORE_ASSERT(false, "RendererAPI::None is currently not supported");
             return nullptr;
         case RendererAPI::API::OpenGL:
-            return std::make_shared<OpenGLShader>(filepath);
+            return CreateRef<OpenGLShader>(filepath);
 
         default:
             MYKA_CORE_ASSERT(false, "Unknown RendererAPI!");
@@ -31,7 +31,7 @@ namespace Myka
             MYKA_CORE_ASSERT(false, "RendererAPI::None is currently not supported");
             return nullptr;
         case RendererAPI::API::OpenGL:
-            return std::make_shared<OpenGLShader>(name, vertexSrc, fragmentSrc);
+            return CreateRef<OpenGLShader>(name, vertexSrc, fragmentSrc);
 
         default:
             MYKA_CORE_ASSERT(false, "Unknown RendererAPI!");

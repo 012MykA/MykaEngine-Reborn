@@ -17,6 +17,7 @@
 
 // --- Renderer --------------------------------------
 #include "MykaEngine/Renderer/Renderer.hpp"
+#include "MykaEngine/Renderer/Renderer2D.hpp"
 #include "MykaEngine/Renderer/RenderCommand.hpp"
 
 #include "MykaEngine/Renderer/Buffer.hpp"
@@ -26,8 +27,3 @@
 
 #include "MykaEngine/Renderer/OrthographicCamera.hpp"
 // ---------------------------------------------------
-
-
-// --- Entry Point -------------
-#include "MykaEngine/Core/EntryPoint.hpp"
-// -----------------------------

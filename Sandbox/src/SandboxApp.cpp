@@ -1,10 +1,14 @@
 #include <MykaEngine.hpp>
+#include <MykaEngine/Core/EntryPoint.hpp>
+
 #include "Platform/OpenGL/OpenGLShader.hpp"
 
 #include <imgui.h>
 
-#include <glm/gtc/type_ptr.hpp>
 #include <glm/gtc/matrix_transform.hpp>
+#include <glm/gtc/type_ptr.hpp>
+
+#include "Sandbox2D.hpp"
 
 class ExampleLayer : public Myka::Layer
 {
@@ -12,7 +16,7 @@ public:
 	ExampleLayer() : Layer("Example"), m_CameraController(1280.0f / 720.0f)
 	{
 		// triangle
-		m_VertexArray.reset(Myka::VertexArray::Create());
+		m_VertexArray = Myka::VertexArray::Create();
 
 		float vertices[5 * 4] = {
 			-0.5f, -0.5f, 0.0f, 0.0f, 0.0f,
@@ -132,7 +136,8 @@ class Sandbox : public Myka::Application
 public:
 	Sandbox() : Application()
 	{
-		PushLayer(new ExampleLayer());
+		// PushLayer(new ExampleLayer());
+		PushLayer(new Sandbox2D());
 	}
 
 	~Sandbox() {}

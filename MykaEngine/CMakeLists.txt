@@ -4,9 +4,6 @@ project(MykaEngine)
 set(CMAKE_CXX_STANDARD 23)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
-# -------------------------
-# GLAD
-# -------------------------
 add_library(glad STATIC
     vendor/glad/src/glad.c
 )
@@ -16,9 +13,6 @@ target_include_directories(glad
         ${CMAKE_CURRENT_SOURCE_DIR}/vendor/glad/include
 )
 
-# -------------------------
-# ImGui
-# -------------------------
 add_library(imgui STATIC
     vendor/imgui/imgui.cpp
     vendor/imgui/imgui_draw.cpp
@@ -35,9 +29,6 @@ target_include_directories(imgui
         ${CMAKE_CURRENT_SOURCE_DIR}/vendor/imgui/backends
 )
 
-# -------------------------
-# stb_image
-# -------------------------
 add_library(stb_image STATIC
     ${CMAKE_CURRENT_SOURCE_DIR}/vendor/stb_image/stb_image.cpp
 )
@@ -46,26 +37,17 @@ target_include_directories(stb_image PUBLIC
     ${CMAKE_CURRENT_SOURCE_DIR}/vendor/stb_image
 )
 
-# -------------------------
-# Dependencies
-# -------------------------
 add_subdirectory(vendor/glfw)
 add_subdirectory(vendor/glm)
 add_subdirectory(vendor/spdlog)
 
 target_link_libraries(imgui PRIVATE glfw)
 
-# -------------------------
-# Engine sources
-# -------------------------
 file(GLOB_RECURSE ENGINE_SOURCES
     src/*.cpp
     src/*.hpp
 )
 
-# -------------------------
-# MykaEngine (STATIC)
-# -------------------------
 add_library(MykaEngine STATIC
     ${ENGINE_SOURCES}
 )
