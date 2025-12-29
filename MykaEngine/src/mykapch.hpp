@@ -13,6 +13,9 @@
 #include <unordered_set>
 #include <cinttypes>
 
+#include "MykaEngine/Core/Log.hpp"
+
+#include "MykaEngine/Debug/Instrumentor.hpp"
 
 #ifdef MYKA_PLATFORM_WINDOWS
 #include <Windows.h>

@@ -2,12 +2,6 @@
 
 #include <MykaEngine.hpp>
 
-struct ProfileResult
-{
-    const char *Name;
-    float Time;
-};
-
 class Sandbox2D : public Myka::Layer
 {
 public:
@@ -28,6 +22,4 @@ private:
     Myka::Ref<Myka::VertexArray> m_VertexArray;
     Myka::Ref<Myka::Shader> m_FlatColorShader;
     Myka::Ref<Myka::Texture2D> m_BoxTexture;
-
-    std::vector<ProfileResult> m_ProfileResults;
 };
