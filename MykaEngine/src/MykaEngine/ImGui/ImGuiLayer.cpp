@@ -14,14 +14,6 @@
 
 namespace Myka
 {
-    ImGuiLayer::ImGuiLayer() : Layer("ImGuiLayer")
-    {
-    }
-
-    ImGuiLayer::~ImGuiLayer()
-    {
-    }
-
     void ImGuiLayer::OnAttach()
     {
         // Setup Dear ImGui context
@@ -80,16 +72,11 @@ namespace Myka
 
         if (io.ConfigFlags & ImGuiConfigFlags_ViewportsEnable)
         {
-            GLFWwindow* backup_current_context = glfwGetCurrentContext();
+            GLFWwindow *backup_current_context = glfwGetCurrentContext();
             ImGui::UpdatePlatformWindows();
             ImGui::RenderPlatformWindowsDefault();
             glfwMakeContextCurrent(backup_current_context);
         }
     }
 
-    void ImGuiLayer::OnImGuiRender()
-    {
-        static bool show = true;
-        ImGui::ShowDemoWindow(&show);
-    }
 } // namespace Myka
