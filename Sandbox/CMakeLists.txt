@@ -16,14 +16,6 @@ target_link_libraries(Sandbox
         MykaEngine
 )
 
-if (WIN32)
-target_compile_definitions(Sandbox
-    PRIVATE
-        MYKA_PLATFORM_WINDOWS
-)
-endif()
-
-
 if (MSVC)
     target_compile_options(Sandbox PRIVATE /W4 /utf-8)
 endif()
