@@ -10,6 +10,8 @@ namespace Myka
 
     void Renderer::Init()
     {
+        MYKA_PROFILE_FUNCTION();
+        
         RenderCommand::Init();
         Renderer2D::Init();
     }

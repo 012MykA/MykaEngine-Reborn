@@ -28,21 +28,36 @@ namespace Myka
 
     OpenGLVertexArray::OpenGLVertexArray()
     {
+        MYKA_PROFILE_FUNCTION();
+
         glCreateVertexArrays(1, &m_RendererID);
+    }
+
+    OpenGLVertexArray::~OpenGLVertexArray()
+    {
+        MYKA_PROFILE_FUNCTION();
+
+        glDeleteVertexArrays(1, &m_RendererID);
     }
 
     void OpenGLVertexArray::Bind() const
     {
+        MYKA_PROFILE_FUNCTION();
+
         glBindVertexArray(m_RendererID);
     }
 
     void OpenGLVertexArray::Unbind() const
     {
+        MYKA_PROFILE_FUNCTION();
+
         glBindVertexArray(0);
     }
 
     void OpenGLVertexArray::AddVertexBuffer(const Ref<VertexBuffer> &vertexBuffer)
     {
+        MYKA_PROFILE_FUNCTION();
+
         MYKA_CORE_ASSERT(vertexBuffer->GetLayout().GetElements().size(), "Vertex Buffer has no layout!");
 
         glBindVertexArray(m_RendererID);
@@ -68,6 +83,8 @@ namespace Myka
 
     void OpenGLVertexArray::SetIndexBuffer(const Ref<IndexBuffer> &indexBuffer)
     {
+        MYKA_PROFILE_FUNCTION();
+        
         glBindVertexArray(m_RendererID);
         indexBuffer->Bind();
 

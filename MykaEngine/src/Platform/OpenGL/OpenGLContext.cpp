@@ -15,6 +15,8 @@ namespace Myka
 
     void OpenGLContext::Init()
     {
+        MYKA_PROFILE_FUNCTION();
+        
         glfwMakeContextCurrent(m_WindowHandle);
         int status = gladLoadGLLoader((GLADloadproc)glfwGetProcAddress);
         MYKA_CORE_ASSERT(status, "Failed to initialize Glad!");
@@ -27,6 +29,8 @@ namespace Myka
 
     void OpenGLContext::SwapBuffers()
     {
+        MYKA_PROFILE_FUNCTION();
+
         glfwSwapBuffers(m_WindowHandle);
     }
 } // namespace Myka

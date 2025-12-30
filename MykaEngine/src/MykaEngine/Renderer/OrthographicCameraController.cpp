@@ -13,6 +13,8 @@ namespace Myka
 
     void OrthographicCameraController::OnUpdate(Timestep ts)
     {
+        MYKA_PROFILE_FUNCTION();
+        
         if (Input::IsKeyPressed(MYKA_KEY_A))
             m_CameraPosition.x -= m_CameraTranslationSpeed * ts;
         if (Input::IsKeyPressed(MYKA_KEY_D))
@@ -40,6 +42,8 @@ namespace Myka
 
     void OrthographicCameraController::OnEvent(Event &e)
     {
+        MYKA_PROFILE_FUNCTION();
+
         EventDispatcher dp(e);
         dp.Dispatch<MouseScrolledEvent>(MYKA_BIND_EVENT_FN(OrthographicCameraController::OnMouseScrolled));
         dp.Dispatch<WindowResizeEvent>(MYKA_BIND_EVENT_FN(OrthographicCameraController::OnWindowResized));
@@ -47,6 +51,8 @@ namespace Myka
 
     bool OrthographicCameraController::OnMouseScrolled(MouseScrolledEvent &e)
     {
+        MYKA_PROFILE_FUNCTION();
+
         m_ZoomLevel -= e.GetYOffset() * 0.25f;
         m_ZoomLevel = std::max(m_ZoomLevel, 0.25f);     // Min Zoom
         m_ZoomLevel = std::min(m_ZoomLevel, 10.0f);      // Max Zoom
@@ -57,6 +63,8 @@ namespace Myka
 
     bool OrthographicCameraController::OnWindowResized(WindowResizeEvent &e)
     {
+        MYKA_PROFILE_FUNCTION();
+        
         m_AspectRatio = (float)e.GetWidth() / (float)e.GetHeight();
         m_Camera.SetProjection(-m_AspectRatio * m_ZoomLevel, m_AspectRatio * m_ZoomLevel, -m_ZoomLevel, m_ZoomLevel);
 

@@ -22,16 +22,22 @@ namespace Myka
 
     WindowsWindow::WindowsWindow(const WindowProps &props)
     {
+        MYKA_PROFILE_FUNCTION();
+
         Init(props);
     }
 
     WindowsWindow::~WindowsWindow()
     {
+        MYKA_PROFILE_FUNCTION();
+        
         Shutdown();
     }
 
     void WindowsWindow::Init(const WindowProps &props)
     {
+        MYKA_PROFILE_FUNCTION();
+
         m_Data.Title = props.Title;
         m_Data.Width = props.Width;
         m_Data.Height = props.Height;
@@ -40,6 +46,8 @@ namespace Myka
 
         if (!s_GLFWInitializated)
         {
+            MYKA_PROFILE_SCOPE("glfwInit");
+
             int success = glfwInit();
             MYKA_CORE_ASSERT(success, "Could not initialize GLFW!");
             glfwSetErrorCallback(GLFWErrorCallback);
@@ -51,7 +59,11 @@ namespace Myka
         glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 6);
         glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 
-        m_Window = glfwCreateWindow((int)props.Width, (int)props.Height, m_Data.Title.c_str(), nullptr, nullptr);
+        {
+            MYKA_PROFILE_SCOPE("glfwCreateWindow");
+
+            m_Window = glfwCreateWindow((int)props.Width, (int)props.Height, m_Data.Title.c_str(), nullptr, nullptr);
+        }
 
         m_Context = new OpenGLContext(m_Window);
         m_Context->Init();
@@ -152,17 +164,23 @@ namespace Myka
 
     void WindowsWindow::Shutdown()
     {
+        MYKA_PROFILE_FUNCTION();
+
         glfwDestroyWindow(m_Window);
     }
 
     void WindowsWindow::OnUpdate()
     {
+        MYKA_PROFILE_FUNCTION();
+
         glfwPollEvents();
         m_Context->SwapBuffers();
     }
 
     void WindowsWindow::SetVSync(bool enabled)
     {
+        MYKA_PROFILE_FUNCTION();
+
         if (enabled)
             glfwSwapInterval(1);
         else

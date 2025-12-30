@@ -19,6 +19,8 @@ namespace Myka
 
 	Application::Application()
 	{
+		MYKA_PROFILE_FUNCTION();
+
 		MYKA_CORE_ASSERT(!s_Instance, "Application already exists!");
 		s_Instance = this;
 
@@ -33,10 +35,15 @@ namespace Myka
 
 	Application::~Application()
 	{
+		MYKA_PROFILE_FUNCTION();
+
+		Renderer::Shutdown();
 	}
 
 	void Application::OnEvent(Event &e)
 	{
+		MYKA_PROFILE_FUNCTION();
+
 		EventDispatcher dispatcher(e);
 		dispatcher.Dispatch<WindowCloseEvent>(BIND_EVENT_FN(OnWindowClose));
 		dispatcher.Dispatch<WindowResizeEvent>(BIND_EVENT_FN(OnWindowResize));
@@ -51,20 +58,28 @@ namespace Myka
 
 	void Application::PushLayer(Layer *layer)
 	{
+		MYKA_PROFILE_FUNCTION();
+
 		m_LayerStack.PushLayer(layer);
 		layer->OnAttach();
 	}
 
 	void Application::PushOverlay(Layer *overlay)
 	{
+		MYKA_PROFILE_FUNCTION();
+
 		m_LayerStack.PushOverlay(overlay);
 		overlay->OnAttach();
 	}
 
 	void Application::Run()
 	{
+		MYKA_PROFILE_FUNCTION();
+		
 		while (m_Running)
 		{
+			MYKA_PROFILE_SCOPE("RunLoop");
+
 			float time = (float)glfwGetTime();
 			Timestep timestep = time - m_LastFrameTime;
 			m_LastFrameTime = time;
@@ -72,16 +87,21 @@ namespace Myka
 			// OnUpdate
 			if (!m_Minimized)
 			{
+				MYKA_PROFILE_SCOPE("LayerStack OnUpdate");
+
 				for (Layer *layer : m_LayerStack)
 					layer->OnUpdate(timestep);
 			}
 
 			// OnImGuiRender
 			m_ImGuiLayer->Begin();
-			for (Layer *layer : m_LayerStack)
-				layer->OnImGuiRender();
-			m_ImGuiLayer->End();
+			{
+				MYKA_PROFILE_SCOPE("LayerStack OnImGuiRender");
 
+				for (Layer *layer : m_LayerStack)
+					layer->OnImGuiRender();
+				m_ImGuiLayer->End();
+			}
 			m_Window->OnUpdate();
 		}
 	}
@@ -94,6 +114,8 @@ namespace Myka
 
 	bool Application::OnWindowResize(WindowResizeEvent &e)
 	{
+		MYKA_PROFILE_FUNCTION();
+
 		if (e.GetWidth() == 0 || e.GetHeight() == 0)
 		{
 			m_Minimized = true;
