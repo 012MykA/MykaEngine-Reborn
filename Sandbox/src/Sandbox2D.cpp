@@ -3,7 +3,6 @@
 #include <imgui.h>
 #include <glm/gtc/type_ptr.hpp>
 
-
 Sandbox2D::Sandbox2D() : Layer("Sandbox2D"), m_CameraController(1280.0f / 720.0f) {}
 
 void Sandbox2D::OnAttach()
@@ -28,18 +27,21 @@ void Sandbox2D::OnUpdate(Myka::Timestep ts)
     // Render
     {
         MYKA_PROFILE_SCOPE("Renderer Prep");
+
         Myka::RenderCommand::SetClearColor({0.1f, 0.1f, 0.1f, 1.0f});
         Myka::RenderCommand::Clear();
     }
 
     {
         MYKA_PROFILE_SCOPE("Renderer Draw");
+
         Myka::Renderer2D::BeginScene(m_CameraController.GetCamera());
 
         Myka::Renderer2D::DrawQuad({-1.0f, 0.0f}, {0.8f, 0.8f}, {0.8f, 0.2f, 0.3f, 1.0f});
         Myka::Renderer2D::DrawQuad({0.5f, -0.5f}, {0.5f, 0.75f}, {0.2f, 0.3f, 0.8f, 1.0f});
-        // Myka::Renderer2D::DrawRotatedQuad({0.0f, 0.0f, -0.1f}, {1.5f, 1.5f}, glm::radians(-45.0f), m_BoxTexture, 5.0f, {0.5f, 1.0f, 0.5f, 1.0f});
-        
+        Myka::Renderer2D::DrawQuad({0.0f, 0.0f, -0.1f}, {1.5f, 1.5f}, m_BoxTexture, 5.0f);
+        Myka::Renderer2D::DrawQuad({1.5f, 1.5f, 0.1f}, {1.0f, 1.0f}, m_BoxTexture);
+
         Myka::Renderer2D::EndScene();
     }
 }
