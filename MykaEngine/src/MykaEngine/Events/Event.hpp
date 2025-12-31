@@ -35,7 +35,7 @@ namespace Myka
     };
 
 #define EVENT_CLASS_TYPE(type)                                                  \
-    static EventType GetStaticType() { return EventType::type; }              \
+    static EventType GetStaticType() { return EventType::type; }                \
     virtual EventType GetEventType() const override { return GetStaticType(); } \
     virtual const char *GetName() const override { return #type; }
 
@@ -52,7 +52,7 @@ namespace Myka
         virtual int GetCategoryFlags() const = 0;
         virtual std::string ToString() const { return GetName(); }
 
-        inline bool IsInCategory(EventCategory category)
+        bool IsInCategory(EventCategory category)
         {
             return GetCategoryFlags() & category;
         }
