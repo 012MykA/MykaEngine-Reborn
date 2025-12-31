@@ -22,7 +22,9 @@ private:
     // Temp
     Myka::Ref<Myka::VertexArray> m_VertexArray;
     Myka::Ref<Myka::Shader> m_FlatColorShader;
+
     Myka::Ref<Myka::Texture2D> m_BoxTexture;
+    Myka::Ref<Myka::Texture2D> m_SpriteSheet;
 
     ParticleSystem m_ParticleSystem;
     ParticleProps m_Particle;
