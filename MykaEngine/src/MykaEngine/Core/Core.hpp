@@ -35,13 +35,24 @@
 
 // Debug
 #ifdef MYKA_DEBUG
-    #define MYKA_ENABLE_ASSERTS
+	#ifdef MYKA_PLATFORM_WINDOWS
+		#define MYKA_DEBUGBREAK() __debugbreak()
+	#elif defined(MYKA_PLATFORM_LINUX)
+		#include <signal.h>
+		#define MYKA_DEBUGBREAK() raise(SIGTRAP)
+	#else
+		#error "Platform doesn't support debugbreak yet!"
+	#endif
+
+	#define MYKA_ENABLE_ASSERTS
+#else
+	#define MYKA_DEBUGBREAK()
 #endif // End Debug
 
 // Asserts
 #ifdef MYKA_ENABLE_ASSERTS
-    #define MYKA_ASSERT(x, ...) { if(!(x)) { MYKA_ERROR("Assertion Failed: {0}", __VA_ARGS__); __debugbreak(); } }
-    #define MYKA_CORE_ASSERT(x, ...) { if(!(x)) { MYKA_CORE_ERROR("Assertion Failed: {0}", __VA_ARGS__); __debugbreak(); } }
+    #define MYKA_ASSERT(x, ...) { if(!(x)) { MYKA_ERROR("Assertion Failed: {0}", __VA_ARGS__); MYKA_DEBUGBREAK(); } }
+    #define MYKA_CORE_ASSERT(x, ...) { if(!(x)) { MYKA_CORE_ERROR("Assertion Failed: {0}", __VA_ARGS__); MYKA_DEBUGBREAK(); } }
 #else
     #define MYKA_ASSERT(x, ...)
     #define MYKA_CORE_ASSERT(x, ...)
