@@ -1,6 +1,7 @@
 #pragma once
 
 #include <MykaEngine.hpp>
+#include "ParticleSystem.hpp"
 
 class Sandbox2D : public Myka::Layer
 {
@@ -22,4 +23,7 @@ private:
     Myka::Ref<Myka::VertexArray> m_VertexArray;
     Myka::Ref<Myka::Shader> m_FlatColorShader;
     Myka::Ref<Myka::Texture2D> m_BoxTexture;
+
+    ParticleSystem m_ParticleSystem;
+    ParticleProps m_Particle;
 };
