@@ -1,7 +1,6 @@
 #pragma once
 
 #include <MykaEngine.hpp>
-#include "ParticleSystem.hpp"
 #include <unordered_map>
 
 class Sandbox2D : public Myka::Layer

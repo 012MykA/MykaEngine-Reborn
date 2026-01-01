@@ -3,3 +3,4 @@ project(MykaSolution)
 
 add_subdirectory(MykaEngine)
 add_subdirectory(Sandbox)
+add_subdirectory(MykaEditor)
