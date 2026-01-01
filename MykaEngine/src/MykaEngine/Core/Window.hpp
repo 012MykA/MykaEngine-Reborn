@@ -2,7 +2,7 @@
 
 #include "mykapch.hpp"
 
-#include "MykaEngine/Core/Core.hpp"
+#include "MykaEngine/Core/Base.hpp"
 #include "MykaEngine/Events/Event.hpp"
 
 namespace Myka
@@ -22,7 +22,7 @@ namespace Myka
     class Window
     {
     public:
-        using EventCallbackFn = std::function<void(Event&)>;
+        using EventCallbackFn = std::function<void(Event &)>;
 
         virtual ~Window() {};
 
@@ -31,12 +31,12 @@ namespace Myka
         virtual unsigned int GetWidth() const = 0;
         virtual unsigned int GetHeight() const = 0;
 
-        virtual void SetEventCallback(const EventCallbackFn& callback) = 0;
+        virtual void SetEventCallback(const EventCallbackFn &callback) = 0;
         virtual void SetVSync(bool enable) = 0;
         virtual bool IsVSync() const = 0;
 
-        virtual void* GetNativeWindow() const = 0;
+        virtual void *GetNativeWindow() const = 0;
 
-        static Window* Create(const WindowProps& props = WindowProps());
+        static Window *Create(const WindowProps &props = WindowProps());
     };
 } // namespace Myka

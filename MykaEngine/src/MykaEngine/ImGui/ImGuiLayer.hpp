@@ -1,6 +1,6 @@
 #pragma once
 
-#include "MykaEngine/Core/Core.hpp"
+#include "MykaEngine/Core/Base.hpp"
 #include "MykaEngine/Core/Layer.hpp"
 #include "MykaEngine/Events/Event.hpp"
 #include "MykaEngine/Events/ApplicationEvent.hpp"

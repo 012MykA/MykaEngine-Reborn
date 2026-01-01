@@ -1,6 +1,6 @@
 #pragma once
 
-#include "MykaEngine/Core/Core.hpp"
+#include "MykaEngine/Core/Base.hpp"
 
 #include <cinttypes>
 #include <string>

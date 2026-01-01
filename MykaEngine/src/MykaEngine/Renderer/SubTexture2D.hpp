@@ -1,7 +1,7 @@
 #pragma once
 
 #include "Texture.hpp"
-#include "MykaEngine/Core/Core.hpp"
+#include "MykaEngine/Core/Base.hpp"
 
 #include <glm/glm.hpp>
 
