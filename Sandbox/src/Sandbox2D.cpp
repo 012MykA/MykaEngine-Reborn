@@ -3,21 +3,21 @@
 #include <imgui.h>
 
 static const uint32_t s_MapWidth = 24;
-static const char* s_MapTiles =
-"WWWWWWWWWWWWWWWWWWWWWWWW"
-"WWWWWWWWWWDDDDDDWWWWWWWW"
-"WWWWWWWDDDDDDDDDDDWCWWWW"
-"WWWWWWDDDDDDDDDDDDDDWWWW"
-"WWWWDDDDDDDDDDDDDDDDDWWW"
-"WWWDDDDDDDDDDDDDDDDDDDWW"
-"WWDDDDDDDDDDDDDDDDDDDDDD"
-"WDDDDDDDDDDDDDDDDDDDDDDW"
-"WWDDDDDDDDDDDDDDDDDDDDWW"
-"WWDDDDDDDDDDDDDDDDDDDWWW"
-"WWWDDDDDDDDDDDDDDDDDDWWW"
-"WWWWDDDDDDDDDDDDDDDDWWWW"
-"WWWWDDDDDDDDDDDDWDWWWWWW"
-"WWWWWWWWWWWWWWWWWWWWWWWW";
+static const char *s_MapTiles =
+    "WWWWWWWWWWWWWWWWWWWWWWWW"
+    "WWWWWWWWWWDDDDDDWWWWWWWW"
+    "WWWWWWWDDDDDDDDDDDWCWWWW"
+    "WWWWWWDDDDDDDDDDDDDDWWWW"
+    "WWWWDDDDDDDDDDDDDDDDDWWW"
+    "WWWDDDDDDDDDDDDDDDDDDDWW"
+    "WWDDDDDDDDDDDDDDDDDDDDDD"
+    "WDDDDDDDDDDDDDDDDDDDDDDW"
+    "WWDDDDDDDDDDDDDDDDDDDDWW"
+    "WWDDDDDDDDDDDDDDDDDDDWWW"
+    "WWWDDDDDDDDDDDDDDDDDDWWW"
+    "WWWWDDDDDDDDDDDDDDDDWWWW"
+    "WWWWDDDDDDDDDDDDWDWWWWWW"
+    "WWWWWWWWWWWWWWWWWWWWWWWW";
 
 Sandbox2D::Sandbox2D() : Layer("Sandbox2D"), m_CameraController(1280.0f / 720.0f) {}
 
@@ -30,7 +30,6 @@ void Sandbox2D::OnAttach()
 
     m_TextureStairs = Myka::SubTexture2D::CreateFromCoords(m_SpriteSheet, {0, 11}, {128, 128});
     m_TextureTree = Myka::SubTexture2D::CreateFromCoords(m_SpriteSheet, {2, 1}, {128, 128}, {1, 2});
-
 
     m_MapWidth = s_MapWidth;
     m_MapHeight = std::strlen(s_MapTiles) / s_MapWidth;
@@ -104,7 +103,7 @@ void Sandbox2D::OnUpdate(Myka::Timestep ts)
         auto pos = m_CameraController.GetCamera().GetPosition();
         x = (x / width) * bounds.GetWidth() - bounds.GetWidth() * 0.5f;
         y = bounds.GetHeight() * 0.5f - (y / height) * bounds.GetHeight();
-    m_Particle.Position = {x + pos.x, y + pos.y};
+        m_Particle.Position = {x + pos.x, y + pos.y};
         for (int i = 0; i < 5; i++)
             m_ParticleSystem.Emit(m_Particle);
     }
