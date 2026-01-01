@@ -74,7 +74,7 @@ target_link_libraries(MykaEngine
 
 target_compile_definitions(MykaEngine
     PRIVATE
-        MYKA_ENABLE_ASSERTS
+        MYKA_DEBUG
 )
 
 target_precompile_headers(MykaEngine

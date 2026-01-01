@@ -2,6 +2,7 @@
 
 #include <MykaEngine.hpp>
 #include "ParticleSystem.hpp"
+#include <unordered_map>
 
 class Sandbox2D : public Myka::Layer
 {
@@ -25,7 +26,11 @@ private:
 
     Myka::Ref<Myka::Texture2D> m_BoxTexture;
     Myka::Ref<Myka::Texture2D> m_SpriteSheet;
+    Myka::Ref<Myka::SubTexture2D> m_TextureStairs, m_TextureBarrel, m_TextureTree;
 
     ParticleSystem m_ParticleSystem;
     ParticleProps m_Particle;
+
+    uint32_t m_MapWidth, m_MapHeight;
+    std::unordered_map<char, Myka::Ref<Myka::SubTexture2D>> m_TextureMap;
 };

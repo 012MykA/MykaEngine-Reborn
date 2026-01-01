@@ -29,7 +29,7 @@ namespace Myka
         const OrthographicCamera &GetCamera() const { return m_Camera; }
 
         float GetZoomLevel() { return m_ZoomLevel; }
-        void SetZoomLevel(float level) { m_ZoomLevel = level; }
+        void SetZoomLevel(float level) { m_ZoomLevel = level; CalculateView(); }
 
         const OrthographicCameraBounds &GetBounds() const { return m_Bounds; }
 
@@ -38,6 +38,8 @@ namespace Myka
         bool OnWindowResized(WindowResizeEvent &e);
 
     private:
+        void CalculateView();
+
         float m_AspectRatio;
         float m_ZoomLevel = 1.0f;
         OrthographicCameraBounds m_Bounds;
