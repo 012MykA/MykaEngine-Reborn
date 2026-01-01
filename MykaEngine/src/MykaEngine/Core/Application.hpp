@@ -23,6 +23,8 @@ namespace Myka
 
 		Window &GetWindow() { return *m_Window; }
 
+		void Close();
+
 		static Application &Get() { return *s_Instance; }
 
 	private:

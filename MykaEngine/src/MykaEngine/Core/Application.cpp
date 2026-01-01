@@ -50,9 +50,9 @@ namespace Myka
 
 		for (auto it = m_LayerStack.end(); it != m_LayerStack.begin();)
 		{
-			(*--it)->OnEvent(e);
 			if (e.Handled)
 				break;
+			(*--it)->OnEvent(e);
 		}
 	}
 
@@ -72,10 +72,15 @@ namespace Myka
 		overlay->OnAttach();
 	}
 
+	void Application::Close()
+	{
+		m_Running = false;
+	}
+
 	void Application::Run()
 	{
 		MYKA_PROFILE_FUNCTION();
-		
+
 		while (m_Running)
 		{
 			MYKA_PROFILE_SCOPE("RunLoop");
