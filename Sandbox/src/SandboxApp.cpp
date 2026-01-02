@@ -134,7 +134,7 @@ private:
 class Sandbox : public Myka::Application
 {
 public:
-	Sandbox() : Application()
+	Sandbox() : Application("Sandbox")
 	{
 		// PushLayer(new ExampleLayer());
 		PushLayer(new Sandbox2D());

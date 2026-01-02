@@ -11,7 +11,7 @@ namespace Myka
 	class Application
 	{
 	public:
-		Application();
+		Application(const std::string &name = "MykaEngine");
 		virtual ~Application();
 
 		void Run();

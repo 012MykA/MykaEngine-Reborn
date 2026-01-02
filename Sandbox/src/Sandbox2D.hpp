@@ -22,7 +22,6 @@ private:
     // Temp
     Myka::Ref<Myka::VertexArray> m_VertexArray;
     Myka::Ref<Myka::Shader> m_FlatColorShader;
-    Myka::Ref<Myka::Framebuffer> m_Framebuffer;
 
     Myka::Ref<Myka::Texture2D> m_BoxTexture;
 };
