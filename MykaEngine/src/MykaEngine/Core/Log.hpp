@@ -25,9 +25,11 @@ namespace Myka
 #define MYKA_CORE_INFO(...) 	::Myka::Log::GetCoreLogger()->info(__VA_ARGS__)
 #define MYKA_CORE_WARN(...) 	::Myka::Log::GetCoreLogger()->warn(__VA_ARGS__)
 #define MYKA_CORE_ERROR(...) 	::Myka::Log::GetCoreLogger()->error(__VA_ARGS__)
+#define MYKA_CORE_CRITICAL(...) ::Myka::Log::GetCoreLogger()->critical(__VA_ARGS__)
 
 // Client log macros
 #define MYKA_TRACE(...) 		::Myka::Log::GetClientLogger()->trace(__VA_ARGS__)
 #define MYKA_INFO(...) 			::Myka::Log::GetClientLogger()->info(__VA_ARGS__)
 #define MYKA_WARN(...) 			::Myka::Log::GetClientLogger()->warn(__VA_ARGS__)
 #define MYKA_ERROR(...) 		::Myka::Log::GetClientLogger()->error(__VA_ARGS__)
+#define MYKA_CRITICAL(...) 		::Myka::Log::GetClientLogger()->critical(__VA_ARGS__)
