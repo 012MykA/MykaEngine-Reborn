@@ -25,6 +25,7 @@ namespace Myka
         Ref<Shader> m_FlatColorShader;
         Ref<Framebuffer> m_Framebuffer;
 
+        bool m_ViewportFocused = false, m_ViewportHovered = false;
         glm::vec2 m_ViewportSize = {0.0f, 0.0f};
     
         Ref<Texture2D> m_BoxTexture;
