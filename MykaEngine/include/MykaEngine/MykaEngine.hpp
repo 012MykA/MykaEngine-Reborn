@@ -1,11 +1,12 @@
 #pragma once
 
-// for use by MykaEngine applications
+// --- Application ------------------------------
 #include "MykaEngine/Core/Application.hpp"
 #include "MykaEngine/Core/Layer.hpp"
 #include "MykaEngine/Core/Log.hpp"
 
 #include "MykaEngine/Core/Timestep.hpp"
+// ----------------------------------------------
 
 // --- Input -------------------------------
 #include "MykaEngine/Core/Input.hpp"
@@ -14,8 +15,11 @@
 #include "MykaEngine/Renderer/OrthographicCameraController.hpp"
 // -----------------------------------------
 
+// --- ECS ----------------------------------
 #include "MykaEngine/Scene/Scene.hpp"
 #include "MykaEngine/Scene/Components.hpp"
+#include "MykaEngine/Scene/Entity.hpp"
+// ------------------------------------------
 
 // --- Renderer --------------------------------------
 #include "MykaEngine/Renderer/Renderer.hpp"

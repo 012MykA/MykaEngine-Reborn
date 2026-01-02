@@ -8,11 +8,13 @@ namespace Myka
 {
     class Scene
     {
+        friend class Entity;
+
     public:
         Scene();
         ~Scene();
 
-        entt::entity CreateEntity();
+        Entity CreateEntity(const std::string &name = std::string());
 
         // Temp
         entt::registry &Reg() { return m_Registry; }

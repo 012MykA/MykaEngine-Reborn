@@ -20,11 +20,8 @@ namespace Myka
 
         m_ActiveScene = CreateRef<Scene>();
 
-        auto square = m_ActiveScene->CreateEntity();
-        m_ActiveScene->Reg().emplace<TransformComponent>(square);
-        m_ActiveScene->Reg().emplace<SpriteRendererComponent>(square, m_SquareColor);
-        
-        m_SquareEntity = square;
+        m_SquareEntity = m_ActiveScene->CreateEntity("Square");
+        m_SquareEntity.AddComponent<SpriteRendererComponent>(m_SquareColor);
     }
 
     void EditorLayer::OnDetach()
@@ -46,7 +43,7 @@ namespace Myka
         m_Framebuffer->Bind();
         RenderCommand::SetClearColor({0.1f, 0.1f, 0.1f, 1.0f});
         RenderCommand::Clear();
-        
+
         Renderer2D::BeginScene(m_CameraController.GetCamera());
 
         m_ActiveScene->OnUpdate(ts);
@@ -125,8 +122,14 @@ namespace Myka
             ImGui::Text("Vertices: %d", stats.GetTotalVertexCount());
             ImGui::Text("Indices: %d", stats.GetTotalIndexCount());
 
-            auto& squareColor = m_ActiveScene->Reg().get<SpriteRendererComponent>(m_SquareEntity).Color;
-            ImGui::ColorEdit4("Square Color", glm::value_ptr(squareColor));
+            if (m_SquareEntity)
+            {
+                ImGui::Separator();
+                ImGui::Text("%s", m_SquareEntity.GetComponent<TagComponent>().Tag.c_str());
+
+                auto &squareColor = m_SquareEntity.GetComponent<SpriteRendererComponent>().Color;
+                ImGui::ColorEdit4("Square Color", glm::value_ptr(squareColor));
+            }
         }
         ImGui::End();
 
