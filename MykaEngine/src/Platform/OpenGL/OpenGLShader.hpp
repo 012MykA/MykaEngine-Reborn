@@ -3,7 +3,6 @@
 #include "MykaEngine/Renderer/Shader.hpp"
 
 #include <glm/glm.hpp>
-#include <glad/glad.h>
 
 namespace Myka
 {
@@ -39,8 +38,8 @@ namespace Myka
 
     private:
         std::string ReadFile(const std::string &filepath);
-        std::unordered_map<GLenum, std::string> PreProcess(const std::string &source);
-        void Compile(const std::unordered_map<GLenum, std::string> &shaderSources);
+        std::unordered_map<unsigned int, std::string> PreProcess(const std::string &source);
+        void Compile(const std::unordered_map<unsigned int, std::string> &shaderSources);
 
     private:
         uint32_t m_RendererID;

@@ -75,7 +75,7 @@ namespace Myka
         return result;
     }
 
-    std::unordered_map<GLenum, std::string> OpenGLShader::PreProcess(const std::string &source)
+    std::unordered_map<unsigned int, std::string> OpenGLShader::PreProcess(const std::string &source)
     {
         MYKA_PROFILE_FUNCTION();
 
@@ -102,7 +102,7 @@ namespace Myka
         return shaderSources;
     }
 
-    void OpenGLShader::Compile(const std::unordered_map<GLenum, std::string> &shaderSources)
+    void OpenGLShader::Compile(const std::unordered_map<unsigned int, std::string> &shaderSources)
     {
         MYKA_PROFILE_FUNCTION();
 

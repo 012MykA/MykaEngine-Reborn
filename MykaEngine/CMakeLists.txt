@@ -37,6 +37,12 @@ target_include_directories(stb_image PUBLIC
     ${CMAKE_CURRENT_SOURCE_DIR}/vendor/stb_image
 )
 
+add_library(entt INTERFACE)
+
+target_include_directories(entt INTERFACE
+    ${CMAKE_CURRENT_SOURCE_DIR}/vendor/entt/include
+)
+
 add_subdirectory(vendor/glfw)
 add_subdirectory(vendor/glm)
 add_subdirectory(vendor/spdlog)
@@ -63,11 +69,12 @@ target_include_directories(MykaEngine
 
 target_link_libraries(MykaEngine
     PUBLIC
-        imgui
+        entt
         spdlog
+        imgui
+    PRIVATE
         glad
         stb_image
-    PRIVATE
         glfw
         opengl32
 )
