@@ -14,6 +14,9 @@
 #include "MykaEngine/Renderer/OrthographicCameraController.hpp"
 // -----------------------------------------
 
+#include "MykaEngine/Scene/Scene.hpp"
+#include "MykaEngine/Scene/Components.hpp"
+
 // --- Renderer --------------------------------------
 #include "MykaEngine/Renderer/Renderer.hpp"
 #include "MykaEngine/Renderer/Renderer2D.hpp"
