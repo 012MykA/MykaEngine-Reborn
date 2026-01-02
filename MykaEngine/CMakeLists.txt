@@ -72,11 +72,6 @@ target_link_libraries(MykaEngine
         opengl32
 )
 
-target_compile_definitions(MykaEngine
-    PRIVATE
-        MYKA_DEBUG
-)
-
 target_precompile_headers(MykaEngine
     PRIVATE
         src/mykapch.hpp

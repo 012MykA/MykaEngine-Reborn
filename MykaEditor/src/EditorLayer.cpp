@@ -49,7 +49,7 @@ namespace Myka
 
             Renderer2D::BeginScene(m_CameraController.GetCamera());
 
-            Renderer2D::DrawRotatedQuad({0.0f, 0.0f, -0.1f}, {1.0f, 1.0f}, glm::radians(rotation), m_BoxTexture);
+            Renderer2D::DrawRotatedQuad({0.0f, 0.0f, 0.1f}, {1.0f, 1.0f}, glm::radians(rotation), m_BoxTexture);
 
             for (float y = -5.0f; y < 5.0f; y += 0.5f)
             {
@@ -120,12 +120,10 @@ namespace Myka
 
                     ImGui::EndMenu();
                 }
-
                 ImGui::EndMenuBar();
             }
-
-            ImGui::End();
         }
+        ImGui::End();
 
         //  --- Renderer2D Stats ---
         if (ImGui::Begin("Renderer2D Stats"))
@@ -135,8 +133,8 @@ namespace Myka
             ImGui::Text("Quads: %d", stats.QuadCount);
             ImGui::Text("Vertices: %d", stats.GetTotalVertexCount());
             ImGui::Text("Indices: %d", stats.GetTotalIndexCount());
-            ImGui::End();
         }
+        ImGui::End();
 
         // --- Viewport ---
         ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2{0, 0});
@@ -148,17 +146,17 @@ namespace Myka
 
             ImVec2 viewportPanelSize = ImGui::GetContentRegionAvail();
             glm::vec2 viewportSize = {viewportPanelSize.x, viewportPanelSize.y};
-            if (m_ViewportSize != viewportSize)
+            if (m_ViewportSize != viewportSize && viewportPanelSize.x > 0 && viewportPanelSize.y > 0)
             {
                 m_Framebuffer->Resize((uint32_t)viewportSize.x, (uint32_t)viewportSize.y);
                 m_ViewportSize = viewportSize;
 
-            m_CameraController.OnResize(viewportPanelSize.x, viewportPanelSize.y);
+                m_CameraController.OnResize(viewportPanelSize.x, viewportPanelSize.y);
             }
 
             ImGui::Image(m_Framebuffer->GetColorAttachment(), ImVec2{m_ViewportSize.x, m_ViewportSize.y}, ImVec2{0, 1}, ImVec2{1, 0});
-            ImGui::End();
         }
+        ImGui::End();
         ImGui::PopStyleVar();
     }
 

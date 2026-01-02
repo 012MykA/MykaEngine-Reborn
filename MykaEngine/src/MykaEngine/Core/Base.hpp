@@ -24,7 +24,7 @@
     #error "Android platform is not supported!"
 
 #else
-    #error "Unknown platform!"  
+    #error "Unknown platform!"
 
 #endif // End Platform detection
 

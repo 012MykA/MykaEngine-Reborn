@@ -16,6 +16,11 @@ target_link_libraries(MykaEditor
         MykaEngine
 )
 
+target_compile_definitions(MykaEditor
+    PRIVATE
+        MYKA_DEBUG
+)
+
 if (MSVC)
     target_compile_options(MykaEditor PRIVATE /W4 /utf-8)
 endif()

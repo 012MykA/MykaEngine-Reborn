@@ -62,7 +62,7 @@ namespace Myka
     {
         if (m_BlockEvents)
         {
-            ImGuiIO& io = ImGui::GetIO();
+            ImGuiIO &io = ImGui::GetIO();
             e.Handled |= e.IsInCategory(EventCategoryMouse) & io.WantCaptureMouse;
             e.Handled |= e.IsInCategory(EventCategoryKeyboard) & io.WantCaptureKeyboard;
         }
@@ -80,7 +80,7 @@ namespace Myka
     void ImGuiLayer::End()
     {
         MYKA_PROFILE_FUNCTION();
-        
+
         ImGuiIO &io = ImGui::GetIO();
         Application &app = Application::Get();
         io.DisplaySize = ImVec2((float)app.GetWindow().GetWidth(), (float)app.GetWindow().GetHeight());
