@@ -1,26 +1,26 @@
 #include "mykapch.hpp"
-#include "WindowsInput.hpp"
+#include "MykaEngine/Core/Input.hpp"
 #include "MykaEngine/Core/Application.hpp"
 
 #include <GLFW/glfw3.h>
 
 namespace Myka
 {
-    bool WindowsInput::IsKeyPressedImpl(int keycode)
+    bool Input::IsKeyPressed(int keycode)
     {
         auto window = static_cast<GLFWwindow *>(Application::Get().GetWindow().GetNativeWindow());
         auto state = glfwGetKey(window, keycode);
         return state == GLFW_PRESS || state == GLFW_REPEAT;
     }
 
-    bool WindowsInput::IsMouseButtonPressedImpl(int button)
+    bool Input::IsMouseButtonPressed(int button)
     {
         auto window = static_cast<GLFWwindow *>(Application::Get().GetWindow().GetNativeWindow());
         auto state = glfwGetMouseButton(window, button);
         return state == GLFW_PRESS;
     }
 
-    std::pair<float, float> WindowsInput::GetMousePositionImpl()
+    std::pair<float, float> Input::GetMousePosition()
     {
         auto window = static_cast<GLFWwindow *>(Application::Get().GetWindow().GetNativeWindow());
         double xPos, yPos;
@@ -29,16 +29,16 @@ namespace Myka
         return {(float)xPos, (float)yPos};
     }
 
-    float WindowsInput::GetMouseXImpl()
+    float Input::GetMouseX()
     {
-        auto [xPos, yPos] = GetMousePositionImpl();
+        auto [xPos, yPos] = GetMousePosition();
 
         return xPos;
     }
 
-    float WindowsInput::GetMouseYImpl()
+    float Input::GetMouseY()
     {
-        auto [xPos, yPos] = GetMousePositionImpl();
+        auto [xPos, yPos] = GetMousePosition();
 
         return yPos;
     }
