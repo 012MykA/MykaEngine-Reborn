@@ -16,9 +16,6 @@ namespace Myka
 
         Entity CreateEntity(const std::string &name = std::string());
 
-        // Temp
-        entt::registry &Reg() { return m_Registry; }
-
         void OnUpdate(Timestep ts);
 
     private:
