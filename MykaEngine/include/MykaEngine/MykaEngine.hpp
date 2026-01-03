@@ -17,8 +17,9 @@
 
 // --- ECS ----------------------------------
 #include "MykaEngine/Scene/Scene.hpp"
-#include "MykaEngine/Scene/Components.hpp"
 #include "MykaEngine/Scene/Entity.hpp"
+#include "MykaEngine/Scene/ScriptableEntity.hpp"
+#include "MykaEngine/Scene/Components.hpp"
 // ------------------------------------------
 
 // --- Renderer --------------------------------------
