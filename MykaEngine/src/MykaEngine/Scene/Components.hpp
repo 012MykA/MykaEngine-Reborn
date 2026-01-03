@@ -2,6 +2,8 @@
 
 #include <glm/glm.hpp>
 
+#include "MykaEngine/Renderer/Camera.hpp"
+
 namespace Myka
 {
     struct TagComponent
@@ -35,5 +37,15 @@ namespace Myka
 
         operator glm::vec4 &() { return Color; }
         operator const glm::vec4 &() const { return Color; }
+    };
+
+    struct CameraComponent
+    {
+        Camera Camera;
+        bool Primary = true;
+
+        CameraComponent() = default;
+        CameraComponent(const CameraComponent &) = default;
+        CameraComponent(const glm::mat4& projection) : Camera(projection) {}
     };
 } // namespace Myka
