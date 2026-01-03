@@ -23,11 +23,11 @@ namespace Myka
         m_SquareEntity = m_ActiveScene->CreateEntity("Square");
         m_SquareEntity.AddComponent<SpriteRendererComponent>(m_SquareColor);
 
-        m_CameraEntity = m_ActiveScene->CreateEntity("Camera");
-        m_CameraEntity.AddComponent<CameraComponent>(glm::ortho(-16.0f, 16.0f, -9.0f, 9.0f, -1.0f, 1.0f));
+        m_CameraEntity = m_ActiveScene->CreateEntity("Camera Entity");
+        m_CameraEntity.AddComponent<CameraComponent>();
 
-        m_SecondCamera = m_ActiveScene->CreateEntity("Clip-Space Camera");
-        auto& cc = m_SecondCamera.AddComponent<CameraComponent>(glm::ortho(-1.0f, 1.0f, -1.0f, 1.0f, -1.0f, 1.0f));
+        m_SecondCamera = m_ActiveScene->CreateEntity("Clip-Space Entity");
+        auto &cc = m_SecondCamera.AddComponent<CameraComponent>();
         cc.Primary = false;
     }
 
@@ -40,17 +40,28 @@ namespace Myka
     {
         MYKA_PROFILE_FUNCTION();
 
+        // Resize
+        if (FramebufferSpecification spec = m_Framebuffer->GetSpecification();
+            m_ViewportSize.x > 0.0f && m_ViewportSize.y > 0.0f && // zero sized framebuffer is invalid
+            (spec.Width != m_ViewportSize.x || spec.Height != m_ViewportSize.y))
+        {
+            m_Framebuffer->Resize((uint32_t)m_ViewportSize.x, (uint32_t)m_ViewportSize.y);
+            m_CameraController.OnResize(m_ViewportSize.x, m_ViewportSize.y);
+
+            m_ActiveScene->OnViewportResize((uint32_t)m_ViewportSize.x, (uint32_t)m_ViewportSize.y);
+        }
+
         // Update
         if (m_ViewportFocused)
             m_CameraController.OnUpdate(ts);
 
         // Render
         Renderer2D::ResetStats();
-
         m_Framebuffer->Bind();
         RenderCommand::SetClearColor({0.1f, 0.1f, 0.1f, 1.0f});
         RenderCommand::Clear();
 
+        // Update scene
         m_ActiveScene->OnUpdate(ts);
 
         m_Framebuffer->Unbind();
@@ -141,29 +152,28 @@ namespace Myka
                 m_CameraEntity.GetComponent<CameraComponent>().Primary = m_PrimaryCamera;
                 m_SecondCamera.GetComponent<CameraComponent>().Primary = !m_PrimaryCamera;
             }
+
+            {
+                auto &camera = m_SecondCamera.GetComponent<CameraComponent>().Camera;
+                float orthoSize = camera.GetOrthographicSize();
+                if (ImGui::DragFloat("Second Camera Ortho Size", &orthoSize, 0.1f, 0.0f, 50.0f))
+                    camera.SetOrthographicSize(orthoSize);
+            }
         }
         ImGui::End();
 
-        // --- Viewport ---
         ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2{0, 0});
-        if (ImGui::Begin("Viewport"))
-        {
-            m_ViewportFocused = ImGui::IsWindowFocused();
-            m_ViewportHovered = ImGui::IsWindowHovered();
-            Application::Get().GetImGuiLayer()->SetBlockEvents(!m_ViewportFocused || !m_ViewportHovered);
+        ImGui::Begin("Viewport");
 
-            ImVec2 viewportPanelSize = ImGui::GetContentRegionAvail();
-            glm::vec2 viewportSize = {viewportPanelSize.x, viewportPanelSize.y};
-            if (m_ViewportSize != viewportSize && viewportPanelSize.x > 0 && viewportPanelSize.y > 0)
-            {
-                m_Framebuffer->Resize((uint32_t)viewportSize.x, (uint32_t)viewportSize.y);
-                m_ViewportSize = viewportSize;
+        m_ViewportFocused = ImGui::IsWindowFocused();
+        m_ViewportHovered = ImGui::IsWindowHovered();
+        Application::Get().GetImGuiLayer()->SetBlockEvents(!m_ViewportFocused || !m_ViewportHovered);
 
-                m_CameraController.OnResize(viewportPanelSize.x, viewportPanelSize.y);
-            }
+        ImVec2 viewportPanelSize = ImGui::GetContentRegionAvail();
+        m_ViewportSize = {viewportPanelSize.x, viewportPanelSize.y};
 
-            ImGui::Image(m_Framebuffer->GetColorAttachment(), ImVec2{m_ViewportSize.x, m_ViewportSize.y}, ImVec2{0, 1}, ImVec2{1, 0});
-        }
+        uint32_t textureID = m_Framebuffer->GetColorAttachment();
+        ImGui::Image((void *)textureID, ImVec2{m_ViewportSize.x, m_ViewportSize.y}, ImVec2{0, 1}, ImVec2{1, 0});
         ImGui::End();
         ImGui::PopStyleVar();
     }
