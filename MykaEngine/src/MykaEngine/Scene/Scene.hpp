@@ -9,10 +9,11 @@ namespace Myka
     class Scene
     {
         friend class Entity;
+        friend class SceneHierarchyPanel;
 
     public:
-        Scene();
-        ~Scene();
+        Scene() = default;
+        ~Scene() = default;
 
         Entity CreateEntity(const std::string &name = std::string());
 

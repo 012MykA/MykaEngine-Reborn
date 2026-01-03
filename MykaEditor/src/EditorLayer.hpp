@@ -2,6 +2,8 @@
 
 #include <MykaEngine.hpp>
 
+#include "Panels/SceneHierarchyPanel.hpp"
+
 namespace Myka
 {
     class EditorLayer : public Layer
@@ -37,5 +39,7 @@ namespace Myka
 
         Ref<Texture2D> m_BoxTexture;
         glm::vec4 m_SquareColor = {0.0f, 1.0f, 0.0f, 1.0f};
+
+        SceneHierarchyPanel m_SceneHierarchyPanel;
     };
 } // namespace Myka

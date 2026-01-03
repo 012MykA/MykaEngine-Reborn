@@ -35,6 +35,8 @@ namespace Myka
         public:
             void OnCreate()
             {
+                auto &transform = GetComponent<TransformComponent>().Transform;
+                transform[3][0] = rand() % 10 - 5.0f;
             }
 
             void OnDestroy()
@@ -58,6 +60,9 @@ namespace Myka
         };
 
         m_CameraEntity.AddComponent<NativeScriptComponent>().Bind<CameraController>();
+        m_SecondCamera.AddComponent<NativeScriptComponent>().Bind<CameraController>();
+
+        m_SceneHierarchyPanel.SetContext(m_ActiveScene);
     }
 
     void EditorLayer::OnDetach()
@@ -155,6 +160,9 @@ namespace Myka
             }
         }
         ImGui::End();
+
+        // SceneHierarchyPanel Render
+        m_SceneHierarchyPanel.OnImGuiRender();
 
         //  --- Renderer2D Stats ---
         if (ImGui::Begin("Renderer2D Stats"))

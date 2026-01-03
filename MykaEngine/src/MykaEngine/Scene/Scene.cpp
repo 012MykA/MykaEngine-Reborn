@@ -8,42 +8,6 @@
 
 namespace Myka
 {
-    Scene::Scene()
-    {
-#if ENTT_EXAMPLE
-        struct MeshComponent
-        {
-            bool Value;
-            MeshComponent() = default;
-        };
-
-        struct TransformComponent
-        {
-            glm::mat4 Transform;
-
-            TransformComponent() = default;
-            TransformComponent(const TransformComponent &) = default;
-            TransformComponent(const glm::mat4 &transform) : Transform(transform) {}
-
-            operator glm::mat4() { return Transform; }
-            operator const glm::mat4 &() const { return Transform; }
-        };
-
-        // Rendererg
-        auto group = m_Registry.group<TransformComponent, MeshComponent>();
-        for (auto entity : group)
-        {
-            auto [transform, mesh] = group.get<TransformComponent, MeshComponent>(entity);
-
-            Renderer::Submit(mesh, transform);
-        }
-#endif
-    }
-
-    Scene::~Scene()
-    {
-    }
-
     Entity Scene::CreateEntity(const std::string &name)
     {
         Entity entity(m_Registry.create(), this);
@@ -58,17 +22,16 @@ namespace Myka
     {
         // Update scripts
         {
-            m_Registry.view<NativeScriptComponent>().each([=](auto entity, auto& nsc)
-        {
-            if (!nsc.Instance)
-            {
-                nsc.InstantiateFunction();
-                nsc.Instance->m_Entity = Entity{entity, this};
-                nsc.OnCreateFunction(nsc.Instance);
-            }
+            m_Registry.view<NativeScriptComponent>().each([=](auto entity, auto &nsc)
+                                                          {
+                if (!nsc.Instance)
+                {
+                    nsc.Instance = nsc.InstantiateScript();
+                    nsc.Instance->m_Entity = Entity{ entity, this };
+                    nsc.Instance->OnCreate();
+                }
 
-            nsc.OnUpdateFunction(nsc.Instance, ts);
-        });
+                nsc.Instance->OnUpdate(ts); });
         }
 
         Camera *mainCamera = nullptr;
