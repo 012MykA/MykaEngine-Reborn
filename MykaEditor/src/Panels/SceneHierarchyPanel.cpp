@@ -18,7 +18,7 @@ namespace Myka
 
     void SceneHierarchyPanel::OnImGuiRender()
     {
-        ImGui::Begin("Scene Hierarchy");
+        ImGui::Begin("Scene");
 
         auto view = m_Context->m_Registry.view<entt::entity>();
         for (auto entity : view)
@@ -145,6 +145,16 @@ namespace Myka
                     ImGui::Checkbox("Fixed Aspect Ratio", &cameraComponent.FixedAspectRatio);
                 }
 
+                ImGui::TreePop();
+            }
+        }
+    
+        if (entity.HasComponent<SpriteRendererComponent>())
+        {
+            if (ImGui::TreeNodeEx((void *)typeid(SpriteRendererComponent).hash_code(), ImGuiTreeNodeFlags_DefaultOpen, "Sprite Renderer"))
+            {
+                auto &color = entity.GetComponent<SpriteRendererComponent>().Color;
+                ImGui::ColorEdit4("Color", glm::value_ptr(color));
                 ImGui::TreePop();
             }
         }
