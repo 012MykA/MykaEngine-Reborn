@@ -12,7 +12,7 @@ namespace Myka
         friend class SceneHierarchyPanel;
 
     public:
-        Scene() = default;
+        Scene();
         ~Scene() = default;
 
         Entity CreateEntity(const std::string &name = std::string());
@@ -20,6 +20,10 @@ namespace Myka
 
         void OnUpdate(Timestep ts);
         void OnViewportResize(uint32_t width, uint32_t height);
+
+    private:
+        template <typename T>
+        void OnComponentAdded(Entity entity, T &component);
 
     private:
         entt::registry m_Registry;
