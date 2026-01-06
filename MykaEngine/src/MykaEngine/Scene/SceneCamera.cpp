@@ -44,11 +44,13 @@ namespace Myka
     void SceneCamera::SetPerspectiveNearClip(float nearClip)
     {
         m_PerspectiveNear = nearClip;
+        RecalculateProjection();
     }
 
     void SceneCamera::SetPerspectiveFarClip(float farClip)
     {
         m_PerspectiveFar = farClip;
+        RecalculateProjection();
     }
 
     void SceneCamera::SetOrthographicSize(float size)
