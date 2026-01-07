@@ -1,0 +1,134 @@
+{
+    "Entities": [
+        {
+            "CameraComponent": {
+                "Camera": {
+                    "OrthographicFar": 1.0,
+                    "OrthographicNear": -1.0,
+                    "OrthographicSize": 10.0,
+                    "PerspectiveFOV": 0.7853981852531433,
+                    "PerspectiveFar": 1000.0,
+                    "PerspectiveNear": 0.009999999776482582,
+                    "ProjectionType": 0
+                },
+                "FixedAspectRatio": false,
+                "Primary": true
+            },
+            "Entity": 3,
+            "TagComponent": {
+                "Tag": "Camera"
+            },
+            "TransformComponent": {
+                "Position": [
+                    0.0,
+                    0.699999988079071,
+                    0.699999988079071
+                ],
+                "Rotation": [
+                    -0.39095374941825867,
+                    0.0,
+                    0.0
+                ],
+                "Scale": [
+                    1.0,
+                    1.0,
+                    1.0
+                ]
+            }
+        },
+        {
+            "Entity": 2,
+            "SpriteRendererComponent": {
+                "Color": [
+                    1.0,
+                    0.0,
+                    0.9490199089050293,
+                    1.0
+                ]
+            },
+            "TagComponent": {
+                "Tag": "Left"
+            },
+            "TransformComponent": {
+                "Position": [
+                    -0.3569999933242798,
+                    0.0,
+                    0.0
+                ],
+                "Rotation": [
+                    0.0,
+                    -0.7853981852531433,
+                    0.0
+                ],
+                "Scale": [
+                    1.0,
+                    1.0,
+                    1.0
+                ]
+            }
+        },
+        {
+            "Entity": 1,
+            "SpriteRendererComponent": {
+                "Color": [
+                    0.4229390621185303,
+                    0.0,
+                    0.39152082800865173,
+                    1.0
+                ]
+            },
+            "TagComponent": {
+                "Tag": "Right"
+            },
+            "TransformComponent": {
+                "Position": [
+                    0.3499999940395355,
+                    0.0,
+                    0.0
+                ],
+                "Rotation": [
+                    0.0,
+                    0.7853981852531433,
+                    0.0
+                ],
+                "Scale": [
+                    1.0,
+                    1.0,
+                    1.0
+                ]
+            }
+        },
+        {
+            "Entity": 0,
+            "SpriteRendererComponent": {
+                "Color": [
+                    0.7562724351882935,
+                    0.0,
+                    0.7379753589630127,
+                    1.0
+                ]
+            },
+            "TagComponent": {
+                "Tag": "Top"
+            },
+            "TransformComponent": {
+                "Position": [
+                    -0.009999999776482582,
+                    0.5,
+                    -0.3499999940395355
+                ],
+                "Rotation": [
+                    1.5707963705062866,
+                    0.0,
+                    0.7853981852531433
+                ],
+                "Scale": [
+                    1.0,
+                    1.0,
+                    1.0
+                ]
+            }
+        }
+    ],
+    "Scene": "Untilted"
+}

@@ -41,13 +41,13 @@ namespace Myka
         RecalculateProjection();
     }
 
-    void SceneCamera::SetPerspectiveNearClip(float nearClip)
+    void SceneCamera::SetPerspectiveNear(float nearClip)
     {
         m_PerspectiveNear = nearClip;
         RecalculateProjection();
     }
 
-    void SceneCamera::SetPerspectiveFarClip(float farClip)
+    void SceneCamera::SetPerspectiveFar(float farClip)
     {
         m_PerspectiveFar = farClip;
         RecalculateProjection();
@@ -59,13 +59,13 @@ namespace Myka
         RecalculateProjection();
     }
 
-    void SceneCamera::SetOrthographicNearClip(float nearClip)
+    void SceneCamera::SetOrthographicNear(float nearClip)
     {
         m_OrthographicNear = nearClip;
         RecalculateProjection();
     }
 
-    void SceneCamera::SetOrthographicFarClip(float farClip)
+    void SceneCamera::SetOrthographicFar(float farClip)
     {
         m_OrthographicFar = farClip;
         RecalculateProjection();

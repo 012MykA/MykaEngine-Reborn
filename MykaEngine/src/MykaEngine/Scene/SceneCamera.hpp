@@ -26,17 +26,17 @@ namespace Myka
     public:
         float GetPerspectiveFOV() const { return m_PerspectiveFOV; }
         void SetPerspectiveFOV(float FOV);
-        float GetPerspectiveNearClip() const { return m_PerspectiveNear; }
-        void SetPerspectiveNearClip(float nearClip);
-        float GetPerspectiveFarClip() const { return m_PerspectiveFar; }
-        void SetPerspectiveFarClip(float farClip);
+        float GetPerspectiveNear() const { return m_PerspectiveNear; }
+        void SetPerspectiveNear(float nearClip);
+        float GetPerspectiveFar() const { return m_PerspectiveFar; }
+        void SetPerspectiveFar(float farClip);
 
         float GetOrthographicSize() const { return m_OrthographicSize; }
         void SetOrthographicSize(float size);
-        float GetOrthographicNearClip() const { return m_OrthographicNear; }
-        void SetOrthographicNearClip(float nearClip);
-        float GetOrthographicFarClip() const { return m_OrthographicFar; }
-        void SetOrthographicFarClip(float farClip);
+        float GetOrthographicNear() const { return m_OrthographicNear; }
+        void SetOrthographicNear(float nearClip);
+        float GetOrthographicFar() const { return m_OrthographicFar; }
+        void SetOrthographicFar(float farClip);
 
     public:
         ProjectionType GetProjectionType() const { return m_ProjectionType; }

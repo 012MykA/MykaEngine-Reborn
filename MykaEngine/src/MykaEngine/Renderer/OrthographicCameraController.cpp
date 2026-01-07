@@ -18,14 +18,14 @@ namespace Myka
         MYKA_PROFILE_FUNCTION();
 
         if (Input::IsKeyPressed(MYKA_KEY_A))
-            m_CameraPosition.x -= m_CameraTranslationSpeed * ts;
+            m_CameraPosition.x -= m_CameraPositionSpeed * ts;
         if (Input::IsKeyPressed(MYKA_KEY_D))
-            m_CameraPosition.x += m_CameraTranslationSpeed * ts;
+            m_CameraPosition.x += m_CameraPositionSpeed * ts;
 
         if (Input::IsKeyPressed(MYKA_KEY_S))
-            m_CameraPosition.y -= m_CameraTranslationSpeed * ts;
+            m_CameraPosition.y -= m_CameraPositionSpeed * ts;
         if (Input::IsKeyPressed(MYKA_KEY_W))
-            m_CameraPosition.y += m_CameraTranslationSpeed * ts;
+            m_CameraPosition.y += m_CameraPositionSpeed * ts;
 
         if (m_Rotation)
         {
@@ -39,7 +39,7 @@ namespace Myka
 
         m_Camera.SetPosition(m_CameraPosition);
 
-        m_CameraTranslationSpeed = m_ZoomLevel;
+        m_CameraPositionSpeed = m_ZoomLevel;
     }
 
     void OrthographicCameraController::OnEvent(Event &e)

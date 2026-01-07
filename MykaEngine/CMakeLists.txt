@@ -46,6 +46,7 @@ target_include_directories(entt INTERFACE
 add_subdirectory(vendor/glfw)
 add_subdirectory(vendor/glm)
 add_subdirectory(vendor/spdlog)
+add_subdirectory(vendor/json)
 
 target_link_libraries(imgui PRIVATE glfw)
 
@@ -65,6 +66,7 @@ target_include_directories(MykaEngine
         ${CMAKE_CURRENT_SOURCE_DIR}/vendor/imgui
         ${CMAKE_CURRENT_SOURCE_DIR}/vendor/imgui/backends
         ${CMAKE_CURRENT_SOURCE_DIR}/vendor/glm
+        ${CMAKE_CURRENT_SOURCE_DIR}/vendor/json/include
 )
 
 target_link_libraries(MykaEngine

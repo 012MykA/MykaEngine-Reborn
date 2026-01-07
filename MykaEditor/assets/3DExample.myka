@@ -1,0 +1,139 @@
+{
+    "Entities": [
+        {
+            "CameraComponent": {
+                "Camera": {
+                    "OrthographicFar": 1.0,
+                    "OrthographicNear": -1.0,
+                    "OrthographicSize": 10.0,
+                    "PerspectiveFOV": 0.7853981852531433,
+                    "PerspectiveFar": 1000.0,
+                    "PerspectiveNear": 0.009999999776482582,
+                    "ProjectionType": 1
+                },
+                "FixedAspectRatio": false,
+                "Primary": false
+            },
+            "Entity": 3,
+            "TagComponent": {
+                "Tag": "Camera A"
+            },
+            "TransformComponent": {
+                "Position": [
+                    0.0,
+                    0.0,
+                    0.0
+                ],
+                "Rotation": [
+                    0.0,
+                    0.0,
+                    0.0
+                ],
+                "Scale": [
+                    1.0,
+                    1.0,
+                    1.0
+                ]
+            }
+        },
+        {
+            "CameraComponent": {
+                "Camera": {
+                    "OrthographicFar": 1.0,
+                    "OrthographicNear": -1.0,
+                    "OrthographicSize": 10.0,
+                    "PerspectiveFOV": 0.7853981852531433,
+                    "PerspectiveFar": 1000.0,
+                    "PerspectiveNear": 0.009999999776482582,
+                    "ProjectionType": 0
+                },
+                "FixedAspectRatio": false,
+                "Primary": true
+            },
+            "Entity": 2,
+            "TagComponent": {
+                "Tag": "Camera B"
+            },
+            "TransformComponent": {
+                "Position": [
+                    0.5,
+                    0.800000011920929,
+                    11.0
+                ],
+                "Rotation": [
+                    0.0,
+                    0.0,
+                    0.0
+                ],
+                "Scale": [
+                    1.0,
+                    1.0,
+                    1.0
+                ]
+            }
+        },
+        {
+            "Entity": 1,
+            "SpriteRendererComponent": {
+                "Color": [
+                    1.0,
+                    0.0,
+                    0.0,
+                    0.4901960790157318
+                ]
+            },
+            "TagComponent": {
+                "Tag": "Red Square"
+            },
+            "TransformComponent": {
+                "Position": [
+                    -0.10000000149011612,
+                    1.2999999523162842,
+                    0.5
+                ],
+                "Rotation": [
+                    0.0,
+                    0.0,
+                    0.21642081439495087
+                ],
+                "Scale": [
+                    2.0,
+                    2.0,
+                    1.0
+                ]
+            }
+        },
+        {
+            "Entity": 0,
+            "SpriteRendererComponent": {
+                "Color": [
+                    0.0,
+                    1.0,
+                    0.0,
+                    0.5921568870544434
+                ]
+            },
+            "TagComponent": {
+                "Tag": "Green Square"
+            },
+            "TransformComponent": {
+                "Position": [
+                    0.800000011920929,
+                    0.800000011920929,
+                    1.600000023841858
+                ],
+                "Rotation": [
+                    0.0,
+                    0.0,
+                    0.8953539133071899
+                ],
+                "Scale": [
+                    1.0,
+                    1.0,
+                    1.0
+                ]
+            }
+        }
+    ],
+    "Scene": "Untilted"
+}

@@ -119,6 +119,7 @@ namespace Myka
     SceneHierarchyPanel::SceneHierarchyPanel(const Ref<Scene> &scene)
     {
         SetContext(scene);
+        m_SelectionContext = {};
     }
 
     void SceneHierarchyPanel::SetContext(const Ref<Scene> &context)
@@ -238,7 +239,7 @@ namespace Myka
 
         DrawComponent<TransformComponent>("Transform", entity, [](auto &component)
                                           {
-            DrawVec3Control("Position", component.Translation);
+            DrawVec3Control("Position", component.Position);
                 glm::vec3 rotation = glm::degrees(component.Rotation);
                 DrawVec3Control("Rotation", rotation);
                 component.Rotation = glm::radians(rotation);
@@ -276,13 +277,13 @@ namespace Myka
                 if (ImGui::DragFloat("FOV", &perspectiveFOV))
                 camera.SetPerspectiveFOV(glm::radians(perspectiveFOV));
                 
-                float perspectiveNear = camera.GetPerspectiveNearClip();
+                float perspectiveNear = camera.GetPerspectiveNear();
                 if (ImGui::DragFloat("Near", &perspectiveNear))
-                camera.SetPerspectiveNearClip(perspectiveNear);
+                camera.SetPerspectiveNear(perspectiveNear);
                 
-                float perspectiveFar = camera.GetPerspectiveFarClip();
+                float perspectiveFar = camera.GetPerspectiveFar();
                 if (ImGui::DragFloat("Far", &perspectiveFar))
-                camera.SetPerspectiveFarClip(perspectiveFar);
+                camera.SetPerspectiveFar(perspectiveFar);
             }
 
             if (camera.GetProjectionType() == SceneCamera::ProjectionType::Orthographic)
@@ -291,13 +292,13 @@ namespace Myka
                 if (ImGui::DragFloat("Size", &orthoSize))
                 camera.SetOrthographicSize(orthoSize);
                 
-                float orthoNear = camera.GetOrthographicNearClip();
+                float orthoNear = camera.GetOrthographicNear();
                 if (ImGui::DragFloat("Near", &orthoNear))
-                camera.SetOrthographicNearClip(orthoNear);
+                camera.SetOrthographicNear(orthoNear);
                 
-                float orthoFar = camera.GetOrthographicFarClip();
+                float orthoFar = camera.GetOrthographicFar();
                 if (ImGui::DragFloat("Far", &orthoFar))
-                camera.SetOrthographicFarClip(orthoFar);
+                camera.SetOrthographicFar(orthoFar);
                 
                 ImGui::Checkbox("Fixed Aspect Ratio", &component.FixedAspectRatio);
             } });

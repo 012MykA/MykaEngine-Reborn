@@ -3,6 +3,10 @@
 #include <imgui.h>
 #include <glm/gtc/type_ptr.hpp>
 
+#include "MykaEngine/Scene/SceneSerializer.hpp"
+
+#include "MykaEngine/Utils/PlatformUtils.hpp"
+
 namespace Myka
 {
     EditorLayer::EditorLayer() : Layer("EditorLayer"), m_CameraController(1280.0f / 720.0f) {}
@@ -20,6 +24,7 @@ namespace Myka
 
         m_ActiveScene = CreateRef<Scene>();
 
+#if 0
         m_SquareEntity = m_ActiveScene->CreateEntity("Green Square");
         m_SquareEntity.AddComponent<SpriteRendererComponent>(m_SquareColor);
 
@@ -46,22 +51,23 @@ namespace Myka
 
             void OnUpdate(Timestep ts)
             {
-                auto &translation = GetComponent<TransformComponent>().Translation;
+                auto &position = GetComponent<TransformComponent>().Position;
 
                 float speed = 5.0f;
                 if (Input::IsKeyPressed(MYKA_KEY_A))
-                    translation.x -= speed * ts;
+                    position.x -= speed * ts;
                 if (Input::IsKeyPressed(MYKA_KEY_D))
-                    translation.x += speed * ts;
+                    position.x += speed * ts;
                 if (Input::IsKeyPressed(MYKA_KEY_W))
-                    translation.y += speed * ts;
+                    position.y += speed * ts;
                 if (Input::IsKeyPressed(MYKA_KEY_S))
-                    translation.y -= speed * ts;
+                    position.y -= speed * ts;
             }
         };
 
         m_CameraEntity.AddComponent<NativeScriptComponent>().Bind<CameraController>();
         m_SecondCamera.AddComponent<NativeScriptComponent>().Bind<CameraController>();
+#endif
 
         m_SceneHierarchyPanel.SetContext(m_ActiveScene);
     }
@@ -156,6 +162,44 @@ namespace Myka
             {
                 if (ImGui::BeginMenu("File"))
                 {
+                    if (ImGui::MenuItem("New", "Ctrl+N"))
+                    {
+                        m_ActiveScene = CreateRef<Scene>();
+                        m_ActiveScene->OnViewportResize((uint32_t)m_ViewportSize.x, (uint32_t)m_ViewportSize.y);
+                        m_SceneHierarchyPanel.SetContext(m_ActiveScene);
+                    }
+
+                    ImGui::Separator();
+
+                    if (ImGui::MenuItem("Open...", "Ctrl+O"))
+                    {
+                        std::string filepath = FileDialogs::OpenFile("MykaEngine Scene (*.myka)\0*.myka\0"); // JSON (*.json)\0*.json\0
+                        if (!filepath.empty())
+                        {
+                            m_ActiveScene = CreateRef<Scene>();
+                            m_ActiveScene->OnViewportResize((uint32_t)m_ViewportSize.x, (uint32_t)m_ViewportSize.y);
+                            m_SceneHierarchyPanel.SetContext(m_ActiveScene);
+
+                            SceneSerializer serializer(m_ActiveScene);
+                            serializer.DeserializeJSON(filepath);
+                        }
+                    }
+
+                    ImGui::Separator();
+
+                    if (ImGui::MenuItem("Save As...", "Ctrl+Shift+S"))
+                    {
+                        std::string filepath = FileDialogs::SaveFile("MykaEngine Scene (*.myka)\0*.myka\0");
+
+                        if (!filepath.empty())
+                        {
+                            SceneSerializer serializer(m_ActiveScene);
+                            serializer.SerializeJSON(filepath);
+                        }
+                    }
+
+                    ImGui::Separator();
+
                     if (ImGui::MenuItem("Exit"))
                         Application::Get().Close();
 
