@@ -119,12 +119,12 @@ namespace Myka
     SceneHierarchyPanel::SceneHierarchyPanel(const Ref<Scene> &scene)
     {
         SetContext(scene);
-        m_SelectionContext = {};
     }
 
     void SceneHierarchyPanel::SetContext(const Ref<Scene> &context)
     {
         m_Context = context;
+        m_SelectionContext = {};
     }
 
     void SceneHierarchyPanel::OnImGuiRender()

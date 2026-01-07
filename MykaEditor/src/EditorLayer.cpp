@@ -163,40 +163,17 @@ namespace Myka
                 if (ImGui::BeginMenu("File"))
                 {
                     if (ImGui::MenuItem("New", "Ctrl+N"))
-                    {
-                        m_ActiveScene = CreateRef<Scene>();
-                        m_ActiveScene->OnViewportResize((uint32_t)m_ViewportSize.x, (uint32_t)m_ViewportSize.y);
-                        m_SceneHierarchyPanel.SetContext(m_ActiveScene);
-                    }
+                        NewScene();
 
                     ImGui::Separator();
 
                     if (ImGui::MenuItem("Open...", "Ctrl+O"))
-                    {
-                        std::string filepath = FileDialogs::OpenFile("MykaEngine Scene (*.myka)\0*.myka\0"); // JSON (*.json)\0*.json\0
-                        if (!filepath.empty())
-                        {
-                            m_ActiveScene = CreateRef<Scene>();
-                            m_ActiveScene->OnViewportResize((uint32_t)m_ViewportSize.x, (uint32_t)m_ViewportSize.y);
-                            m_SceneHierarchyPanel.SetContext(m_ActiveScene);
-
-                            SceneSerializer serializer(m_ActiveScene);
-                            serializer.DeserializeJSON(filepath);
-                        }
-                    }
+                        OpenScene();
 
                     ImGui::Separator();
 
                     if (ImGui::MenuItem("Save As...", "Ctrl+Shift+S"))
-                    {
-                        std::string filepath = FileDialogs::SaveFile("MykaEngine Scene (*.myka)\0*.myka\0");
-
-                        if (!filepath.empty())
-                        {
-                            SceneSerializer serializer(m_ActiveScene);
-                            serializer.SerializeJSON(filepath);
-                        }
-                    }
+                        SaveSceneAs();
 
                     ImGui::Separator();
 
@@ -239,5 +216,81 @@ namespace Myka
     void EditorLayer::OnEvent(Event &e)
     {
         m_CameraController.OnEvent(e);
+
+        EventDispatcher dp(e);
+        dp.Dispatch<KeyPressedEvent>(MYKA_BIND_EVENT_FN(EditorLayer::OnKeyPressed));
     }
+
+    bool EditorLayer::OnKeyPressed(KeyPressedEvent &e)
+    {
+        // Shortcuts
+        if (e.GetRepeatCount() > 0)
+            return false;
+
+        bool ctrl = Input::IsKeyPressed(MYKA_KEY_LEFT_CONTROL) || Input::IsKeyPressed(MYKA_KEY_RIGHT_CONTROL);
+        bool shift = Input::IsKeyPressed(MYKA_KEY_LEFT_SHIFT) || Input::IsKeyPressed(MYKA_KEY_RIGHT_SHIFT);
+
+        switch (e.GetKeyCode())
+        {
+        case MYKA_KEY_N:
+        {
+            if (ctrl)
+            {
+                NewScene();
+            }
+            break;
+        }
+
+        case MYKA_KEY_O:
+        {
+            if (ctrl)
+            {
+                OpenScene();
+            }
+            break;
+        }
+
+        case MYKA_KEY_S:
+        {
+            if (ctrl && shift)
+            {
+                SaveSceneAs();
+            }
+            break;
+        }
+        }
+    }
+
+    void EditorLayer::NewScene()
+    {
+        m_ActiveScene = CreateRef<Scene>();
+        m_ActiveScene->OnViewportResize((uint32_t)m_ViewportSize.x, (uint32_t)m_ViewportSize.y);
+        m_SceneHierarchyPanel.SetContext(m_ActiveScene);
+    }
+
+    void EditorLayer::OpenScene()
+    {
+        std::string filepath = FileDialogs::OpenFile("MykaEngine Scene (*.myka)\0*.myka\0"); // JSON (*.json)\0*.json\0
+        if (!filepath.empty())
+        {
+            m_ActiveScene = CreateRef<Scene>();
+            m_ActiveScene->OnViewportResize((uint32_t)m_ViewportSize.x, (uint32_t)m_ViewportSize.y);
+            m_SceneHierarchyPanel.SetContext(m_ActiveScene);
+
+            SceneSerializer serializer(m_ActiveScene);
+            serializer.DeserializeJSON(filepath);
+        }
+    }
+
+    void EditorLayer::SaveSceneAs()
+    {
+        std::string filepath = FileDialogs::SaveFile("MykaEngine Scene (*.myka)\0*.myka\0");
+
+        if (!filepath.empty())
+        {
+            SceneSerializer serializer(m_ActiveScene);
+            serializer.SerializeJSON(filepath);
+        }
+    }
+
 } // namespace Myka
