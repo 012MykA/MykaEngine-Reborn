@@ -66,9 +66,9 @@ public:
 
 		m_FlatColorShader = Myka::Shader::Create("FlatColor", flatShaderVertexSrc, flatShaderFragmentSrc);
 
-		auto textureSHader = m_ShaderLibrary.Load("C:/dev/MykaEngine-Reborn/Sandbox/assets/shaders/Texture.glsl");
+		auto textureSHader = m_ShaderLibrary.Load("../../Sandbox/assets/shaders/Texture.glsl");
 
-		m_Texture = Myka::Texture2D::Create("C:/dev/MykaEngine-Reborn/Sandbox/assets/textures/opengl-logo.png");
+		m_Texture = Myka::Texture2D::Create("../../Sandbox/assets/textures/opengl-logo.png");
 
 		std::dynamic_pointer_cast<Myka::OpenGLShader>(textureSHader)->Bind();
 		std::dynamic_pointer_cast<Myka::OpenGLShader>(textureSHader)->UploadUniformInt("u_Texture", 0);

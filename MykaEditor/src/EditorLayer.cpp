@@ -15,7 +15,7 @@ namespace Myka
     {
         MYKA_PROFILE_FUNCTION();
 
-        m_BoxTexture = Texture2D::Create("C:/dev/MykaEngine-Reborn/MykaEditor/assets/textures/box.png");
+        m_BoxTexture = Texture2D::Create("../../MykaEditor/assets/textures/box.png");
 
         FramebufferSpecification fbSpec;
         fbSpec.Width = 1280;

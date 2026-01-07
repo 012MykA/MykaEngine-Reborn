@@ -8,7 +8,7 @@ void Sandbox2D::OnAttach()
 {
     MYKA_PROFILE_FUNCTION();
 
-    m_BoxTexture = Myka::Texture2D::Create("C:/dev/MykaEngine-Reborn/Sandbox/assets/textures/box.png");
+    m_BoxTexture = Myka::Texture2D::Create("../../Sandbox/assets/textures/box.png");
 }
 
 void Sandbox2D::OnDetach()
