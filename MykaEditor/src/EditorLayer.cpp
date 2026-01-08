@@ -52,10 +52,9 @@ namespace Myka
 
         // Update
         if (m_ViewportFocused)
-        {
             m_CameraController.OnUpdate(ts);
-            m_EditorCamera.OnUpdate(ts);
-        }
+
+        m_EditorCamera.OnUpdate(ts);
 
         // Render
         Renderer2D::ResetStats();
@@ -206,7 +205,7 @@ namespace Myka
             float snapValues[3] = {snapValue, snapValue, snapValue};
 
             ImGuizmo::Manipulate(glm::value_ptr(cameraView), glm::value_ptr(cameraProjection),
-                                 (ImGuizmo::OPERATION)m_ImGuizmoType, ImGuizmo::LOCAL, glm::value_ptr(transform),
+                                 (ImGuizmo::OPERATION)m_ImGuizmoType, (ImGuizmo::MODE)m_ImGuizmoMode, glm::value_ptr(transform),
                                  nullptr, snap ? snapValues : nullptr);
 
             if (ImGuizmo::IsUsing())
@@ -276,6 +275,11 @@ namespace Myka
             break;
         }
         // ImGuizmo
+        case MYKA_KEY_X:
+        {
+            m_ImGuizmoMode = m_ImGuizmoMode == ImGuizmo::MODE::LOCAL ? ImGuizmo::MODE::WORLD : ImGuizmo::MODE::LOCAL;
+            break;
+        }
         case MYKA_KEY_Q:
         {
             m_ImGuizmoType = -1;

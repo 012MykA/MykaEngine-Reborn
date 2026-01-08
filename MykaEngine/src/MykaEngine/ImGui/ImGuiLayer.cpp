@@ -208,7 +208,7 @@ namespace Myka
         style.Colors[ImGuizmo::PLANE_Y] = ImVec4(0.36f, 0.72f, 0.36f, 1.0f);
         style.Colors[ImGuizmo::PLANE_Z] = ImVec4(0.36f, 0.36f, 0.72f, 1.0f);
 
-        style.Colors[ImGuizmo::SELECTION] = ImVec4(0.86f + 0.1f, 0.45f + 0.1f, 0.23f + 0.1f, 1.0f);
+        style.Colors[ImGuizmo::SELECTION] = ImVec4(0.96f, 0.55f, 0.33f, 1.0f);
         style.Colors[ImGuizmo::INACTIVE] = ImVec4(0.45f, 0.45f, 0.45f, 0.6f);
         style.Colors[ImGuizmo::TRANSLATION_LINE] = ImVec4(0.85f, 0.85f, 0.85f, 1.0f);
         style.Colors[ImGuizmo::SCALE_LINE] = ImVec4(0.0f, 0.8f, 0.8f, 1.0f);

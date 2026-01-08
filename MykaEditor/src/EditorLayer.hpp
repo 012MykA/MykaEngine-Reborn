@@ -50,6 +50,7 @@ namespace Myka
         glm::vec4 m_SquareColor = {0.0f, 1.0f, 0.0f, 1.0f};
 
         int m_ImGuizmoType = -1;
+        int m_ImGuizmoMode = 0;
 
         SceneHierarchyPanel m_SceneHierarchyPanel;
     };

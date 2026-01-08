@@ -1,136 +1,69 @@
 {
     "Entities": [
         {
-            "Entity": 5,
+            "Entity": 6,
             "SpriteRendererComponent": {
                 "Color": [
-                    1.0,
-                    1.0,
-                    1.0,
+                    0.6628894209861755,
+                    0.0,
+                    0.7168458700180054,
                     1.0
                 ]
             },
             "TagComponent": {
-                "Tag": "Floor"
+                "Tag": "Square"
             },
             "TransformComponent": {
                 "Position": [
-                    -0.8808454871177673,
-                    -4.574946403503418,
-                    -2.269155740737915
+                    3.4448022842407227,
+                    0.44909948110580444,
+                    5.329288482666016
                 ],
                 "Rotation": [
-                    1.5707958936691284,
+                    0.0,
                     0.0,
                     0.0
                 ],
                 "Scale": [
-                    16.933006286621094,
-                    15.303115844726563,
-                    0.9999999403953552
+                    1.0,
+                    1.0,
+                    1.0
+                ]
+            }
+        },
+        {
+            "Entity": 5,
+            "SpriteRendererComponent": {
+                "Color": [
+                    0.7568627595901489,
+                    0.7372549176216125,
+                    0.0,
+                    1.0
+                ]
+            },
+            "TagComponent": {
+                "Tag": "Top"
+            },
+            "TransformComponent": {
+                "Position": [
+                    -0.006347341928631067,
+                    0.7805359363555908,
+                    -0.34365028142929077
+                ],
+                "Rotation": [
+                    1.5707954168319702,
+                    0.1011214330792427,
+                    7.076949941620114e-07
+                ],
+                "Scale": [
+                    1.0,
+                    1.0000001192092896,
+                    1.0000020265579224
                 ]
             }
         },
         {
             "Entity": 4,
-            "SpriteRendererComponent": {
-                "Color": [
-                    0.38351255655288696,
-                    0.38351255655288696,
-                    0.38351255655288696,
-                    1.0
-                ]
-            },
-            "TagComponent": {
-                "Tag": "Wall"
-            },
-            "TransformComponent": {
-                "Position": [
-                    0.5576622486114502,
-                    0.0,
-                    -9.81360912322998
-                ],
-                "Rotation": [
-                    0.0,
-                    0.0,
-                    0.0
-                ],
-                "Scale": [
-                    25.00482177734375,
-                    14.623784065246582,
-                    1.559999942779541
-                ]
-            }
-        },
-        {
-            "CameraComponent": {
-                "Camera": {
-                    "OrthographicFar": 1.0,
-                    "OrthographicNear": -1.0,
-                    "OrthographicSize": 10.0,
-                    "PerspectiveFOV": 0.7853981852531433,
-                    "PerspectiveFar": 1000.0,
-                    "PerspectiveNear": 0.009999999776482582,
-                    "ProjectionType": 0
-                },
-                "FixedAspectRatio": false,
-                "Primary": true
-            },
-            "Entity": 3,
-            "TagComponent": {
-                "Tag": "Camera"
-            },
-            "TransformComponent": {
-                "Position": [
-                    0.0,
-                    0.800000011920929,
-                    2.0
-                ],
-                "Rotation": [
-                    -0.29845130443573,
-                    0.0,
-                    0.0
-                ],
-                "Scale": [
-                    1.0,
-                    1.0,
-                    1.0
-                ]
-            }
-        },
-        {
-            "Entity": 2,
-            "SpriteRendererComponent": {
-                "Color": [
-                    1.0,
-                    0.9490196108818054,
-                    0.0,
-                    1.0
-                ]
-            },
-            "TagComponent": {
-                "Tag": "Left"
-            },
-            "TransformComponent": {
-                "Position": [
-                    -0.35777607560157776,
-                    0.0,
-                    0.00578628433868289
-                ],
-                "Rotation": [
-                    0.0,
-                    -0.7853982448577881,
-                    0.0
-                ],
-                "Scale": [
-                    1.0,
-                    1.0,
-                    1.0
-                ]
-            }
-        },
-        {
-            "Entity": 1,
             "SpriteRendererComponent": {
                 "Color": [
                     0.42352941632270813,
@@ -161,33 +94,131 @@
             }
         },
         {
-            "Entity": 0,
+            "Entity": 3,
             "SpriteRendererComponent": {
                 "Color": [
-                    0.7568627595901489,
-                    0.7372549176216125,
+                    1.0,
+                    0.9490196108818054,
                     0.0,
                     1.0
                 ]
             },
             "TagComponent": {
-                "Tag": "Top"
+                "Tag": "Left"
             },
             "TransformComponent": {
                 "Position": [
-                    -0.006347341928631067,
-                    0.7805359363555908,
-                    -0.34365028142929077
+                    -0.35777607560157776,
+                    0.0,
+                    0.00578628433868289
                 ],
                 "Rotation": [
-                    1.5707954168319702,
-                    0.1011214330792427,
-                    7.076949941620114e-07
+                    0.0,
+                    -0.7853982448577881,
+                    0.0
                 ],
                 "Scale": [
                     1.0,
-                    1.0000001192092896,
-                    1.0000020265579224
+                    1.0,
+                    1.0
+                ]
+            }
+        },
+        {
+            "CameraComponent": {
+                "Camera": {
+                    "OrthographicFar": 1.0,
+                    "OrthographicNear": -1.0,
+                    "OrthographicSize": 10.0,
+                    "PerspectiveFOV": 0.7853981852531433,
+                    "PerspectiveFar": 1000.0,
+                    "PerspectiveNear": 0.009999999776482582,
+                    "ProjectionType": 0
+                },
+                "FixedAspectRatio": false,
+                "Primary": true
+            },
+            "Entity": 2,
+            "TagComponent": {
+                "Tag": "Runtime Camera"
+            },
+            "TransformComponent": {
+                "Position": [
+                    -0.2153114676475525,
+                    1.1164162158966064,
+                    2.351936101913452
+                ],
+                "Rotation": [
+                    -0.30543261766433716,
+                    0.0,
+                    0.0
+                ],
+                "Scale": [
+                    1.0,
+                    1.0,
+                    1.0
+                ]
+            }
+        },
+        {
+            "Entity": 1,
+            "SpriteRendererComponent": {
+                "Color": [
+                    0.38351255655288696,
+                    0.38351255655288696,
+                    0.38351255655288696,
+                    1.0
+                ]
+            },
+            "TagComponent": {
+                "Tag": "Wall"
+            },
+            "TransformComponent": {
+                "Position": [
+                    0.5576622486114502,
+                    0.0,
+                    -9.81360912322998
+                ],
+                "Rotation": [
+                    0.0,
+                    0.0,
+                    0.0
+                ],
+                "Scale": [
+                    25.00482177734375,
+                    14.623784065246582,
+                    1.559999942779541
+                ]
+            }
+        },
+        {
+            "Entity": 0,
+            "SpriteRendererComponent": {
+                "Color": [
+                    1.0,
+                    1.0,
+                    1.0,
+                    1.0
+                ]
+            },
+            "TagComponent": {
+                "Tag": "Floor"
+            },
+            "TransformComponent": {
+                "Position": [
+                    -0.8808454871177673,
+                    -4.574946403503418,
+                    -2.269155740737915
+                ],
+                "Rotation": [
+                    1.5707958936691284,
+                    0.0,
+                    0.0
+                ],
+                "Scale": [
+                    16.933006286621094,
+                    15.303115844726563,
+                    0.9999999403953552
                 ]
             }
         }
