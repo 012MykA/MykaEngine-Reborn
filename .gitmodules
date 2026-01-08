@@ -13,3 +13,6 @@
 [submodule "MykaEngine/vendor/json"]
 	path = MykaEngine/vendor/json
 	url = https://github.com/nlohmann/json.git
+[submodule "MykaEngine/vendor/ImGuizmo"]
+	path = MykaEngine/vendor/ImGuizmo
+	url = https://github.com/CedricGuillemet/ImGuizmo.git

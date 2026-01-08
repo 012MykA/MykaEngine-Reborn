@@ -4,6 +4,7 @@ project(MykaEngine)
 set(CMAKE_CXX_STANDARD 23)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
+# GLAD
 add_library(glad STATIC
     vendor/glad/src/glad.c
 )
@@ -13,6 +14,7 @@ target_include_directories(glad
         ${CMAKE_CURRENT_SOURCE_DIR}/vendor/glad/include
 )
 
+# ImGui
 add_library(imgui STATIC
     vendor/imgui/imgui.cpp
     vendor/imgui/imgui_draw.cpp
@@ -29,6 +31,24 @@ target_include_directories(imgui
         ${CMAKE_CURRENT_SOURCE_DIR}/vendor/imgui/backends
 )
 
+target_link_libraries(imgui PRIVATE glfw)
+
+# ImGuizmo
+add_library(ImGuizmo STATIC
+    ${CMAKE_CURRENT_SOURCE_DIR}/vendor/ImGuizmo/ImGuizmo.cpp
+)
+
+target_include_directories(ImGuizmo
+    PUBLIC
+        ${CMAKE_CURRENT_SOURCE_DIR}/vendor/ImGuizmo
+)
+
+target_link_libraries(ImGuizmo
+    PUBLIC
+        imgui
+)
+
+# stb_image
 add_library(stb_image STATIC
     ${CMAKE_CURRENT_SOURCE_DIR}/vendor/stb_image/stb_image.cpp
 )
@@ -37,19 +57,20 @@ target_include_directories(stb_image PUBLIC
     ${CMAKE_CURRENT_SOURCE_DIR}/vendor/stb_image
 )
 
+# entt
 add_library(entt INTERFACE)
 
 target_include_directories(entt INTERFACE
     ${CMAKE_CURRENT_SOURCE_DIR}/vendor/entt/include
 )
 
+# glfw - glm - spdlog - nlohmann/json
 add_subdirectory(vendor/glfw)
 add_subdirectory(vendor/glm)
 add_subdirectory(vendor/spdlog)
 add_subdirectory(vendor/json)
 
-target_link_libraries(imgui PRIVATE glfw)
-
+# Sources
 file(GLOB_RECURSE ENGINE_SOURCES
     src/*.cpp
     src/*.hpp
@@ -74,6 +95,7 @@ target_link_libraries(MykaEngine
         entt
         spdlog
         imgui
+        ImGuizmo
     PRIVATE
         glad
         stb_image
