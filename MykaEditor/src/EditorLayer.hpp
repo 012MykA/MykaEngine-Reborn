@@ -47,6 +47,8 @@ namespace Myka
         Ref<Texture2D> m_BoxTexture;
         glm::vec4 m_SquareColor = {0.0f, 1.0f, 0.0f, 1.0f};
 
+        int m_ImGuizmoType = -1;
+
         SceneHierarchyPanel m_SceneHierarchyPanel;
     };
 } // namespace Myka

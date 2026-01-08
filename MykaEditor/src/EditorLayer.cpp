@@ -1,6 +1,7 @@
 #include "EditorLayer.hpp"
 
 #include <imgui.h>
+#include <ImGuizmo.h>
 #include <glm/gtc/type_ptr.hpp>
 
 #include "MykaEngine/Scene/SceneSerializer.hpp"
@@ -23,51 +24,6 @@ namespace Myka
         m_Framebuffer = Framebuffer::Create(fbSpec);
 
         m_ActiveScene = CreateRef<Scene>();
-
-#if 0
-        m_SquareEntity = m_ActiveScene->CreateEntity("Green Square");
-        m_SquareEntity.AddComponent<SpriteRendererComponent>(m_SquareColor);
-
-        auto square = m_ActiveScene->CreateEntity("Red Square");
-        square.AddComponent<SpriteRendererComponent>(glm::vec4{1.0f, 0.0f, 0.0f, 1.0f});
-
-        m_CameraEntity = m_ActiveScene->CreateEntity("Camera B");
-        m_CameraEntity.AddComponent<CameraComponent>();
-
-        m_SecondCamera = m_ActiveScene->CreateEntity("Camera A");
-        auto &cc = m_SecondCamera.AddComponent<CameraComponent>();
-        cc.Primary = false;
-
-        class CameraController : public ScriptableEntity
-        {
-        public:
-            void OnCreate()
-            {
-            }
-
-            void OnDestroy()
-            {
-            }
-
-            void OnUpdate(Timestep ts)
-            {
-                auto &position = GetComponent<TransformComponent>().Position;
-
-                float speed = 5.0f;
-                if (Input::IsKeyPressed(MYKA_KEY_A))
-                    position.x -= speed * ts;
-                if (Input::IsKeyPressed(MYKA_KEY_D))
-                    position.x += speed * ts;
-                if (Input::IsKeyPressed(MYKA_KEY_W))
-                    position.y += speed * ts;
-                if (Input::IsKeyPressed(MYKA_KEY_S))
-                    position.y -= speed * ts;
-            }
-        };
-
-        m_CameraEntity.AddComponent<NativeScriptComponent>().Bind<CameraController>();
-        m_SecondCamera.AddComponent<NativeScriptComponent>().Bind<CameraController>();
-#endif
 
         m_SceneHierarchyPanel.SetContext(m_ActiveScene);
     }
@@ -204,11 +160,60 @@ namespace Myka
         ImGui::Begin("Viewport");
         m_ViewportFocused = ImGui::IsWindowFocused();
         m_ViewportHovered = ImGui::IsWindowHovered();
-        Application::Get().GetImGuiLayer()->SetBlockEvents(!m_ViewportFocused || !m_ViewportHovered);
+        Application::Get().GetImGuiLayer()->SetBlockEvents(!m_ViewportFocused && !m_ViewportHovered);
         ImVec2 viewportPanelSize = ImGui::GetContentRegionAvail();
         m_ViewportSize = {viewportPanelSize.x, viewportPanelSize.y};
-        uint32_t textureID = m_Framebuffer->GetColorAttachment();
+
+        uint64_t textureID = m_Framebuffer->GetColorAttachment();
         ImGui::Image((void *)textureID, ImVec2{m_ViewportSize.x, m_ViewportSize.y}, ImVec2{0, 1}, ImVec2{1, 0});
+
+        // ImGuizmo
+        Entity selectedEntity = m_SceneHierarchyPanel.GetSelectedEntity();
+        if (selectedEntity && m_ImGuizmoType != -1)
+        {
+            ImGuizmo::SetOrthographic(false);
+            ImGuizmo::SetDrawlist();
+            float windowWidth = static_cast<float>(ImGui::GetWindowWidth());
+            float windowHeight = static_cast<float>(ImGui::GetWindowHeight());
+            ImGuizmo::SetRect(ImGui::GetWindowPos().x, ImGui::GetWindowPos().y, windowWidth, windowHeight);
+
+            auto cameraEntity = m_ActiveScene->GetPrimaryCameraEntity();
+            const auto &camera = cameraEntity.GetComponent<CameraComponent>().Camera;
+            const glm::mat4 &cameraProjection = camera.GetProjection();
+            glm::mat4 cameraView = glm::inverse(cameraEntity.GetComponent<TransformComponent>().GetTransform());
+
+            // Entity transform
+            auto &tc = selectedEntity.GetComponent<TransformComponent>();
+            glm::mat4 transform = tc.GetTransform();
+
+            // Snapping
+            bool snap = Input::IsKeyPressed(MYKA_KEY_LEFT_CONTROL);
+
+            float snapValue = 0.5f;
+            if (m_ImGuizmoType == ImGuizmo::OPERATION::ROTATE)
+                snapValue = 45.0f;
+
+            float snapValues[3] = {snapValue, snapValue, snapValue};
+
+            ImGuizmo::Manipulate(glm::value_ptr(cameraView), glm::value_ptr(cameraProjection),
+                                 (ImGuizmo::OPERATION)m_ImGuizmoType, ImGuizmo::LOCAL, glm::value_ptr(transform),
+                                 nullptr, snap ? snapValues : nullptr);
+
+            if (ImGuizmo::IsUsing())
+            {
+                float position[3], rotation[3], scale[3];
+
+                ImGuizmo::DecomposeMatrixToComponents(glm::value_ptr(transform), position, rotation, scale);
+
+                glm::vec3 newRotation = glm::radians(glm::vec3(rotation[0], rotation[1], rotation[2]));
+                glm::vec3 deltaRotation = newRotation - tc.Rotation;
+
+                tc.Position = {position[0], position[1], position[2]};
+                tc.Rotation += deltaRotation;
+                tc.Scale = {scale[0], scale[1], scale[2]};
+            }
+        }
+
         ImGui::End();
         ImGui::PopStyleVar();
     }
@@ -232,6 +237,7 @@ namespace Myka
 
         switch (e.GetKeyCode())
         {
+        // File dialogs
         case MYKA_KEY_N:
         {
             if (ctrl)
@@ -256,6 +262,27 @@ namespace Myka
             {
                 SaveSceneAs();
             }
+            break;
+        }
+        // ImGuizmo
+        case MYKA_KEY_Q:
+        {
+            m_ImGuizmoType = -1;
+            break;
+        }
+        case MYKA_KEY_W:
+        {
+            m_ImGuizmoType = ImGuizmo::TRANSLATE;
+            break;
+        }
+        case MYKA_KEY_E:
+        {
+            m_ImGuizmoType = ImGuizmo::ROTATE;
+            break;
+        }
+        case MYKA_KEY_R:
+        {
+            m_ImGuizmoType = ImGuizmo::SCALE;
             break;
         }
         }
