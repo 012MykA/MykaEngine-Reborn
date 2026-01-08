@@ -62,10 +62,11 @@ namespace Myka
         {
             Renderer2D::BeginScene(mainCamera->GetProjection(), cameraTransform);
 
-            auto group = m_Registry.group<TransformComponent>(entt::get<SpriteRendererComponent>);
-            for (auto entity : group)
+            auto view = m_Registry.view<TransformComponent, SpriteRendererComponent>();
+            for (auto entity : view)
             {
-                auto [transform, sprite] = group.get<TransformComponent, SpriteRendererComponent>(entity);
+                auto& transform = view.get<TransformComponent>(entity);
+                auto& sprite = view.get<SpriteRendererComponent>(entity);
 
                 Renderer2D::DrawQuad(transform.GetTransform(), sprite.Color);
             }
