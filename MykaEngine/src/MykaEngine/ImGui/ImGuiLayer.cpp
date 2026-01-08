@@ -46,6 +46,7 @@ namespace Myka
             style.Colors[ImGuiCol_WindowBg].w = 1.0f;
         }
         SetDarkThemeColors();
+        SetImGuizmoStyle();
 
         Application &app = Application::Get();
         GLFWwindow *window = static_cast<GLFWwindow *>(app.GetWindow().GetNativeWindow());
@@ -184,6 +185,38 @@ namespace Myka
 
         style.AntiAliasedLines = true;
         style.AntiAliasedFill = true;
+    }
+
+    void ImGuiLayer::SetImGuizmoStyle()
+    {
+        ImGuizmo::Style &style = ImGuizmo::GetStyle();
+
+        style.TranslationLineThickness = 4.5f;
+        style.TranslationLineArrowSize = 6.0f;
+        style.RotationLineThickness = 4.5f;
+        style.RotationOuterLineThickness = 4.5f;
+        style.ScaleLineThickness = 4.5f;
+        style.ScaleLineCircleSize = 6.0f;
+        style.HatchedAxisLineThickness = 0.0f;
+        style.CenterCircleSize = 6.0f;
+
+        style.Colors[ImGuizmo::DIRECTION_X] = ImVec4(0.72f, 0.0f, 0.0f, 1.0f);
+        style.Colors[ImGuizmo::DIRECTION_Y] = ImVec4(0.0f, 0.72f, 0.0f, 1.0f);
+        style.Colors[ImGuizmo::DIRECTION_Z] = ImVec4(0.0f, 0.0f, 0.72f, 1.0f);
+
+        style.Colors[ImGuizmo::PLANE_X] = ImVec4(0.72f, 0.36f, 0.36f, 1.0f);
+        style.Colors[ImGuizmo::PLANE_Y] = ImVec4(0.36f, 0.72f, 0.36f, 1.0f);
+        style.Colors[ImGuizmo::PLANE_Z] = ImVec4(0.36f, 0.36f, 0.72f, 1.0f);
+
+        style.Colors[ImGuizmo::SELECTION] = ImVec4(0.86f + 0.1f, 0.45f + 0.1f, 0.23f + 0.1f, 1.0f);
+        style.Colors[ImGuizmo::INACTIVE] = ImVec4(0.45f, 0.45f, 0.45f, 0.6f);
+        style.Colors[ImGuizmo::TRANSLATION_LINE] = ImVec4(0.85f, 0.85f, 0.85f, 1.0f);
+        style.Colors[ImGuizmo::SCALE_LINE] = ImVec4(0.0f, 0.8f, 0.8f, 1.0f);
+        style.Colors[ImGuizmo::ROTATION_USING_BORDER] = ImVec4(0.85f, 0.85f, 0.85f, 1.0f);
+        style.Colors[ImGuizmo::ROTATION_USING_FILL] = ImVec4(0.85f, 0.85f, 0.85f, 0.25f);
+        style.Colors[ImGuizmo::HATCHED_AXIS_LINES] = ImVec4(0, 0, 0, 0);
+        style.Colors[ImGuizmo::TEXT] = ImVec4(0.95f, 0.95f, 0.95f, 1.0f);
+        style.Colors[ImGuizmo::TEXT_SHADOW] = ImVec4(0.05f, 0.05f, 0.05f, 0.5f);
     }
 
 } // namespace Myka

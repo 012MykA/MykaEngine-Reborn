@@ -267,22 +267,22 @@ namespace Myka
         // ImGuizmo
         case MYKA_KEY_Q:
         {
-            m_ImGuizmoType = -1;
+            m_ImGuizmoType = ImGuizmo::OPERATION::UNIVERSAL;
             break;
         }
         case MYKA_KEY_W:
         {
-            m_ImGuizmoType = ImGuizmo::TRANSLATE;
+            m_ImGuizmoType = ImGuizmo::OPERATION::TRANSLATE;
             break;
         }
         case MYKA_KEY_E:
         {
-            m_ImGuizmoType = ImGuizmo::ROTATE;
+            m_ImGuizmoType = ImGuizmo::OPERATION::ROTATE;
             break;
         }
         case MYKA_KEY_R:
         {
-            m_ImGuizmoType = ImGuizmo::SCALE;
+            m_ImGuizmoType = ImGuizmo::OPERATION::SCALE;
             break;
         }
         }
@@ -297,7 +297,7 @@ namespace Myka
 
     void EditorLayer::OpenScene()
     {
-        std::string filepath = FileDialogs::OpenFile("MykaEngine Scene (*.myka)\0*.myka\0"); // JSON (*.json)\0*.json\0
+        std::string filepath = FileDialogs::OpenFile("MykaEngine Scene (*.myka)\0*.myka\0");
         if (!filepath.empty())
         {
             m_ActiveScene = CreateRef<Scene>();
