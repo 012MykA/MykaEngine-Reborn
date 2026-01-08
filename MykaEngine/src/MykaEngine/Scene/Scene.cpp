@@ -25,7 +25,23 @@ namespace Myka
         m_Registry.destroy(entity);
     }
 
-    void Scene::OnUpdate(Timestep ts)
+    void Scene::OnUpdateEditor(Timestep ts, EditorCamera &camera)
+    {
+        Renderer2D::BeginScene(camera);
+
+        auto view = m_Registry.view<TransformComponent, SpriteRendererComponent>();
+        for (auto entity : view)
+        {
+            auto &transform = view.get<TransformComponent>(entity);
+            auto &sprite = view.get<SpriteRendererComponent>(entity);
+
+            Renderer2D::DrawQuad(transform.GetTransform(), sprite.Color);
+        }
+
+        Renderer2D::EndScene();
+    }
+
+    void Scene::OnUpdateRuntime(Timestep ts)
     {
         // Update scripts
         {
@@ -65,8 +81,8 @@ namespace Myka
             auto view = m_Registry.view<TransformComponent, SpriteRendererComponent>();
             for (auto entity : view)
             {
-                auto& transform = view.get<TransformComponent>(entity);
-                auto& sprite = view.get<SpriteRendererComponent>(entity);
+                auto &transform = view.get<TransformComponent>(entity);
+                auto &sprite = view.get<SpriteRendererComponent>(entity);
 
                 Renderer2D::DrawQuad(transform.GetTransform(), sprite.Color);
             }

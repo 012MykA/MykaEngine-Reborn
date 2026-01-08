@@ -26,6 +26,8 @@ namespace Myka
         m_ActiveScene = CreateRef<Scene>();
 
         m_SceneHierarchyPanel.SetContext(m_ActiveScene);
+
+        m_EditorCamera = EditorCamera(45.0f, 1.778f, 0.1f, 1000.0f);
     }
 
     void EditorLayer::OnDetach()
@@ -44,13 +46,16 @@ namespace Myka
         {
             m_Framebuffer->Resize((uint32_t)m_ViewportSize.x, (uint32_t)m_ViewportSize.y);
             m_CameraController.OnResize(m_ViewportSize.x, m_ViewportSize.y);
-
+            m_EditorCamera.SetViewportSize(m_ViewportSize.x, m_ViewportSize.y);
             m_ActiveScene->OnViewportResize((uint32_t)m_ViewportSize.x, (uint32_t)m_ViewportSize.y);
         }
 
         // Update
         if (m_ViewportFocused)
+        {
             m_CameraController.OnUpdate(ts);
+            m_EditorCamera.OnUpdate(ts);
+        }
 
         // Render
         Renderer2D::ResetStats();
@@ -59,7 +64,8 @@ namespace Myka
         RenderCommand::Clear();
 
         // Update scene
-        m_ActiveScene->OnUpdate(ts);
+        // m_ActiveScene->OnUpdateRuntime(ts);
+        m_ActiveScene->OnUpdateEditor(ts, m_EditorCamera);
 
         m_Framebuffer->Unbind();
     }
@@ -177,10 +183,14 @@ namespace Myka
             float windowHeight = static_cast<float>(ImGui::GetWindowHeight());
             ImGuizmo::SetRect(ImGui::GetWindowPos().x, ImGui::GetWindowPos().y, windowWidth, windowHeight);
 
-            auto cameraEntity = m_ActiveScene->GetPrimaryCameraEntity();
-            const auto &camera = cameraEntity.GetComponent<CameraComponent>().Camera;
-            const glm::mat4 &cameraProjection = camera.GetProjection();
-            glm::mat4 cameraView = glm::inverse(cameraEntity.GetComponent<TransformComponent>().GetTransform());
+            // Runtime camera
+            // auto cameraEntity = m_ActiveScene->GetPrimaryCameraEntity();
+            // const auto &camera = cameraEntity.GetComponent<CameraComponent>().Camera;
+            // const glm::mat4 &cameraProjection = camera.GetProjection();
+            // glm::mat4 cameraView = glm::inverse(cameraEntity.GetComponent<TransformComponent>().GetTransform());
+
+            const glm::mat4 &cameraProjection = m_EditorCamera.GetProjection();
+            glm::mat4 cameraView = m_EditorCamera.GetViewMatrix();
 
             // Entity transform
             auto &tc = selectedEntity.GetComponent<TransformComponent>();
@@ -221,6 +231,7 @@ namespace Myka
     void EditorLayer::OnEvent(Event &e)
     {
         m_CameraController.OnEvent(e);
+        m_EditorCamera.OnEvent(e);
 
         EventDispatcher dp(e);
         dp.Dispatch<KeyPressedEvent>(MYKA_BIND_EVENT_FN(EditorLayer::OnKeyPressed));
@@ -267,7 +278,7 @@ namespace Myka
         // ImGuizmo
         case MYKA_KEY_Q:
         {
-            m_ImGuizmoType = ImGuizmo::OPERATION::UNIVERSAL;
+            m_ImGuizmoType = -1;
             break;
         }
         case MYKA_KEY_W:

@@ -3,6 +3,7 @@
 #include <MykaEngine.hpp>
 
 #include "Panels/SceneHierarchyPanel.hpp"
+#include "MykaEngine/Renderer/EditorCamera.hpp"
 
 namespace Myka
 {
@@ -20,7 +21,7 @@ namespace Myka
         virtual void OnEvent(Event &e) override;
 
     private:
-        bool OnKeyPressed(KeyPressedEvent& e);
+        bool OnKeyPressed(KeyPressedEvent &e);
 
         void NewScene();
         void OpenScene();
@@ -40,6 +41,7 @@ namespace Myka
         Entity m_SecondCamera;
 
         bool m_PrimaryCamera = true;
+        EditorCamera m_EditorCamera;
 
         bool m_ViewportFocused = false, m_ViewportHovered = false;
         glm::vec2 m_ViewportSize = {0.0f, 0.0f};
