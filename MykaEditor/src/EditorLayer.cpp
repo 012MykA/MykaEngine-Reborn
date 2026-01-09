@@ -19,6 +19,7 @@ namespace Myka
         m_BoxTexture = Texture2D::Create("../../MykaEditor/assets/textures/box.png");
 
         FramebufferSpecification fbSpec;
+        fbSpec.Attachments = { FramebufferTextureFormat::RGBA8, FramebufferTextureFormat::RGBA8, FramebufferTextureFormat::Depth };
         fbSpec.Width = 1280;
         fbSpec.Height = 720;
         m_Framebuffer = Framebuffer::Create(fbSpec);
@@ -169,8 +170,8 @@ namespace Myka
         ImVec2 viewportPanelSize = ImGui::GetContentRegionAvail();
         m_ViewportSize = {viewportPanelSize.x, viewportPanelSize.y};
 
-        uint64_t textureID = m_Framebuffer->GetColorAttachment();
-        ImGui::Image((void *)textureID, ImVec2{m_ViewportSize.x, m_ViewportSize.y}, ImVec2{0, 1}, ImVec2{1, 0});
+        uint64_t textureID = m_Framebuffer->GetColorAttachment(1);
+        ImGui::Image(reinterpret_cast<void*>(textureID), ImVec2{m_ViewportSize.x, m_ViewportSize.y}, ImVec2{0, 1}, ImVec2{1, 0});
 
         // ImGuizmo
         Entity selectedEntity = m_SceneHierarchyPanel.GetSelectedEntity();

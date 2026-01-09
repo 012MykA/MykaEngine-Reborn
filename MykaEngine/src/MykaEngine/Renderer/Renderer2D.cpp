@@ -91,7 +91,7 @@ namespace Myka
             samplers[i] = i;
         }
 
-        s_Data.TextureShader = Shader::Create("../../Sandbox/assets/shaders/Texture.glsl");
+        s_Data.TextureShader = Shader::Create("../../MykaEditor/assets/shaders/Texture.glsl");
         s_Data.TextureShader->Bind();
         s_Data.TextureShader->SetIntArray("u_Textures", samplers, s_Data.MaxTextureSlots);
 
