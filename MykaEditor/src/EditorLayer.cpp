@@ -5,7 +5,7 @@
 #include <glm/gtc/type_ptr.hpp>
 
 #include "MykaEngine/Scene/SceneSerializer.hpp"
-
+#include "MykaEngine/Core/MouseCodes.hpp"
 #include "MykaEngine/Utils/PlatformUtils.hpp"
 
 namespace Myka
@@ -86,8 +86,7 @@ namespace Myka
             mouseY < (int)viewportSize.y)
         {
             int pixelData = m_Framebuffer->ReadPixel(1, mouseX, mouseY);
-            
-            MYKA_CORE_WARN("Pixel data = {0}", pixelData);
+            m_HoveredEntity = pixelData == -1 ? Entity() : Entity((entt::entity)pixelData, m_ActiveScene.get());
         }
 
         m_Framebuffer->Unbind();
@@ -177,6 +176,13 @@ namespace Myka
 
         //  --- Renderer2D Stats ---
         ImGui::Begin("Renderer2D Stats");
+
+        std::string name = "None";
+        if (static_cast<bool>(m_HoveredEntity))
+            name = m_HoveredEntity.GetComponent<TagComponent>().Tag;
+
+        ImGui::Text("Hovered Entity: %s", name.c_str());
+
         auto stats = Renderer2D::GetStats();
         ImGui::Text("Draw Calls: %d", stats.DrawCalls);
         ImGui::Text("Quads: %d", stats.QuadCount);
@@ -187,23 +193,24 @@ namespace Myka
         // --- Viewport ---
         ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2{0, 0});
         ImGui::Begin("Viewport");
-        auto viewportOffset = ImGui::GetCursorPos();
 
         m_ViewportFocused = ImGui::IsWindowFocused();
         m_ViewportHovered = ImGui::IsWindowHovered();
         Application::Get().GetImGuiLayer()->SetBlockEvents(!m_ViewportFocused && !m_ViewportHovered);
+
+        ImVec2 viewportOffset = ImGui::GetCursorPos();
         ImVec2 viewportPanelSize = ImGui::GetContentRegionAvail();
         m_ViewportSize = {viewportPanelSize.x, viewportPanelSize.y};
 
         uint64_t textureID = m_Framebuffer->GetColorAttachment(0);
         ImGui::Image(reinterpret_cast<void *>(textureID), ImVec2{m_ViewportSize.x, m_ViewportSize.y}, ImVec2{0, 1}, ImVec2{1, 0});
 
-        ImVec2 windowSize = ImGui::GetWindowSize();
         ImVec2 minBound = ImGui::GetWindowPos();
         minBound.x += viewportOffset.x;
         minBound.y += viewportOffset.y;
 
-        ImVec2 maxBound = {minBound.x + windowSize.x, minBound.y + windowSize.y};
+        ImVec2 maxBound = {minBound.x + m_ViewportSize.x, minBound.y + m_ViewportSize.y};
+
         m_ViewportBounds[0] = {minBound.x, minBound.y};
         m_ViewportBounds[1] = {maxBound.x, maxBound.y};
 
@@ -269,6 +276,7 @@ namespace Myka
 
         EventDispatcher dp(e);
         dp.Dispatch<KeyPressedEvent>(MYKA_BIND_EVENT_FN(EditorLayer::OnKeyPressed));
+        dp.Dispatch<MouseButtonPressedEvent>(MYKA_BIND_EVENT_FN(EditorLayer::OnMouseButtonPressed));
     }
 
     bool EditorLayer::OnKeyPressed(KeyPressedEvent &e)
@@ -336,6 +344,17 @@ namespace Myka
             break;
         }
         }
+    }
+
+    bool EditorLayer::OnMouseButtonPressed(MouseButtonPressedEvent &e)
+    {
+        if (e.GetMouseButton() == Mouse::ButtonLeft)
+        {
+            if (m_ViewportHovered && !ImGuizmo::IsOver() && !Input::IsKeyPressed(MYKA_KEY_LEFT_ALT))
+                m_SceneHierarchyPanel.SetSelectedEntity(m_HoveredEntity);
+        }
+        
+        return false;
     }
 
     void EditorLayer::NewScene()

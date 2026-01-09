@@ -16,6 +16,9 @@ namespace Myka
         glm::vec2 TexCoord;
         float TexIndex;
         float TilingFactor;
+
+        // Editor only
+        int EntityID;
     };
 
     struct Rendeerer2DData
@@ -54,8 +57,9 @@ namespace Myka
         s_Data.QuadVertexBuffer->SetLayout({{ShaderDataType::Float3, "a_Position"},
                                             {ShaderDataType::Float4, "a_Color"},
                                             {ShaderDataType::Float2, "a_TexCoord"},
-                                            {ShaderDataType::Float, "a_TexIndex"},
-                                            {ShaderDataType::Float, "a_TilingFactor"}});
+                                            {ShaderDataType::Float,  "a_TexIndex"},
+                                            {ShaderDataType::Float,  "a_TilingFactor"},
+                                            {ShaderDataType::Int,    "a_EntityID"}});
 
         s_Data.QuadVertexArray->AddVertexBuffer(s_Data.QuadVertexBuffer);
 
@@ -313,79 +317,7 @@ namespace Myka
         s_Data.Stats.QuadCount++;
     }
 
-    void Renderer2D::DrawQuad(const glm::vec2 &position, const glm::vec2 &size, const Ref<SubTexture2D> &subTexture, float tilingFactor, const glm::vec4 &tintColor)
-    {
-        MYKA_PROFILE_FUNCTION();
-
-        DrawQuad({position.x, position.y, 0.0f}, size, subTexture, tilingFactor, tintColor);
-    }
-
-    void Renderer2D::DrawQuad(const glm::vec3 &position, const glm::vec2 &size, const Ref<SubTexture2D> &subTexture, float tilingFactor, const glm::vec4 &tintColor)
-    {
-        MYKA_PROFILE_FUNCTION();
-
-        const glm::vec2 *texCoords = subTexture->GetTexCoords();
-        const Ref<Texture2D> texture = subTexture->GetTexture();
-
-        if (s_Data.QuadIndexCount >= Rendeerer2DData::MaxIndices)
-        {
-            FlushAndReset();
-        }
-
-        float textureIndex = 0.0f;
-
-        for (uint32_t i = 1; i < s_Data.TextureSlotIndex; ++i)
-        {
-            if (*s_Data.TextureSlots[i].get() == *texture.get())
-            {
-                textureIndex = (float)i;
-                break;
-            }
-        }
-
-        if (textureIndex == 0.0f)
-        {
-            textureIndex = (float)s_Data.TextureSlotIndex;
-            s_Data.TextureSlots[s_Data.TextureSlotIndex] = texture;
-            s_Data.TextureSlotIndex++;
-        }
-
-        glm::mat4 transform = glm::translate(glm::mat4(1.0f), position) * glm::scale(glm::mat4(1.0f), {size.x, size.y, 1.0f});
-
-        s_Data.QuadVertexBufferPtr->Position = transform * s_Data.QuadVertexPositions[0];
-        s_Data.QuadVertexBufferPtr->Color = tintColor;
-        s_Data.QuadVertexBufferPtr->TexCoord = texCoords[0];
-        s_Data.QuadVertexBufferPtr->TexIndex = textureIndex;
-        s_Data.QuadVertexBufferPtr->TilingFactor = tilingFactor;
-        s_Data.QuadVertexBufferPtr++;
-
-        s_Data.QuadVertexBufferPtr->Position = transform * s_Data.QuadVertexPositions[1];
-        s_Data.QuadVertexBufferPtr->Color = tintColor;
-        s_Data.QuadVertexBufferPtr->TexCoord = texCoords[1];
-        s_Data.QuadVertexBufferPtr->TexIndex = textureIndex;
-        s_Data.QuadVertexBufferPtr->TilingFactor = tilingFactor;
-        s_Data.QuadVertexBufferPtr++;
-
-        s_Data.QuadVertexBufferPtr->Position = transform * s_Data.QuadVertexPositions[2];
-        s_Data.QuadVertexBufferPtr->Color = tintColor;
-        s_Data.QuadVertexBufferPtr->TexCoord = texCoords[2];
-        s_Data.QuadVertexBufferPtr->TexIndex = textureIndex;
-        s_Data.QuadVertexBufferPtr->TilingFactor = tilingFactor;
-        s_Data.QuadVertexBufferPtr++;
-
-        s_Data.QuadVertexBufferPtr->Position = transform * s_Data.QuadVertexPositions[3];
-        s_Data.QuadVertexBufferPtr->Color = tintColor;
-        s_Data.QuadVertexBufferPtr->TexCoord = texCoords[3];
-        s_Data.QuadVertexBufferPtr->TexIndex = textureIndex;
-        s_Data.QuadVertexBufferPtr->TilingFactor = tilingFactor;
-        s_Data.QuadVertexBufferPtr++;
-
-        s_Data.QuadIndexCount += 6;
-
-        s_Data.Stats.QuadCount++;
-    }
-
-    void Renderer2D::DrawQuad(const glm::mat4 &transform, const glm::vec4 &color)
+    void Renderer2D::DrawQuad(const glm::mat4 &transform, const glm::vec4 &color, int entityID)
     {
         MYKA_PROFILE_FUNCTION();
 
@@ -402,6 +334,7 @@ namespace Myka
         s_Data.QuadVertexBufferPtr->TexCoord = {0.0f, 0.0f};
         s_Data.QuadVertexBufferPtr->TexIndex = textureIndex;
         s_Data.QuadVertexBufferPtr->TilingFactor = tilingFactor;
+        s_Data.QuadVertexBufferPtr->EntityID = entityID;
         s_Data.QuadVertexBufferPtr++;
 
         s_Data.QuadVertexBufferPtr->Position = transform * s_Data.QuadVertexPositions[1];
@@ -409,6 +342,7 @@ namespace Myka
         s_Data.QuadVertexBufferPtr->TexCoord = {0.0f, 1.0f};
         s_Data.QuadVertexBufferPtr->TexIndex = textureIndex;
         s_Data.QuadVertexBufferPtr->TilingFactor = tilingFactor;
+        s_Data.QuadVertexBufferPtr->EntityID = entityID;
         s_Data.QuadVertexBufferPtr++;
 
         s_Data.QuadVertexBufferPtr->Position = transform * s_Data.QuadVertexPositions[2];
@@ -416,6 +350,7 @@ namespace Myka
         s_Data.QuadVertexBufferPtr->TexCoord = {1.0f, 1.0f};
         s_Data.QuadVertexBufferPtr->TexIndex = textureIndex;
         s_Data.QuadVertexBufferPtr->TilingFactor = tilingFactor;
+        s_Data.QuadVertexBufferPtr->EntityID = entityID;
         s_Data.QuadVertexBufferPtr++;
 
         s_Data.QuadVertexBufferPtr->Position = transform * s_Data.QuadVertexPositions[3];
@@ -423,6 +358,7 @@ namespace Myka
         s_Data.QuadVertexBufferPtr->TexCoord = {1.0f, 0.0f};
         s_Data.QuadVertexBufferPtr->TexIndex = textureIndex;
         s_Data.QuadVertexBufferPtr->TilingFactor = tilingFactor;
+        s_Data.QuadVertexBufferPtr->EntityID = entityID;
         s_Data.QuadVertexBufferPtr++;
 
         s_Data.QuadIndexCount += 6;
@@ -430,7 +366,7 @@ namespace Myka
         s_Data.Stats.QuadCount++;
     }
 
-    void Renderer2D::DrawQuad(const glm::mat4 &transform, const Ref<Texture2D> &texture, float tilingFactor, const glm::vec4 &tintColor)
+    void Renderer2D::DrawQuad(const glm::mat4 &transform, const Ref<Texture2D> &texture, float tilingFactor, const glm::vec4 &tintColor, int entityID)
     {
         MYKA_PROFILE_FUNCTION();
 
@@ -462,6 +398,7 @@ namespace Myka
         s_Data.QuadVertexBufferPtr->TexCoord = {0.0f, 0.0f};
         s_Data.QuadVertexBufferPtr->TexIndex = textureIndex;
         s_Data.QuadVertexBufferPtr->TilingFactor = tilingFactor;
+        s_Data.QuadVertexBufferPtr->EntityID = entityID;
         s_Data.QuadVertexBufferPtr++;
 
         s_Data.QuadVertexBufferPtr->Position = transform * s_Data.QuadVertexPositions[1];
@@ -469,6 +406,7 @@ namespace Myka
         s_Data.QuadVertexBufferPtr->TexCoord = {0.0f, 1.0f};
         s_Data.QuadVertexBufferPtr->TexIndex = textureIndex;
         s_Data.QuadVertexBufferPtr->TilingFactor = tilingFactor;
+        s_Data.QuadVertexBufferPtr->EntityID = entityID;
         s_Data.QuadVertexBufferPtr++;
 
         s_Data.QuadVertexBufferPtr->Position = transform * s_Data.QuadVertexPositions[2];
@@ -476,6 +414,7 @@ namespace Myka
         s_Data.QuadVertexBufferPtr->TexCoord = {1.0f, 1.0f};
         s_Data.QuadVertexBufferPtr->TexIndex = textureIndex;
         s_Data.QuadVertexBufferPtr->TilingFactor = tilingFactor;
+        s_Data.QuadVertexBufferPtr->EntityID = entityID;
         s_Data.QuadVertexBufferPtr++;
 
         s_Data.QuadVertexBufferPtr->Position = transform * s_Data.QuadVertexPositions[3];
@@ -483,6 +422,7 @@ namespace Myka
         s_Data.QuadVertexBufferPtr->TexCoord = {1.0f, 0.0f};
         s_Data.QuadVertexBufferPtr->TexIndex = textureIndex;
         s_Data.QuadVertexBufferPtr->TilingFactor = tilingFactor;
+        s_Data.QuadVertexBufferPtr->EntityID = entityID;
         s_Data.QuadVertexBufferPtr++;
 
         s_Data.QuadIndexCount += 6;
@@ -613,75 +553,11 @@ namespace Myka
         s_Data.Stats.QuadCount++;
     }
 
-    void Renderer2D::DrawRotatedQuad(const glm::vec2 &position, const glm::vec2 &size, float rotation, const Ref<SubTexture2D> &subTexture, float tilingFactor, const glm::vec4 &tintColor)
+    void Renderer2D::DrawSprite(const glm::mat4 &transform, SpriteRendererComponent &src, int entityID)
     {
         MYKA_PROFILE_FUNCTION();
 
-        DrawRotatedQuad({position.x, position.y, 0.0f}, size, rotation, subTexture, tilingFactor, tintColor);
-    }
-
-    void Renderer2D::DrawRotatedQuad(const glm::vec3 &position, const glm::vec2 &size, float rotation, const Ref<SubTexture2D> &subTexture, float tilingFactor, const glm::vec4 &tintColor)
-    {
-        MYKA_PROFILE_FUNCTION();
-
-        if (s_Data.QuadIndexCount >= Rendeerer2DData::MaxIndices)
-        {
-            FlushAndReset();
-        }
-
-        const glm::vec2 *texCoords = subTexture->GetTexCoords();
-        const Ref<Texture2D> texture = subTexture->GetTexture();
-
-        float textureIndex = 0.0f;
-        for (uint32_t i = 1; i < s_Data.TextureSlotIndex; ++i)
-        {
-            if (*s_Data.TextureSlots[i].get() == *texture.get())
-            {
-                textureIndex = (float)i;
-                break;
-            }
-        }
-
-        if (textureIndex == 0.0f)
-        {
-            textureIndex = (float)s_Data.TextureSlotIndex;
-            s_Data.TextureSlots[s_Data.TextureSlotIndex] = texture;
-            s_Data.TextureSlotIndex++;
-        }
-
-        glm::mat4 transform = glm::translate(glm::mat4(1.0f), position) * glm::rotate(glm::mat4(1.0f), rotation, {0.0f, 0.0f, 1.0f}) * glm::scale(glm::mat4(1.0f), {size.x, size.y, 1.0f});
-
-        s_Data.QuadVertexBufferPtr->Position = transform * s_Data.QuadVertexPositions[0];
-        s_Data.QuadVertexBufferPtr->Color = tintColor;
-        s_Data.QuadVertexBufferPtr->TexCoord = texCoords[0];
-        s_Data.QuadVertexBufferPtr->TexIndex = textureIndex;
-        s_Data.QuadVertexBufferPtr->TilingFactor = tilingFactor;
-        s_Data.QuadVertexBufferPtr++;
-
-        s_Data.QuadVertexBufferPtr->Position = transform * s_Data.QuadVertexPositions[1];
-        s_Data.QuadVertexBufferPtr->Color = tintColor;
-        s_Data.QuadVertexBufferPtr->TexCoord = texCoords[1];
-        s_Data.QuadVertexBufferPtr->TexIndex = textureIndex;
-        s_Data.QuadVertexBufferPtr->TilingFactor = tilingFactor;
-        s_Data.QuadVertexBufferPtr++;
-
-        s_Data.QuadVertexBufferPtr->Position = transform * s_Data.QuadVertexPositions[2];
-        s_Data.QuadVertexBufferPtr->Color = tintColor;
-        s_Data.QuadVertexBufferPtr->TexCoord = texCoords[2];
-        s_Data.QuadVertexBufferPtr->TexIndex = textureIndex;
-        s_Data.QuadVertexBufferPtr->TilingFactor = tilingFactor;
-        s_Data.QuadVertexBufferPtr++;
-
-        s_Data.QuadVertexBufferPtr->Position = transform * s_Data.QuadVertexPositions[3];
-        s_Data.QuadVertexBufferPtr->Color = tintColor;
-        s_Data.QuadVertexBufferPtr->TexCoord = texCoords[3];
-        s_Data.QuadVertexBufferPtr->TexIndex = textureIndex;
-        s_Data.QuadVertexBufferPtr->TilingFactor = tilingFactor;
-        s_Data.QuadVertexBufferPtr++;
-
-        s_Data.QuadIndexCount += 6;
-
-        s_Data.Stats.QuadCount++;
+        DrawQuad(transform, src.Color, entityID);
     }
 
     void Renderer2D::ResetStats()
