@@ -45,6 +45,7 @@ namespace Myka
 
         bool m_ViewportFocused = false, m_ViewportHovered = false;
         glm::vec2 m_ViewportSize = {0.0f, 0.0f};
+        glm::vec2 m_ViewportBounds[2];
 
         Ref<Texture2D> m_BoxTexture;
         glm::vec4 m_SquareColor = {0.0f, 1.0f, 0.0f, 1.0f};
