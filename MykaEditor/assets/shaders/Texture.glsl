@@ -58,7 +58,7 @@ void main()
 {
     vec4 texColor = Input.Color * texture(u_Textures[int(Input.TexIndex)], Input.TexCoord * Input.TilingFactor);
 
-    color = vec4(1.0, 0.0, 0.0, 1.0);
+    color = texColor;
 
     color2 = v_EntityID; // placeholder for entity ID
 }

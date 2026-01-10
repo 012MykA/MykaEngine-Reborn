@@ -4,6 +4,7 @@ project(MykaEngine)
 set(CMAKE_CXX_STANDARD 23)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
+find_package(OpenGL REQUIRED)
 find_package(Vulkan REQUIRED)
 
 # GLAD
@@ -94,14 +95,21 @@ target_include_directories(MykaEngine
         ${CMAKE_CURRENT_SOURCE_DIR}/vendor/json/include
 )
 
+if (WIN32)
+    set(VULKAN_LIB_DIR "$ENV{VULKAN_SDK}/Lib")
+else()
+    set(VULKAN_LIB_DIR "$ENV{VULKAN_SDK}/lib")
+endif()
+
 target_link_libraries(MykaEngine
     PUBLIC
+        OpenGL::GL
         Vulkan::Vulkan
     
     PRIVATE
-        "C:/VulkanSDK/1.4.335.0/Lib/shaderc_shared.lib"
-        "C:/VulkanSDK/1.4.335.0/Lib/spirv-cross-core.lib"
-        "C:/VulkanSDK/1.4.335.0/Lib/spirv-cross-glsl.lib"
+        ${VULKAN_LIB_DIR}/shaderc_shared.lib
+        ${VULKAN_LIB_DIR}/spirv-cross-core.lib
+        ${VULKAN_LIB_DIR}/spirv-cross-glsl.lib
     
     PUBLIC
         entt
@@ -112,7 +120,6 @@ target_link_libraries(MykaEngine
         glad
         stb_image
         glfw
-        opengl32
 )
 
 target_precompile_headers(MykaEngine
