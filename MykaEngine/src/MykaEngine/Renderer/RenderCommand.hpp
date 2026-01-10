@@ -33,6 +33,6 @@ namespace Myka
         }
 
     private:
-        static RendererAPI *s_RendererAPI;
+        static Scope<RendererAPI> s_RendererAPI;
     };
 } // namespace Myka

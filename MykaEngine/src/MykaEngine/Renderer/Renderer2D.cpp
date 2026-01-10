@@ -3,6 +3,7 @@
 
 #include "VertexArray.hpp"
 #include "Shader.hpp"
+#include "UniformBuffer.hpp"
 #include "RenderCommand.hpp"
 
 #include <glm/gtc/matrix_transform.hpp>
@@ -21,7 +22,7 @@ namespace Myka
         int EntityID;
     };
 
-    struct Rendeerer2DData
+    struct Renderer2DData
     {
         static const uint32_t MaxQuads = 10000;
         static const uint32_t MaxVertices = MaxQuads * 4;
@@ -43,9 +44,16 @@ namespace Myka
         glm::vec4 QuadVertexPositions[4];
 
         Renderer2D::Statistics Stats;
+
+        struct CameraData
+        {
+            glm::mat4 ViewProjection;
+        };
+        CameraData CameraBuffer;
+        Ref<UniformBuffer> CameraUniformBuffer;
     };
 
-    static Rendeerer2DData s_Data;
+    static Renderer2DData s_Data;
 
     void Renderer2D::Init()
     {
@@ -57,9 +65,9 @@ namespace Myka
         s_Data.QuadVertexBuffer->SetLayout({{ShaderDataType::Float3, "a_Position"},
                                             {ShaderDataType::Float4, "a_Color"},
                                             {ShaderDataType::Float2, "a_TexCoord"},
-                                            {ShaderDataType::Float,  "a_TexIndex"},
-                                            {ShaderDataType::Float,  "a_TilingFactor"},
-                                            {ShaderDataType::Int,    "a_EntityID"}});
+                                            {ShaderDataType::Float, "a_TexIndex"},
+                                            {ShaderDataType::Float, "a_TilingFactor"},
+                                            {ShaderDataType::Int, "a_EntityID"}});
 
         s_Data.QuadVertexArray->AddVertexBuffer(s_Data.QuadVertexBuffer);
 
@@ -96,8 +104,10 @@ namespace Myka
         }
 
         s_Data.TextureShader = Shader::Create("../../MykaEditor/assets/shaders/Texture.glsl");
-        s_Data.TextureShader->Bind();
-        s_Data.TextureShader->SetIntArray("u_Textures", samplers, s_Data.MaxTextureSlots);
+
+        // TODO: replace
+        // s_Data.TextureShader->Bind();
+        // s_Data.TextureShader->SetIntArray("u_Textures", samplers, s_Data.MaxTextureSlots);
 
         // Set all texture slots to 0
         s_Data.TextureSlots[0] = s_Data.WhiteTexture;
@@ -106,6 +116,8 @@ namespace Myka
         s_Data.QuadVertexPositions[1] = {-0.5f, 0.5f, 0.0f, 1.0f};
         s_Data.QuadVertexPositions[2] = {0.5f, 0.5f, 0.0f, 1.0f};
         s_Data.QuadVertexPositions[3] = {0.5f, -0.5f, 0.0f, 1.0f};
+
+        s_Data.CameraUniformBuffer = UniformBuffer::Create(sizeof(Renderer2DData::CameraData), 0);
     }
 
     void Renderer2D::Shutdown()
@@ -119,10 +131,14 @@ namespace Myka
     {
         MYKA_PROFILE_FUNCTION();
 
-        glm::mat4 viewProj = camera.GetProjection() * glm::inverse(transform);
+        // TODO: replace
+        // glm::mat4 viewProj = camera.GetProjection() * glm::inverse(transform);
 
-        s_Data.TextureShader->Bind();
-        s_Data.TextureShader->SetMat4("u_ViewProjection", viewProj);
+        // s_Data.TextureShader->Bind();
+        // s_Data.TextureShader->SetMat4("u_ViewProjection", viewProj);
+
+        s_Data.CameraBuffer.ViewProjection = camera.GetProjection() * glm::inverse(transform);
+        s_Data.CameraUniformBuffer->SetData(&s_Data.CameraBuffer, sizeof(Renderer2DData::CameraData));
 
         s_Data.QuadIndexCount = 0;
         s_Data.QuadVertexBufferPtr = s_Data.QuadVertexBufferBase;
@@ -136,8 +152,12 @@ namespace Myka
 
         glm::mat4 viewProj = camera.GetViewProjection();
 
-        s_Data.TextureShader->Bind();
-        s_Data.TextureShader->SetMat4("u_ViewProjection", viewProj);
+        // TODO: replace
+        // s_Data.TextureShader->Bind();
+        // s_Data.TextureShader->SetMat4("u_ViewProjection", viewProj);
+
+        s_Data.CameraBuffer.ViewProjection = camera.GetViewProjection();
+        s_Data.CameraUniformBuffer->SetData(&s_Data.CameraBuffer, sizeof(Renderer2DData::CameraData));
 
         s_Data.QuadIndexCount = 0;
         s_Data.QuadVertexBufferPtr = s_Data.QuadVertexBufferBase;
@@ -149,6 +169,7 @@ namespace Myka
     {
         MYKA_PROFILE_FUNCTION();
 
+        // TODO: replace
         s_Data.TextureShader->Bind();
         s_Data.TextureShader->SetMat4("u_ViewProjection", camera.GetViewProjectionMatrix());
 
@@ -180,6 +201,8 @@ namespace Myka
         {
             s_Data.TextureSlots[i]->Bind(i);
         }
+
+        s_Data.TextureShader->Bind();
         RenderCommand::DrawIndexed(s_Data.QuadVertexArray, s_Data.QuadIndexCount);
         s_Data.Stats.DrawCalls++;
     }
@@ -205,7 +228,7 @@ namespace Myka
     {
         MYKA_PROFILE_FUNCTION();
 
-        if (s_Data.QuadIndexCount >= Rendeerer2DData::MaxIndices)
+        if (s_Data.QuadIndexCount >= Renderer2DData::MaxIndices)
         {
             FlushAndReset();
         }
@@ -259,7 +282,7 @@ namespace Myka
     {
         MYKA_PROFILE_FUNCTION();
 
-        if (s_Data.QuadIndexCount >= Rendeerer2DData::MaxIndices)
+        if (s_Data.QuadIndexCount >= Renderer2DData::MaxIndices)
         {
             FlushAndReset();
         }
@@ -321,7 +344,7 @@ namespace Myka
     {
         MYKA_PROFILE_FUNCTION();
 
-        if (s_Data.QuadIndexCount >= Rendeerer2DData::MaxIndices)
+        if (s_Data.QuadIndexCount >= Renderer2DData::MaxIndices)
         {
             FlushAndReset();
         }
@@ -370,7 +393,7 @@ namespace Myka
     {
         MYKA_PROFILE_FUNCTION();
 
-        if (s_Data.QuadIndexCount >= Rendeerer2DData::MaxIndices)
+        if (s_Data.QuadIndexCount >= Renderer2DData::MaxIndices)
         {
             FlushAndReset();
         }
@@ -441,7 +464,7 @@ namespace Myka
     {
         MYKA_PROFILE_FUNCTION();
 
-        if (s_Data.QuadIndexCount >= Rendeerer2DData::MaxIndices)
+        if (s_Data.QuadIndexCount >= Renderer2DData::MaxIndices)
         {
             FlushAndReset();
         }
@@ -495,7 +518,7 @@ namespace Myka
     {
         MYKA_PROFILE_FUNCTION();
 
-        if (s_Data.QuadIndexCount >= Rendeerer2DData::MaxIndices)
+        if (s_Data.QuadIndexCount >= Renderer2DData::MaxIndices)
         {
             FlushAndReset();
         }
