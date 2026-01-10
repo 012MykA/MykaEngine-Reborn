@@ -8,7 +8,7 @@ namespace Myka
 	class MykaEditor : public Myka::Application
 	{
 	public:
-		MykaEditor() : Application("MykaEditor")
+		MykaEditor(ApplicationCommandLineArgs args) : Application("MykaEditor", args)
 		{
 			PushLayer(new EditorLayer());
 		}
@@ -16,8 +16,8 @@ namespace Myka
 		~MykaEditor() {}
 	};
 
-	Myka::Application *Myka::CreateApplication()
+	Myka::Application *Myka::CreateApplication(ApplicationCommandLineArgs args)
 	{
-		return new MykaEditor();
+		return new MykaEditor(args);
 	}
 } // namespace Myka

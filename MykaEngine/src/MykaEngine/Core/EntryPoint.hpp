@@ -5,14 +5,14 @@
 #include "MykaEngine/Core/Application.hpp"
 #include "MykaEngine/Core/Log.hpp"
 
-extern Myka::Application *Myka::CreateApplication();
+extern Myka::Application *Myka::CreateApplication(ApplicationCommandLineArgs args);
 
 int main(int argc, char **argv)
 {
 	Myka::Log::Init();
 
 	MYKA_PROFILE_BEGIN_SESSION("Startup", "MykaEngineProfile-Startup.json");
-	auto *app = Myka::CreateApplication();
+	auto *app = Myka::CreateApplication({argc, argv});
 	MYKA_PROFILE_END_SESSION();
 
 	MYKA_PROFILE_BEGIN_SESSION("Runtime", "MykaEngineProfile-Runtime.json");
