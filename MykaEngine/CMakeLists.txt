@@ -4,6 +4,8 @@ project(MykaEngine)
 set(CMAKE_CXX_STANDARD 23)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
+find_package(Vulkan REQUIRED)
+
 # GLAD
 add_library(glad STATIC
     vendor/glad/src/glad.c
@@ -82,6 +84,8 @@ add_library(MykaEngine STATIC
 
 target_include_directories(MykaEngine
     PUBLIC
+        ${Vulkan_INCLUDE_DIRS}
+
         ${CMAKE_CURRENT_SOURCE_DIR}/include/MykaEngine
         ${CMAKE_CURRENT_SOURCE_DIR}/src
         ${CMAKE_CURRENT_SOURCE_DIR}/vendor/imgui
@@ -91,6 +95,14 @@ target_include_directories(MykaEngine
 )
 
 target_link_libraries(MykaEngine
+    PUBLIC
+        Vulkan::Vulkan
+    
+    PRIVATE
+        "C:/VulkanSDK/1.4.335.0/Lib/shaderc_shared.lib"
+        "C:/VulkanSDK/1.4.335.0/Lib/spirv-cross-core.lib"
+        "C:/VulkanSDK/1.4.335.0/Lib/spirv-cross-glsl.lib"
+    
     PUBLIC
         entt
         spdlog

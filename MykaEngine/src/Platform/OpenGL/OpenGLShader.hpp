@@ -4,6 +4,8 @@
 
 #include <glm/glm.hpp>
 
+typedef unsigned int GLenum;
+
 namespace Myka
 {
     class OpenGLShader : public Shader
@@ -38,11 +40,21 @@ namespace Myka
 
     private:
         std::string ReadFile(const std::string &filepath);
-        std::unordered_map<unsigned int, std::string> PreProcess(const std::string &source);
-        void Compile(const std::unordered_map<unsigned int, std::string> &shaderSources);
+        std::unordered_map<GLenum, std::string> PreProcess(const std::string &source);
+
+        void CompileOrGetVulkanBinaries(const std::unordered_map<GLenum, std::string> &shaderSources);
+        void CompileOrGetOpenGLBinaries();
+        void CreateProgram();
+        void Reflect(GLenum stage, const std::vector<uint32_t> &shaderData);
 
     private:
         uint32_t m_RendererID;
+        std::string m_FilePath;
         std::string m_Name;
+
+        std::unordered_map<GLenum, std::vector<uint32_t>> m_VulkanSPIRV;
+        std::unordered_map<GLenum, std::vector<uint32_t>> m_OpenGLSPIRV;
+
+        std::unordered_map<GLenum, std::string> m_OpenGLSourceCode;
     };
 } // namespace Myka

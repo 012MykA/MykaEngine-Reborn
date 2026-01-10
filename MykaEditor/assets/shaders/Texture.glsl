@@ -1,5 +1,5 @@
 #type vertex
-#version 460 core
+#version 450 core
 
 layout(location = 0) in vec3 a_Position;
 layout(location = 1) in vec4 a_Color;
@@ -36,7 +36,7 @@ void main()
 }
 
 #type fragment
-#version 460 core
+#version 450 core
 
 layout(location = 0) out vec4 color;
 layout(location = 1) out int color2;
@@ -58,7 +58,7 @@ void main()
 {
     vec4 texColor = Input.Color * texture(u_Textures[int(Input.TexIndex)], Input.TexCoord * Input.TilingFactor);
 
-    color = texColor;
+    color = vec4(1.0, 0.0, 0.0, 1.0);
 
     color2 = v_EntityID; // placeholder for entity ID
 }
