@@ -10,6 +10,8 @@
 
 namespace Myka
 {
+    const std::filesystem::path g_AssetsDirectory = std::filesystem::current_path().parent_path().parent_path() / "MykaEditor/assets";
+
     EditorLayer::EditorLayer() : Layer("EditorLayer"), m_CameraController(1280.0f / 720.0f) {}
 
     void EditorLayer::OnAttach()
@@ -173,6 +175,7 @@ namespace Myka
 
         // SceneHierarchyPanel Render
         m_SceneHierarchyPanel.OnImGuiRender();
+        m_ContentBrowserPanel.OnImGuiRender();
 
         //  --- Renderer2D Stats ---
         ImGui::Begin("Renderer2D Stats");
@@ -204,6 +207,18 @@ namespace Myka
 
         uint64_t textureID = m_Framebuffer->GetColorAttachment(0);
         ImGui::Image(reinterpret_cast<void *>(textureID), ImVec2{m_ViewportSize.x, m_ViewportSize.y}, ImVec2{0, 1}, ImVec2{1, 0});
+
+        if (ImGui::BeginDragDropTarget())
+        {
+            if (const ImGuiPayload *payload = ImGui::AcceptDragDropPayload("CONTENT_BROWSER_ITEM"))
+            {
+                const wchar_t *path = (const wchar_t *)payload->Data;
+
+                OpenScene(g_AssetsDirectory / path);
+            }
+
+            ImGui::EndDragDropTarget();
+        }
 
         ImVec2 minBound = ImGui::GetWindowPos();
         minBound.x += viewportOffset.x;
@@ -353,7 +368,7 @@ namespace Myka
             if (m_ViewportHovered && !ImGuizmo::IsOver() && !Input::IsKeyPressed(MYKA_KEY_LEFT_ALT))
                 m_SceneHierarchyPanel.SetSelectedEntity(m_HoveredEntity);
         }
-        
+
         return false;
     }
 
@@ -368,14 +383,24 @@ namespace Myka
     {
         std::string filepath = FileDialogs::OpenFile("MykaEngine Scene (*.myka)\0*.myka\0");
         if (!filepath.empty())
-        {
-            m_ActiveScene = CreateRef<Scene>();
-            m_ActiveScene->OnViewportResize((uint32_t)m_ViewportSize.x, (uint32_t)m_ViewportSize.y);
-            m_SceneHierarchyPanel.SetContext(m_ActiveScene);
+            OpenScene(filepath);
+    }
 
-            SceneSerializer serializer(m_ActiveScene);
-            serializer.DeserializeJSON(filepath);
+    void EditorLayer::OpenScene(const std::filesystem::path &path)
+    {
+        if (path.filename().extension().string() != ".myka" || std::filesystem::is_directory(path))
+        {
+            // TODO: make a file signature with OpenSSL and then check the signature instead of validating whole file
+            MYKA_CORE_ERROR("Failed load scene from file: {0}", path.generic_string());
+            return;
         }
+
+        m_ActiveScene = CreateRef<Scene>();
+        m_ActiveScene->OnViewportResize((uint32_t)m_ViewportSize.x, (uint32_t)m_ViewportSize.y);
+        m_SceneHierarchyPanel.SetContext(m_ActiveScene);
+
+        SceneSerializer serializer(m_ActiveScene);
+        serializer.DeserializeJSON(path.string());
     }
 
     void EditorLayer::SaveSceneAs()

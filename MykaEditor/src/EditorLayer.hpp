@@ -2,8 +2,12 @@
 
 #include <MykaEngine.hpp>
 
-#include "Panels/SceneHierarchyPanel.hpp"
 #include "MykaEngine/Renderer/EditorCamera.hpp"
+
+#include "Panels/SceneHierarchyPanel.hpp"
+#include "Panels/ContentBrowserPanel.hpp"
+
+#include <filesystem>
 
 namespace Myka
 {
@@ -26,6 +30,7 @@ namespace Myka
 
         void NewScene();
         void OpenScene();
+        void OpenScene(const std::filesystem::path& path);
         void SaveSceneAs();
 
     private:
@@ -57,5 +62,6 @@ namespace Myka
         int m_ImGuizmoMode = 0;
 
         SceneHierarchyPanel m_SceneHierarchyPanel;
+        ContentBrowserPanel m_ContentBrowserPanel;
     };
 } // namespace Myka
