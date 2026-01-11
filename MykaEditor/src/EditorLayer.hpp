@@ -30,8 +30,14 @@ namespace Myka
 
         void NewScene();
         void OpenScene();
-        void OpenScene(const std::filesystem::path& path);
+        void OpenScene(const std::filesystem::path &path);
         void SaveSceneAs();
+
+        void OnScenePlay();
+        void OnSceneStop();
+
+        // UI Panels
+        void UI_ToolBar();
 
     private:
         OrthographicCameraController m_CameraController;
@@ -55,13 +61,21 @@ namespace Myka
         glm::vec2 m_ViewportSize = {0.0f, 0.0f};
         glm::vec2 m_ViewportBounds[2];
 
-        Ref<Texture2D> m_BoxTexture;
-        glm::vec4 m_SquareColor = {0.0f, 1.0f, 0.0f, 1.0f};
+        enum class SceneState
+        {
+            Edit = 0,
+            Play = 1
+        };
+
+        SceneState m_SceneState = SceneState::Edit;
 
         int m_ImGuizmoType = -1;
         int m_ImGuizmoMode = 0;
 
         SceneHierarchyPanel m_SceneHierarchyPanel;
         ContentBrowserPanel m_ContentBrowserPanel;
+
+        // Editor resources
+        Ref<Texture2D> m_IconPlay, m_IconStop;
     };
 } // namespace Myka

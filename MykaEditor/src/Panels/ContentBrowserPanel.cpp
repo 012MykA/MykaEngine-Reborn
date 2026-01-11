@@ -8,11 +8,12 @@ namespace Myka
     // TODO: refactor
     // TODO: change
     extern const std::filesystem::path g_AssetsDirectory;
+    extern const std::filesystem::path g_ResourcesDirectory;
 
     ContentBrowserPanel::ContentBrowserPanel() : m_CurrentDirectory(g_AssetsDirectory)
     {
-        m_DirectoryIcon = Texture2D::Create((g_AssetsDirectory / "textures/folder-icon.png").string());
-        m_FileIcon = Texture2D::Create((g_AssetsDirectory / "textures/file-icon.png").string());
+        m_DirectoryIcon = Texture2D::Create(g_ResourcesDirectory / "icons/Explorer/folder-icon.png");
+        m_FileIcon = Texture2D::Create(g_ResourcesDirectory / "icons/Explorer/file-icon.png");
     }
 
     void ContentBrowserPanel::OnImGuiRender()
