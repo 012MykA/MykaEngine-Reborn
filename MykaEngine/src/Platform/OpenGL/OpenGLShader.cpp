@@ -24,46 +24,50 @@ namespace Myka
             return 0;
         }
 
-        static const char *GetCacheDirectory()
+        static std::filesystem::path GetCacheDirectory()
         {
-            return "../../MykaEditor/assets/cache/opengl";
+            return std::filesystem::path("../../MykaEditor/assets/cache/opengl");
         }
 
         static void CreateCacheDirectoryIfNeeded()
         {
-            std::string cacheDirectory = GetCacheDirectory();
+            std::filesystem::path cacheDirectory = GetCacheDirectory();
             if (!std::filesystem::exists(cacheDirectory))
                 std::filesystem::create_directories(cacheDirectory);
         }
 
         // Convertions
-        static const char* GLShaderStageCachedVulkanFileExtension(uint32_t stage)
+        static const char *GLShaderStageCachedVulkanFileExtension(uint32_t stage)
         {
             switch (stage)
             {
-                case GL_VERTEX_SHADER:      return ".cached_vulkan.vert";
-                case GL_FRAGMENT_SHADER:    return ".cached_vulkan.frag";
+            case GL_VERTEX_SHADER:
+                return ".cached_vulkan.vert";
+            case GL_FRAGMENT_SHADER:
+                return ".cached_vulkan.frag";
 
-                default:
-                {
-                    MYKA_CORE_ASSERT(false, "Cannot recognise type in GLShaderStageCachedVulkanFileExtension(type)");
-                    return "";
-                }
+            default:
+            {
+                MYKA_CORE_ASSERT(false, "Cannot recognise type in GLShaderStageCachedVulkanFileExtension(type)");
+                return "";
+            }
             }
         }
 
-        static const char* GLShaderStageCachedOpenGLFileExtension(uint32_t stage)
+        static const char *GLShaderStageCachedOpenGLFileExtension(uint32_t stage)
         {
             switch (stage)
             {
-                case GL_VERTEX_SHADER:      return ".cached_opengl.vert";
-                case GL_FRAGMENT_SHADER:    return ".cached_opengl.frag";
+            case GL_VERTEX_SHADER:
+                return ".cached_opengl.vert";
+            case GL_FRAGMENT_SHADER:
+                return ".cached_opengl.frag";
 
-                default:
-                {
-                    MYKA_CORE_ASSERT(false, "Cannot recognise type in GLShaderStageCachedOpenGLFileExtension(type)");
-                    return "";
-                }
+            default:
+            {
+                MYKA_CORE_ASSERT(false, "Cannot recognise type in GLShaderStageCachedOpenGLFileExtension(type)");
+                return "";
+            }
             }
         }
 
@@ -71,34 +75,38 @@ namespace Myka
         {
             switch (stage)
             {
-                case GL_VERTEX_SHADER:      return shaderc_glsl_vertex_shader;
-                case GL_FRAGMENT_SHADER:    return shaderc_glsl_fragment_shader;
+            case GL_VERTEX_SHADER:
+                return shaderc_glsl_vertex_shader;
+            case GL_FRAGMENT_SHADER:
+                return shaderc_glsl_fragment_shader;
 
-                default:
-                {
-                    MYKA_CORE_ASSERT(false, "Cannot recognise type in GLShaderStageToShaderC(type)");
-                    return (shaderc_shader_kind)0;
-                }
+            default:
+            {
+                MYKA_CORE_ASSERT(false, "Cannot recognise type in GLShaderStageToShaderC(type)");
+                return (shaderc_shader_kind)0;
+            }
             }
         }
 
-        static const char* GLShaderStageToString(GLenum stage)
+        static const char *GLShaderStageToString(GLenum stage)
         {
             switch (stage)
             {
-                case GL_VERTEX_SHADER:      return "GL_VERTEX_SHADER";
-                case GL_FRAGMENT_SHADER:    return "GL_FRAGMENT_SHADER";
+            case GL_VERTEX_SHADER:
+                return "GL_VERTEX_SHADER";
+            case GL_FRAGMENT_SHADER:
+                return "GL_FRAGMENT_SHADER";
 
-                default:
-                {
-                    MYKA_CORE_ASSERT(false, "Cannot recognise type in GLShaderStageToString(type)");
-                    return nullptr;
-                }
+            default:
+            {
+                MYKA_CORE_ASSERT(false, "Cannot recognise type in GLShaderStageToString(type)");
+                return nullptr;
+            }
             }
         }
     }
 
-    OpenGLShader::OpenGLShader(const std::string &filepath) : m_FilePath(filepath)
+    OpenGLShader::OpenGLShader(const std::filesystem::path &filepath) : m_FilePath(filepath)
     {
         MYKA_PROFILE_FUNCTION();
 
@@ -118,11 +126,12 @@ namespace Myka
         }
 
         // Get name from filepath
-        auto lastSlash = filepath.find_last_of("/\\");
+        std::string filepathString = filepath.string();
+        auto lastSlash = filepathString.find_last_of("/\\");
         lastSlash = lastSlash == std::string::npos ? 0 : lastSlash + 1;
-        auto lastDot = filepath.rfind('.');
-        auto count = lastDot == std::string::npos ? filepath.size() - lastSlash : lastDot - lastSlash;
-        m_Name = filepath.substr(lastSlash, count);
+        auto lastDot = filepathString.rfind('.');
+        auto count = lastDot == std::string::npos ? filepathString.size() - lastSlash : lastDot - lastSlash;
+        m_Name = filepathString.substr(lastSlash, count);
     }
 
     OpenGLShader::OpenGLShader(const std::string &name, const std::string &vertexSrc, const std::string &fragmentSrc) : m_Name(name)
@@ -145,7 +154,7 @@ namespace Myka
         glDeleteProgram(m_RendererID);
     }
 
-    std::string OpenGLShader::ReadFile(const std::string &filepath)
+    std::string OpenGLShader::ReadFile(const std::filesystem::path &filepath)
     {
         MYKA_PROFILE_FUNCTION();
 
@@ -163,13 +172,13 @@ namespace Myka
             }
             else
             {
-                MYKA_CORE_ERROR("Could not read from file '{0}'", filepath);
+                MYKA_CORE_ERROR("Could not read from file '{0}'", filepath.string());
             }
             in.close();
         }
         else
         {
-            MYKA_CORE_ERROR("Could not open file '{0}'", filepath);
+            MYKA_CORE_ERROR("Could not open file '{0}'", filepath.string());
         }
 
         return result;
@@ -231,7 +240,7 @@ namespace Myka
             }
             else
             {
-                shaderc::SpvCompilationResult module = compiler.CompileGlslToSpv(source, Utils::GLShaderStageToShaderC(stage), m_FilePath.c_str(), options);
+                shaderc::SpvCompilationResult module = compiler.CompileGlslToSpv(source, Utils::GLShaderStageToShaderC(stage), m_FilePath.string().c_str(), options);
                 if (module.GetCompilationStatus() != shaderc_compilation_status_success)
                 {
                     MYKA_CORE_ERROR(module.GetErrorMessage());
@@ -292,7 +301,7 @@ namespace Myka
                 m_OpenGLSourceCode[stage] = glslCompiler.compile();
                 auto &source = m_OpenGLSourceCode[stage];
 
-                shaderc::SpvCompilationResult module = compiler.CompileGlslToSpv(source, Utils::GLShaderStageToShaderC(stage), m_FilePath.c_str());
+                shaderc::SpvCompilationResult module = compiler.CompileGlslToSpv(source, Utils::GLShaderStageToShaderC(stage), m_FilePath.string().c_str());
                 if (module.GetCompilationStatus() != shaderc_compilation_status_success)
                 {
                     MYKA_CORE_ASSERT(false, module.GetErrorMessage());
@@ -317,7 +326,7 @@ namespace Myka
         GLuint program = glCreateProgram();
 
         std::vector<GLuint> shaderIDs;
-        for (auto&& [stage, spirv] : m_OpenGLSPIRV)
+        for (auto &&[stage, spirv] : m_OpenGLSPIRV)
         {
             GLuint shaderID = shaderIDs.emplace_back(glCreateShader(stage));
             glShaderBinary(1, &shaderID, GL_SHADER_BINARY_FORMAT_SPIR_V, spirv.data(), spirv.size() * sizeof(uint32_t));
@@ -336,7 +345,7 @@ namespace Myka
 
             std::vector<GLchar> infoLog(maxLength);
             glGetProgramInfoLog(program, maxLength, &maxLength, infoLog.data());
-            MYKA_CORE_ERROR("Shader linking failed ({0}): \n{1}", m_FilePath, infoLog.data());
+            MYKA_CORE_ERROR("Shader linking failed ({0}): \n{1}", m_FilePath.string(), infoLog.data());
 
             glDeleteProgram(program);
 
@@ -358,7 +367,7 @@ namespace Myka
         spirv_cross::Compiler compiler(shaderData);
         spirv_cross::ShaderResources resources = compiler.get_shader_resources();
 
-        MYKA_CORE_TRACE("OpenGLShader::Reflect - {0} {1}", Utils::GLShaderStageToString(stage), m_FilePath);
+        MYKA_CORE_TRACE("OpenGLShader::Reflect - {0} {1}", Utils::GLShaderStageToString(stage), m_FilePath.string());
         MYKA_CORE_TRACE("   {0} uniform buffer", resources.uniform_buffers.size());
         MYKA_CORE_TRACE("   {0} resources", resources.sampled_images.size());
 

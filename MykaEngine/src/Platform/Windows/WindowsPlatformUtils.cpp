@@ -9,7 +9,7 @@
 
 namespace Myka
 {
-    std::string FileDialogs::OpenFile(const char *filter)
+    std::optional<std::filesystem::path> FileDialogs::OpenFile(const char *filter)
     {
         OPENFILENAME ofn;
         CHAR szFile[260] = {0};
@@ -23,12 +23,12 @@ namespace Myka
         ofn.Flags = OFN_PATHMUSTEXIST | OFN_FILEMUSTEXIST | OFN_NOCHANGEDIR;
         if (GetOpenFileName(&ofn) == TRUE)
         {
-            return ofn.lpstrFile;
+            return std::filesystem::path(ofn.lpstrFile);
         }
-        return std::string();
+        return std::nullopt;
     }
 
-    std::string FileDialogs::SaveFile(const char *filter)
+    std::optional<std::filesystem::path> FileDialogs::SaveFile(const char *filter)
     {
         OPENFILENAME ofn;
         CHAR szFile[260] = {0};
@@ -42,9 +42,9 @@ namespace Myka
         ofn.Flags = OFN_PATHMUSTEXIST | OFN_FILEMUSTEXIST | OFN_NOCHANGEDIR;
         if (GetSaveFileName(&ofn) == TRUE)
         {
-            return ofn.lpstrFile;
+            return std::filesystem::path(ofn.lpstrFile);
         }
-        return std::string();
+        return std::nullopt;
     }
 
 } // namespace Myka

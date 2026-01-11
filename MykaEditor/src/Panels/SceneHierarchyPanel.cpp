@@ -7,6 +7,9 @@
 
 namespace Myka
 {
+    // TODO: refactor
+    extern const std::filesystem::path g_AssetsDirectory;
+
     template <typename T, typename UIFunction>
     static void DrawComponent(const std::string &name, Entity entity, UIFunction uiFunction)
     {
@@ -309,6 +312,23 @@ namespace Myka
             } });
 
         DrawComponent<SpriteRendererComponent>("Sprite Renderer", entity, [](auto &component)
-                                               { ImGui::ColorEdit4("Color", glm::value_ptr(component.Color)); });
+        {
+            ImGui::Button("Texture", ImVec2(100.0f, 0.0f));
+            if (ImGui::BeginDragDropTarget())
+            {
+                if (const ImGuiPayload *payload = ImGui::AcceptDragDropPayload("CONTENT_BROWSER_ITEM"))
+                {
+                    const wchar_t *path = (const wchar_t *)payload->Data;
+                    std::filesystem::path texturePath(g_AssetsDirectory / path);
+                    component.Texture = Texture2D::Create(texturePath.string());
+                }
+
+                ImGui::EndDragDropTarget();
+            }
+
+            ImGui::ColorEdit4("Color", glm::value_ptr(component.Color));            
+
+            ImGui::DragFloat("Tiling Factor", &component.TilingFactor, 0.1f, 1.0f, 100.0f);
+        });
     }
 } // namespace Myka

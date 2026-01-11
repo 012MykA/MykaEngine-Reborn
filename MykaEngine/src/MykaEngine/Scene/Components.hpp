@@ -8,6 +8,8 @@
 #include "SceneCamera.hpp"
 #include "ScriptableEntity.hpp"
 
+#include "MykaEngine/Renderer/Texture.hpp"
+
 namespace Myka
 {
     struct TagComponent
@@ -39,7 +41,9 @@ namespace Myka
 
     struct SpriteRendererComponent
     {
+        Ref<Texture2D> Texture;
         glm::vec4 Color = glm::vec4(1.0f);
+        float TilingFactor = 1.0f;
 
         SpriteRendererComponent() = default;
         SpriteRendererComponent(const SpriteRendererComponent &) = default;

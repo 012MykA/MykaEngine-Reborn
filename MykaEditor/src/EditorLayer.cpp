@@ -10,7 +10,8 @@
 
 namespace Myka
 {
-    const std::filesystem::path g_AssetsDirectory = std::filesystem::current_path().parent_path().parent_path() / "MykaEditor/assets";
+    // TODO: refactor
+    extern const std::filesystem::path g_AssetsDirectory = std::filesystem::current_path().parent_path().parent_path() / "MykaEditor/assets";
 
     EditorLayer::EditorLayer() : Layer("EditorLayer"), m_CameraController(1280.0f / 720.0f) {}
 
@@ -381,36 +382,33 @@ namespace Myka
 
     void EditorLayer::OpenScene()
     {
-        std::string filepath = FileDialogs::OpenFile("MykaEngine Scene (*.myka)\0*.myka\0");
-        if (!filepath.empty())
-            OpenScene(filepath);
+        auto filepath = FileDialogs::OpenFile("MykaEngine Scene (*.myka)\0*.myka\0");
+        if (filepath != std::nullopt)
+            OpenScene(filepath.value());
     }
 
     void EditorLayer::OpenScene(const std::filesystem::path &path)
     {
-        if (path.filename().extension().string() != ".myka" || std::filesystem::is_directory(path))
+        if (path.filename().extension().string() == ".myka" && !std::filesystem::is_directory(path))
         {
             // TODO: make a file signature with OpenSSL and then check the signature instead of validating whole file
-            MYKA_CORE_ERROR("Failed load scene from file: {0}", path.generic_string());
-            return;
+            m_ActiveScene = CreateRef<Scene>();
+            m_ActiveScene->OnViewportResize((uint32_t)m_ViewportSize.x, (uint32_t)m_ViewportSize.y);
+            m_SceneHierarchyPanel.SetContext(m_ActiveScene);
+
+            SceneSerializer serializer(m_ActiveScene);
+            serializer.DeserializeJSON(path.string());
         }
-
-        m_ActiveScene = CreateRef<Scene>();
-        m_ActiveScene->OnViewportResize((uint32_t)m_ViewportSize.x, (uint32_t)m_ViewportSize.y);
-        m_SceneHierarchyPanel.SetContext(m_ActiveScene);
-
-        SceneSerializer serializer(m_ActiveScene);
-        serializer.DeserializeJSON(path.string());
     }
 
     void EditorLayer::SaveSceneAs()
     {
-        std::string filepath = FileDialogs::SaveFile("MykaEngine Scene (*.myka)\0*.myka\0");
+        auto filepath = FileDialogs::SaveFile("MykaEngine Scene (*.myka)\0*.myka\0");
 
-        if (!filepath.empty())
+        if (filepath != std::nullopt)
         {
             SceneSerializer serializer(m_ActiveScene);
-            serializer.SerializeJSON(filepath);
+            serializer.SerializeJSON(filepath.value());
         }
     }
 

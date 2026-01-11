@@ -5,8 +5,9 @@
 
 namespace Myka
 {
+    // TODO: refactor
     // TODO: change
-    extern const std::filesystem::path g_AssetsDirectory = std::filesystem::current_path().parent_path().parent_path() / "MykaEditor/assets";
+    extern const std::filesystem::path g_AssetsDirectory;
 
     ContentBrowserPanel::ContentBrowserPanel() : m_CurrentDirectory(g_AssetsDirectory)
     {

@@ -95,17 +95,23 @@ namespace Myka
 
         if (entity.HasComponent<SpriteRendererComponent>())
         {
-            const auto &spriteRendererComponent = entity.GetComponent<SpriteRendererComponent>();
+            const auto &src = entity.GetComponent<SpriteRendererComponent>();
+            json componentData;
+            if (src.Texture)
+                componentData["TexturePath"] = src.Texture->GetPath();
+            else
+                componentData["TexturePath"] = "";
 
-            e["SpriteRendererComponent"] = {
-                {"Color", spriteRendererComponent.Color},
-            };
+            componentData["Color"] = src.Color;
+            componentData["TilingFactor"] = src.TilingFactor;
+
+            e["SpriteRendererComponent"] = componentData;
         }
 
         out.push_back(e);
     }
 
-    void SceneSerializer::SerializeJSON(const std::string &filepath)
+    void SceneSerializer::SerializeJSON(const std::filesystem::path &filepath)
     {
         json data;
 
@@ -134,20 +140,20 @@ namespace Myka
         out.close();
     }
 
-    void SceneSerializer::SerializeBinary(const std::string &filepath)
+    void SceneSerializer::SerializeBinary(const std::filesystem::path &filepath)
     {
         // TODO:
         MYKA_CORE_ASSERT(false, "Not implemented yet");
     }
 
-    bool SceneSerializer::DeserializeJSON(const std::string &filepath)
+    bool SceneSerializer::DeserializeJSON(const std::filesystem::path &filepath)
     {
         std::ifstream in(filepath);
         json data = json::parse(in);
 
         if (!data.contains("Scene") || data["Scene"].is_null())
         {
-            MYKA_CORE_ERROR("Cannot DeserializeJSON: {0}", filepath);
+            MYKA_CORE_ERROR("Cannot DeserializeJSON: {0}", filepath.string());
             return false;
         }
 
@@ -198,7 +204,14 @@ namespace Myka
             if (!spriteRendererComponentJson.is_null())
             {
                 auto &src = deserializedEntity.AddComponent<SpriteRendererComponent>();
+
+                std::filesystem::path texturePath = spriteRendererComponentJson.value("TexturePath", "");
+                if (!texturePath.empty())
+                {
+                    src.Texture = Texture2D::Create(texturePath);
+                }
                 src.Color = spriteRendererComponentJson["Color"];
+                src.TilingFactor = spriteRendererComponentJson.value("TilingFactor", 1.0f);
             }
 
             MYKA_CORE_TRACE("Deserialized entity: ID={0}, name={1}", uuid, name);
@@ -207,7 +220,7 @@ namespace Myka
         return true;
     }
 
-    bool SceneSerializer::DeserializeBinary(const std::string &filepath)
+    bool SceneSerializer::DeserializeBinary(const std::filesystem::path &filepath)
     {
         // TODO:
         MYKA_CORE_ASSERT(false, "Not implemented yet");

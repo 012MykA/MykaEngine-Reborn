@@ -22,7 +22,7 @@ namespace Myka
         glTextureParameteri(m_RendererID, GL_TEXTURE_WRAP_T, GL_REPEAT);
     }
 
-    OpenGLTexture2D::OpenGLTexture2D(const std::string &path) : m_Path(path)
+    OpenGLTexture2D::OpenGLTexture2D(const std::filesystem::path &path) : m_Path(path)
     {
         MYKA_PROFILE_FUNCTION();
 
@@ -31,7 +31,7 @@ namespace Myka
         stbi_uc *data = nullptr;
         {
             MYKA_PROFILE_SCOPE("stbi_load - OpenGLTexture2D::OpenGLTexture2D(const std::string&)");
-            data = stbi_load(path.c_str(), &width, &height, &channels, 0);
+            data = stbi_load(path.string().c_str(), &width, &height, &channels, 0);
         }
         MYKA_CORE_ASSERT(data, "Failed to load image!");
         m_Width = width;

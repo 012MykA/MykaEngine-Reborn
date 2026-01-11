@@ -9,11 +9,11 @@ namespace Myka
     public:
         SceneSerializer(const Ref<Scene> &scene);
 
-        void SerializeJSON(const std::string &filepath);
-        void SerializeBinary(const std::string &filepath);
+        void SerializeJSON(const std::filesystem::path &filepath);
+        void SerializeBinary(const std::filesystem::path &filepath);
 
-        bool DeserializeJSON(const std::string &filepath);
-        bool DeserializeBinary(const std::string &filepath);
+        bool DeserializeJSON(const std::filesystem::path &filepath);
+        bool DeserializeBinary(const std::filesystem::path &filepath);
 
     private:
         Ref<Scene> m_Scene;
