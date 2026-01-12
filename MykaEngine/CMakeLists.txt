@@ -72,6 +72,7 @@ add_subdirectory(vendor/glfw)
 add_subdirectory(vendor/glm)
 add_subdirectory(vendor/spdlog)
 add_subdirectory(vendor/json)
+add_subdirectory(vendor/Box2D)
 
 # Sources
 file(GLOB_RECURSE ENGINE_SOURCES
@@ -117,6 +118,7 @@ target_link_libraries(MykaEngine
         imgui
         ImGuizmo
     PRIVATE
+        box2d
         glad
         stb_image
         glfw

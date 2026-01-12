@@ -122,7 +122,7 @@ namespace Myka
             CompileOrGetVulkanBinaries(shaderSources);
             CompileOrGetOpenGLBinaries();
             CreateProgram();
-            MYKA_CORE_WARN("Shader compilation tool {0} ms", timer.ElapsedMilliseconds());
+            MYKA_CORE_WARN("Shader compilation took {0} ms", timer.ElapsedMilliseconds());
         }
 
         // Get name from filepath

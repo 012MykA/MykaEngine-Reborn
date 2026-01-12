@@ -83,7 +83,7 @@ namespace Myka
                 auto &transform = view.get<TransformComponent>(entity);
                 auto &sprite = view.get<SpriteRendererComponent>(entity);
 
-                Renderer2D::DrawQuad(transform.GetTransform(), sprite.Color);
+                Renderer2D::DrawSprite(transform.GetTransform(), sprite);
             }
 
             Renderer2D::EndScene();

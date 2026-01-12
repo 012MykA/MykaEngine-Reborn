@@ -16,3 +16,6 @@
 [submodule "MykaEngine/vendor/ImGuizmo"]
 	path = MykaEngine/vendor/ImGuizmo
 	url = https://github.com/CedricGuillemet/ImGuizmo.git
+[submodule "MykaEngine/vendor/Box2D"]
+	path = MykaEngine/vendor/Box2D
+	url = https://github.com/erincatto/box2d.git

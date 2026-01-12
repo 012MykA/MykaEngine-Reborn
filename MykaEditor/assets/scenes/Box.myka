@@ -1,38 +1,71 @@
 {
     "Entities": [
         {
-            "Entity": 1048580
+            "CameraComponent": {
+                "Camera": {
+                    "OrthographicFar": 1.0,
+                    "OrthographicNear": -1.0,
+                    "OrthographicSize": 10.0,
+                    "PerspectiveFOV": 0.7853981852531433,
+                    "PerspectiveFar": 1000.0,
+                    "PerspectiveNear": 0.009999999776482582,
+                    "ProjectionType": 0
+                },
+                "FixedAspectRatio": false,
+                "Primary": true
+            },
+            "Entity": 4,
+            "TagComponent": {
+                "Tag": "Camera"
+            },
+            "TransformComponent": {
+                "Position": [
+                    0.0,
+                    3.0,
+                    6.300000190734863
+                ],
+                "Rotation": [
+                    -0.2617993950843811,
+                    0.0,
+                    0.0
+                ],
+                "Scale": [
+                    1.0,
+                    1.0,
+                    1.0
+                ]
+            }
         },
         {
             "Entity": 3,
             "SpriteRendererComponent": {
                 "Color": [
-                    0.698924720287323,
-                    0.698924720287323,
-                    0.698924720287323,
+                    1.0,
+                    1.0,
+                    1.0,
                     1.0
                 ],
                 "TexturePath": "C:\\dev\\MykaEngine-Reborn\\MykaEditor/assets\\textures\\box.png",
                 "TilingFactor": 1.0
             },
             "TagComponent": {
-                "Tag": "Top"
+                "Tag": "Left"
             },
             "TransformComponent": {
                 "Position": [
-                    -0.006347315851598978,
-                    0.5001170635223389,
-                    -0.34365028142929077
+                    -0.35777607560157776,
+                    0.0,
+                    0.00578628433868289
                 ],
                 "Rotation": [
-                    1.5707954168319702,
-                    0.785398006439209,
-                    4.2146837131440407e-08
+                    0.0,
+                    -0.7853982448577881,
+                    0.0
                 ],
                 "Scale": [
-                    0.9999999403953552,
-                    0.9999997019767761,
-                    0.9999997019767761
+                    1.0,
+                    1.0,
+                    1.0
                 ]
             }
         },
@@ -73,61 +106,48 @@
             "Entity": 1,
             "SpriteRendererComponent": {
                 "Color": [
-                    1.0,
-                    1.0,
-                    1.0,
+                    0.698924720287323,
+                    0.698924720287323,
+                    0.698924720287323,
                     1.0
                 ],
                 "TexturePath": "C:\\dev\\MykaEngine-Reborn\\MykaEditor/assets\\textures\\box.png",
                 "TilingFactor": 1.0
             },
             "TagComponent": {
-                "Tag": "Left"
+                "Tag": "Top"
             },
             "TransformComponent": {
                 "Position": [
-                    -0.35777607560157776,
-                    0.0,
-                    0.00578628433868289
+                    -0.006347315851598978,
+                    0.5001170635223389,
+                    -0.34365028142929077
                 ],
                 "Rotation": [
-                    0.0,
-                    -0.7853982448577881,
-                    0.0
+                    1.5707954168319702,
+                    0.785398006439209,
+                    4.2146837131440407e-08
                 ],
                 "Scale": [
-                    1.0,
-                    1.0,
-                    1.0
+                    0.9999999403953552,
+                    0.9999997019767761,
+                    0.9999997019767761
                 ]
             }
         },
         {
-            "CameraComponent": {
-                "Camera": {
-                    "OrthographicFar": 1.0,
-                    "OrthographicNear": -1.0,
-                    "OrthographicSize": 10.0,
-                    "PerspectiveFOV": 0.7853981852531433,
-                    "PerspectiveFar": 1000.0,
-                    "PerspectiveNear": 0.009999999776482582,
-                    "ProjectionType": 0
-                },
-                "FixedAspectRatio": false,
-                "Primary": true
-            },
             "Entity": 0,
             "TagComponent": {
-                "Tag": "Camera"
+                "Tag": "Entity"
             },
             "TransformComponent": {
                 "Position": [
                     0.0,
-                    3.5,
-                    4.099999904632568
+                    0.0,
+                    0.0
                 ],
                 "Rotation": [
-                    -0.2617993950843811,
+                    0.0,
                     0.0,
                     0.0
                 ],
