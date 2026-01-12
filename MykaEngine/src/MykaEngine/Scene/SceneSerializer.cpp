@@ -8,30 +8,53 @@ namespace glm
 {
     // Arbitrary types in nlohmann/json library: https://json.nlohmann.me/features/arbitrary_types
 
+    // Vec2
+    inline void to_json(nlohmann::json &j, const glm::vec2 &v)
+    {
+        j = nlohmann::json::array({v.x, v.y});
+    }
+
+    inline void from_json(const nlohmann::json &j, glm::vec2 &v)
+    {
+        if (!j.is_array() || j.size() != 2)
+        {
+            MYKA_CORE_ERROR("Invalid JSON for glm::vec2");
+        }
+
+        v.x = j.at(0).get<float>();
+        v.y = j.at(1).get<float>();
+    }
+
+    // Vec3
     inline void to_json(nlohmann::json &j, const glm::vec3 &v)
     {
         j = nlohmann::json::array({v.x, v.y, v.z});
     }
 
-    inline void to_json(nlohmann::json &j, const glm::vec4 &v)
-    {
-        j = nlohmann::json::array({v.x, v.y, v.z, v.w});
-    }
-
     inline void from_json(const nlohmann::json &j, glm::vec3 &v)
     {
         if (!j.is_array() || j.size() != 3)
-            throw std::runtime_error("Invalid JSON for glm::vec3");
+        {
+            MYKA_CORE_ERROR("Invalid JSON for glm::vec3");
+        }
 
         v.x = j.at(0).get<float>();
         v.y = j.at(1).get<float>();
         v.z = j.at(2).get<float>();
     }
 
+    // Vec4
+    inline void to_json(nlohmann::json &j, const glm::vec4 &v)
+    {
+        j = nlohmann::json::array({v.x, v.y, v.z, v.w});
+    }
+
     inline void from_json(const nlohmann::json &j, glm::vec4 &v)
     {
         if (!j.is_array() || j.size() != 4)
-            throw std::runtime_error("Invalid JSON for glm::vec4");
+        {
+            MYKA_CORE_ERROR("Invalid JSON for glm::vec4");
+        }
 
         v.x = j.at(0).get<float>();
         v.y = j.at(1).get<float>();
@@ -42,6 +65,40 @@ namespace glm
 
 namespace Myka
 {
+    namespace Utils
+    {
+        static std::string Rigidbody2DBodyTypeToString(Rigidbody2DComponent::BodyType type)
+        {
+            switch (type)
+            {
+            case Rigidbody2DComponent::BodyType::Static:
+                return "Static";
+            case Rigidbody2DComponent::BodyType::Kinematic:
+                return "Kinematic";
+            case Rigidbody2DComponent::BodyType::Dynamic:
+                return "Dynamic";
+
+            default:
+            {
+                MYKA_CORE_ASSERT(false, "Unknown body type");
+                return "";
+            }
+            }
+        }
+
+        static Rigidbody2DComponent::BodyType Rigidbody2DBodyTypeFromString(std::string type)
+        {
+            if (type == "Static")
+                return Rigidbody2DComponent::BodyType::Static;
+            if (type == "Kinematic")
+                return Rigidbody2DComponent::BodyType::Kinematic;
+            if (type == "Dynamic")
+                return Rigidbody2DComponent::BodyType::Dynamic;
+
+            return Rigidbody2DComponent::BodyType::Static;
+        }
+    } // namespace Utils
+
     using json = nlohmann::json;
 
     SceneSerializer::SceneSerializer(const Ref<Scene> &scene) : m_Scene(scene)
@@ -106,6 +163,32 @@ namespace Myka
             componentData["TilingFactor"] = src.TilingFactor;
 
             e["SpriteRendererComponent"] = componentData;
+        }
+
+        if (entity.HasComponent<Rigidbody2DComponent>())
+        {
+            const auto &rb2d = entity.GetComponent<Rigidbody2DComponent>();
+
+            json componentData;
+            componentData["BodyType"] = Utils::Rigidbody2DBodyTypeToString(rb2d.Type);
+            componentData["FixedRotation"] = rb2d.FixedRotation;
+
+            e["Rigidbody2DComponent"] = componentData;
+        }
+
+        if (entity.HasComponent<BoxColider2DComponent>())
+        {
+            const auto &bc2d = entity.GetComponent<BoxColider2DComponent>();
+
+            json componentData;
+            componentData["Offset"] = bc2d.Offset;
+            componentData["Size"] = bc2d.Size;
+
+            componentData["Density"] = bc2d.Density;
+            componentData["Friction"] = bc2d.Friction;
+            componentData["Restitution"] = bc2d.Restitution;
+
+            e["BoxColider2DComponent"] = componentData;
         }
 
         out.push_back(e);
@@ -212,6 +295,25 @@ namespace Myka
                 }
                 src.Color = spriteRendererComponentJson["Color"];
                 src.TilingFactor = spriteRendererComponentJson.value("TilingFactor", 1.0f);
+            }
+
+            auto rigidbody2DComponentComponentJson = entity["Rigidbody2DComponent"];
+            if (!rigidbody2DComponentComponentJson.is_null())
+            {
+                auto &rb2d = deserializedEntity.AddComponent<Rigidbody2DComponent>();
+                rb2d.Type = Utils::Rigidbody2DBodyTypeFromString(rigidbody2DComponentComponentJson["BodyType"]);
+                rb2d.FixedRotation = rigidbody2DComponentComponentJson["FixedRotation"];
+            }
+
+            auto boxColider2DComponentComponentJson = entity["BoxColider2DComponent"];
+            if (!boxColider2DComponentComponentJson.is_null())
+            {
+                auto &bc2d = deserializedEntity.AddComponent<BoxColider2DComponent>();
+                bc2d.Offset = boxColider2DComponentComponentJson["Offset"];
+                bc2d.Size = boxColider2DComponentComponentJson["Size"];
+                bc2d.Density = boxColider2DComponentComponentJson["Density"];
+                bc2d.Friction = boxColider2DComponentComponentJson["Friction"];
+                bc2d.Restitution = boxColider2DComponentComponentJson["Restitution"];
             }
 
             MYKA_CORE_TRACE("Deserialized entity: ID={0}, name={1}", uuid, name);

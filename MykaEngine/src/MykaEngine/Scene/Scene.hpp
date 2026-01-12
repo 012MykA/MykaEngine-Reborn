@@ -5,6 +5,8 @@
 #include "MykaEngine/Core/Timestep.hpp"
 #include "MykaEngine/Renderer/EditorCamera.hpp"
 
+#include "box2d/id.h"
+
 namespace Myka
 {
     class Scene
@@ -20,7 +22,10 @@ namespace Myka
         Entity CreateEntity(const std::string &name = std::string());
         void DestroyEntity(Entity entity);
 
-        void OnUpdateEditor(Timestep ts, EditorCamera& camera);
+        void OnRuntimeStart();
+        void OnRuntimeStop();
+
+        void OnUpdateEditor(Timestep ts, EditorCamera &camera);
         void OnUpdateRuntime(Timestep ts);
         void OnViewportResize(uint32_t width, uint32_t height);
 
@@ -33,5 +38,7 @@ namespace Myka
     private:
         entt::registry m_Registry;
         uint32_t m_ViewportWidth = 0, m_ViewportHeight = 0;
+
+        b2WorldId m_PhysicsWorldID;
     };
 } // namespace Myka

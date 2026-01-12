@@ -1,0 +1,191 @@
+{
+    "Entities": [
+        {
+            "BoxColider2DComponent": {
+                "Density": 1.0,
+                "Friction": 0.10000000149011612,
+                "Offset": [
+                    0.0,
+                    0.0
+                ],
+                "Restitution": 0.25999999046325684,
+                "Size": [
+                    0.5,
+                    0.5
+                ]
+            },
+            "Entity": 3,
+            "Rigidbody2DComponent": {
+                "BodyType": "Dynamic",
+                "FixedRotation": false
+            },
+            "SpriteRendererComponent": {
+                "Color": [
+                    0.5140606760978699,
+                    0.9498207569122314,
+                    0.5328029990196228,
+                    1.0
+                ],
+                "TexturePath": "",
+                "TilingFactor": 1.0
+            },
+            "TagComponent": {
+                "Tag": "Rect"
+            },
+            "TransformComponent": {
+                "Position": [
+                    3.2799999713897705,
+                    9.869999885559082,
+                    0.0
+                ],
+                "Rotation": [
+                    0.0,
+                    0.0,
+                    -2.5939083099365234
+                ],
+                "Scale": [
+                    4.80145263671875,
+                    0.4079876244068146,
+                    0.9999989867210388
+                ]
+            }
+        },
+        {
+            "CameraComponent": {
+                "Camera": {
+                    "OrthographicFar": 1.0,
+                    "OrthographicNear": -1.0,
+                    "OrthographicSize": 10.0,
+                    "PerspectiveFOV": 0.7853981852531433,
+                    "PerspectiveFar": 1000.0,
+                    "PerspectiveNear": 0.009999999776482582,
+                    "ProjectionType": 0
+                },
+                "FixedAspectRatio": false,
+                "Primary": true
+            },
+            "Entity": 2,
+            "TagComponent": {
+                "Tag": "Camera"
+            },
+            "TransformComponent": {
+                "Position": [
+                    0.0,
+                    1.0,
+                    22.299999237060547
+                ],
+                "Rotation": [
+                    0.0,
+                    0.0,
+                    0.0
+                ],
+                "Scale": [
+                    1.0,
+                    1.0,
+                    1.0
+                ]
+            }
+        },
+        {
+            "BoxColider2DComponent": {
+                "Density": 1.0,
+                "Friction": 0.30000001192092896,
+                "Offset": [
+                    0.0,
+                    0.0
+                ],
+                "Restitution": 0.15000000596046448,
+                "Size": [
+                    0.5,
+                    0.5
+                ]
+            },
+            "Entity": 1,
+            "Rigidbody2DComponent": {
+                "BodyType": "Static",
+                "FixedRotation": false
+            },
+            "SpriteRendererComponent": {
+                "Color": [
+                    0.9569892287254333,
+                    0.7440667748451233,
+                    0.09604193270206451,
+                    1.0
+                ],
+                "TexturePath": "",
+                "TilingFactor": 1.0
+            },
+            "TagComponent": {
+                "Tag": "Floor"
+            },
+            "TransformComponent": {
+                "Position": [
+                    0.0,
+                    -3.8222761154174805,
+                    0.0
+                ],
+                "Rotation": [
+                    0.0,
+                    0.0,
+                    -0.3686234652996063
+                ],
+                "Scale": [
+                    14.641324996948242,
+                    0.6225683689117432,
+                    1.0
+                ]
+            }
+        },
+        {
+            "BoxColider2DComponent": {
+                "Density": 1.0,
+                "Friction": 0.5,
+                "Offset": [
+                    0.0,
+                    0.0
+                ],
+                "Restitution": 0.0,
+                "Size": [
+                    0.5,
+                    0.5
+                ]
+            },
+            "Entity": 0,
+            "Rigidbody2DComponent": {
+                "BodyType": "Static",
+                "FixedRotation": false
+            },
+            "SpriteRendererComponent": {
+                "Color": [
+                    1.0,
+                    1.0,
+                    1.0,
+                    1.0
+                ],
+                "TexturePath": "C:\\dev\\MykaEngine-Reborn\\MykaEditor/assets\\textures\\box.png",
+                "TilingFactor": 1.0
+            },
+            "TagComponent": {
+                "Tag": "Box"
+            },
+            "TransformComponent": {
+                "Position": [
+                    7.803516864776611,
+                    -4.991390228271484,
+                    0.0
+                ],
+                "Rotation": [
+                    -0.2316015213727951,
+                    1.5707778930664063,
+                    -0.7515673637390137
+                ],
+                "Scale": [
+                    4.359995365142822,
+                    4.360013961791992,
+                    4.360019207000732
+                ]
+            }
+        }
+    ],
+    "Scene": "Untilted"
+}

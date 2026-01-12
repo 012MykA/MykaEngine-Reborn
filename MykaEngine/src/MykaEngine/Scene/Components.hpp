@@ -7,8 +7,9 @@
 
 #include "SceneCamera.hpp"
 #include "ScriptableEntity.hpp"
-
 #include "MykaEngine/Renderer/Texture.hpp"
+
+#include "box2d/id.h"
 
 namespace Myka
 {
@@ -79,5 +80,38 @@ namespace Myka
             DestroyScript = [](NativeScriptComponent *nsc)
             { delete nsc->Instance; nsc->Instance = nullptr; };
         }
+    };
+
+    struct Rigidbody2DComponent
+    {
+        enum class BodyType
+        {
+            Static = 0,
+            Kinematic,
+            Dynamic
+        };
+        BodyType Type = BodyType::Static;
+        bool FixedRotation = false;
+
+        b2BodyId RuntimeBody;
+
+        Rigidbody2DComponent() = default;
+        Rigidbody2DComponent(const Rigidbody2DComponent &) = default;
+    };
+
+    struct BoxColider2DComponent
+    {
+        glm::vec2 Offset = {0.0f, 0.0f};
+        glm::vec2 Size = {0.5f, 0.5f};
+
+        // TODO: move into Physics Matrial;
+        float Density = 1.0f;
+        float Friction = 0.5f;
+        float Restitution = 0.0f;
+
+        b2ShapeId RuntimeShape;
+
+        BoxColider2DComponent() = default;
+        BoxColider2DComponent(const BoxColider2DComponent &) = default;
     };
 } // namespace Myka

@@ -94,6 +94,7 @@ target_include_directories(MykaEngine
         ${CMAKE_CURRENT_SOURCE_DIR}/vendor/imgui/backends
         ${CMAKE_CURRENT_SOURCE_DIR}/vendor/glm
         ${CMAKE_CURRENT_SOURCE_DIR}/vendor/json/include
+        ${CMAKE_CURRENT_SOURCE_DIR}/vendor/Box2D/include
 )
 
 if (WIN32)
