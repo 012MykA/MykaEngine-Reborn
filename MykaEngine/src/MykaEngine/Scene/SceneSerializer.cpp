@@ -206,7 +206,7 @@ namespace Myka
 
         // Entites
         json entities = json::array();
-        for (auto entity : m_Scene->m_Registry.storage<entt::entity>())
+        for (auto entity : m_Scene->m_Registry.view<entt::entity>())
         {
             Entity e = {entity, m_Scene.get()};
             if (!e)
@@ -254,7 +254,7 @@ namespace Myka
             if (!tagComponent.is_null())
                 name = tagComponent["Tag"];
 
-            Entity deserializedEntity = m_Scene->CreateEntityWithUUID(UUID(), name);
+            Entity deserializedEntity = m_Scene->CreateEntityWithUUID(uuid, name);
 
             auto transformComponentJson = entity["TransformComponent"];
             if (!transformComponentJson.is_null())
