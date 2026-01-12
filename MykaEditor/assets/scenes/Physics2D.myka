@@ -14,16 +14,16 @@
                     0.5
                 ]
             },
-            "Entity": 13305678583621638941,
+            "Entity": 18243303129148066529,
             "Rigidbody2DComponent": {
                 "BodyType": "Static",
                 "FixedRotation": false
             },
             "SpriteRendererComponent": {
                 "Color": [
-                    0.9569892287254333,
-                    0.7440667748451233,
-                    0.09604193270206451,
+                    1.0,
+                    0.5054919719696045,
+                    0.021505355834960938,
                     1.0
                 ],
                 "TexturePath": "",
@@ -34,54 +34,68 @@
             },
             "TransformComponent": {
                 "Position": [
-                    0.0,
-                    -3.8222761154174805,
+                    4.961887836456299,
+                    0.6953111886978149,
                     0.0
                 ],
                 "Rotation": [
                     0.0,
                     0.0,
-                    -0.36984983086586
+                    -2.871603012084961
                 ],
                 "Scale": [
-                    14.641324996948242,
-                    0.6225683689117432,
+                    6.057880878448486,
+                    0.6225763559341431,
                     1.0
                 ]
             }
         },
         {
-            "CameraComponent": {
-                "Camera": {
-                    "OrthographicFar": 1.0,
-                    "OrthographicNear": -1.0,
-                    "OrthographicSize": 10.0,
-                    "PerspectiveFOV": 0.7853981852531433,
-                    "PerspectiveFar": 1000.0,
-                    "PerspectiveNear": 0.009999999776482582,
-                    "ProjectionType": 0
-                },
-                "FixedAspectRatio": false,
-                "Primary": true
+            "BoxColider2DComponent": {
+                "Density": 1.0,
+                "Friction": 0.30000001192092896,
+                "Offset": [
+                    0.0,
+                    0.0
+                ],
+                "Restitution": 0.15000000596046448,
+                "Size": [
+                    0.5,
+                    0.5
+                ]
             },
-            "Entity": 3171310426583555680,
+            "Entity": 3651740915543713804,
+            "Rigidbody2DComponent": {
+                "BodyType": "Static",
+                "FixedRotation": false
+            },
+            "SpriteRendererComponent": {
+                "Color": [
+                    1.0,
+                    0.5054919719696045,
+                    0.021505355834960938,
+                    1.0
+                ],
+                "TexturePath": "",
+                "TilingFactor": 1.0
+            },
             "TagComponent": {
-                "Tag": "Camera"
+                "Tag": "Floor"
             },
             "TransformComponent": {
                 "Position": [
-                    0.0,
-                    1.0,
-                    22.299999237060547
+                    -2.4545304775238037,
+                    -1.6534017324447632,
+                    0.0
                 ],
                 "Rotation": [
                     0.0,
                     0.0,
-                    0.0
+                    -0.4851968586444855
                 ],
                 "Scale": [
-                    1.0,
-                    1.0,
+                    9.3070650100708,
+                    0.6225685477256775,
                     1.0
                 ]
             }
@@ -120,19 +134,105 @@
             },
             "TransformComponent": {
                 "Position": [
-                    0.8799999952316284,
-                    8.770000457763672,
+                    3.8593926429748535,
+                    4.872953414916992,
                     0.0
                 ],
                 "Rotation": [
                     0.0,
                     0.0,
-                    0.5569345355033875
+                    0.556933581829071
                 ],
                 "Scale": [
-                    4.80145263671875,
-                    0.4079876244068146,
-                    0.9999989867210388
+                    1.249999761581421,
+                    1.249999761581421,
+                    1.249998688697815
+                ]
+            }
+        },
+        {
+            "CameraComponent": {
+                "Camera": {
+                    "OrthographicFar": 1.0,
+                    "OrthographicNear": -1.0,
+                    "OrthographicSize": 10.0,
+                    "PerspectiveFOV": 0.7853981852531433,
+                    "PerspectiveFar": 1000.0,
+                    "PerspectiveNear": 0.009999999776482582,
+                    "ProjectionType": 0
+                },
+                "FixedAspectRatio": false,
+                "Primary": true
+            },
+            "Entity": 3171310426583555680,
+            "TagComponent": {
+                "Tag": "Camera"
+            },
+            "TransformComponent": {
+                "Position": [
+                    0.0,
+                    1.0,
+                    31.700000762939453
+                ],
+                "Rotation": [
+                    0.0,
+                    0.0,
+                    0.0
+                ],
+                "Scale": [
+                    1.0,
+                    1.0,
+                    1.0
+                ]
+            }
+        },
+        {
+            "BoxColider2DComponent": {
+                "Density": 1.0,
+                "Friction": 0.30000001192092896,
+                "Offset": [
+                    0.0,
+                    0.0
+                ],
+                "Restitution": 0.15000000596046448,
+                "Size": [
+                    0.5,
+                    0.5
+                ]
+            },
+            "Entity": 13305678583621638941,
+            "Rigidbody2DComponent": {
+                "BodyType": "Static",
+                "FixedRotation": false
+            },
+            "SpriteRendererComponent": {
+                "Color": [
+                    1.0,
+                    0.5054919719696045,
+                    0.021505355834960938,
+                    1.0
+                ],
+                "TexturePath": "",
+                "TilingFactor": 1.0
+            },
+            "TagComponent": {
+                "Tag": "Floor"
+            },
+            "TransformComponent": {
+                "Position": [
+                    6.5393290519714355,
+                    -5.00462532043457,
+                    0.0
+                ],
+                "Rotation": [
+                    0.0,
+                    0.0,
+                    0.3861030042171478
+                ],
+                "Scale": [
+                    12.299485206604004,
+                    0.6225706934928894,
+                    0.999993085861206
                 ]
             }
         }

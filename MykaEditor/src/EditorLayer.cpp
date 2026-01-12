@@ -170,6 +170,11 @@ namespace Myka
 
                     ImGui::Separator();
 
+                    if (ImGui::MenuItem("Save", "Ctrl+S"))
+                        SaveScene();
+
+                    ImGui::Separator();
+
                     if (ImGui::MenuItem("Save As...", "Ctrl+Shift+S"))
                         SaveSceneAs();
 
@@ -310,7 +315,7 @@ namespace Myka
         const auto &activeHovered = colors[ImGuiCol_ButtonActive];
         ImGui::PushStyleColor(ImGuiCol_ButtonActive, ImVec4(activeHovered.x, activeHovered.y, activeHovered.z, 0.5f));
 
-        ImGui::Begin("##toolbar", nullptr, ImGuiWindowFlags_NoDecoration | ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_NoScrollWithMouse);
+        ImGui::Begin("##toolbar", nullptr, ImGuiWindowFlags_NoDecoration | ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_NoScrollWithMouse | ImGuiWindowFlags_NoResize);
 
         float size = ImGui::GetWindowHeight() - 4.0f;
         Ref<Texture2D> icon = m_SceneState == SceneState::Edit ? m_IconPlay : m_IconStop;
@@ -372,12 +377,25 @@ namespace Myka
 
         case MYKA_KEY_S:
         {
-            if (ctrl && shift)
+            if (ctrl)
             {
-                SaveSceneAs();
+                if (shift)
+                    SaveSceneAs();
+                else
+                    SaveScene();
             }
             break;
         }
+
+        // Scene Commands
+        case MYKA_KEY_D:
+        {
+            if (ctrl)
+                OnDuplicateEntity();
+
+            break;
+        }
+
         // ImGuizmo
         case MYKA_KEY_X:
         {
@@ -423,6 +441,8 @@ namespace Myka
         m_ActiveScene = CreateRef<Scene>();
         m_ActiveScene->OnViewportResize((uint32_t)m_ViewportSize.x, (uint32_t)m_ViewportSize.y);
         m_SceneHierarchyPanel.SetContext(m_ActiveScene);
+
+        m_EditorScenePath = std::filesystem::path();
     }
 
     void EditorLayer::OpenScene()
@@ -449,9 +469,20 @@ namespace Myka
         SceneSerializer serializer(newScene);
         if (serializer.DeserializeJSON(path))
         {
-            m_ActiveScene = newScene;
-            m_ActiveScene->OnViewportResize((uint32_t)m_ViewportSize.x, (uint32_t)m_ViewportSize.y);
+            m_EditorScene = newScene;
+            m_EditorScene->OnViewportResize((uint32_t)m_ViewportSize.x, (uint32_t)m_ViewportSize.y);
+
+            m_ActiveScene = m_EditorScene;
             m_SceneHierarchyPanel.SetContext(m_ActiveScene);
+            m_EditorScenePath = path;
+        }
+    }
+
+    void EditorLayer::SaveScene()
+    {
+        if (!m_EditorScenePath.empty())
+        {
+            SerializeScene(m_ActiveScene, m_EditorScenePath);
         }
     }
 
@@ -461,21 +492,42 @@ namespace Myka
 
         if (filepath != std::nullopt)
         {
-            SceneSerializer serializer(m_ActiveScene);
-            serializer.SerializeJSON(filepath.value());
+            SerializeScene(m_ActiveScene, filepath.value());
+
+            m_EditorScenePath = filepath.value();
         }
+    }
+
+    void EditorLayer::SerializeScene(Ref<Scene> scene, const std::filesystem::path &path)
+    {
+        SceneSerializer serializer(scene);
+        serializer.SerializeJSON(path);
     }
 
     void EditorLayer::OnScenePlay()
     {
         m_SceneState = SceneState::Play;
+
+        m_ActiveScene = Scene::Copy(m_EditorScene);
         m_ActiveScene->OnRuntimeStart();
     }
 
     void EditorLayer::OnSceneStop()
     {
         m_SceneState = SceneState::Edit;
+
         m_ActiveScene->OnRuntimeStop();
+        m_ActiveScene = m_EditorScene;
+    }
+
+    void EditorLayer::OnDuplicateEntity()
+    {
+        if (m_SceneState != SceneState::Edit)
+            return;
+
+        Entity selectedEntity = m_SceneHierarchyPanel.GetSelectedEntity();
+        if (selectedEntity)
+            m_EditorScene->DuplicateEntity(selectedEntity);
     }
 
 } // namespace Myka
