@@ -222,7 +222,8 @@ namespace Myka
 
         if (ImGui::BeginDragDropTarget())
         {
-            if (const ImGuiPayload *payload = ImGui::AcceptDragDropPayload("CONTENT_BROWSER_ITEM"))
+            const ImGuiPayload *payload = ImGui::AcceptDragDropPayload("CONTENT_BROWSER_ITEM");
+            if (payload && m_SceneState == SceneState::Edit)
             {
                 const wchar_t *path = (const wchar_t *)payload->Data;
 
