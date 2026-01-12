@@ -4,6 +4,7 @@
 
 #include "MykaEngine/Core/Timestep.hpp"
 #include "MykaEngine/Renderer/EditorCamera.hpp"
+#include "MykaEngine/Core/UUID.hpp"
 
 #include "box2d/id.h"
 
@@ -20,6 +21,7 @@ namespace Myka
         ~Scene() = default;
 
         Entity CreateEntity(const std::string &name = std::string());
+        Entity CreateEntityWithUUID(UUID uuid, const std::string &name = std::string());
         void DestroyEntity(Entity entity);
 
         void OnRuntimeStart();

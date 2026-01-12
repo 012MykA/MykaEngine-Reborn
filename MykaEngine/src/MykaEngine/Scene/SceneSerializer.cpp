@@ -107,8 +107,10 @@ namespace Myka
 
     static void SerializeEntity(json &out, Entity entity)
     {
+        MYKA_CORE_ASSERT(entity.HasComponent<IDComponent>());
+
         json e;
-        e["Entity"] = static_cast<uint32_t>(entity); // TODO: replace with UUID
+        e["Entity"] = static_cast<uint64_t>(entity.GetComponent<IDComponent>().ID);
 
         if (entity.HasComponent<TagComponent>())
         {
@@ -245,14 +247,14 @@ namespace Myka
 
         for (auto entity : data["Entities"])
         {
-            uint64_t uuid = entity["Entity"]; // TODO: UUID
+            uint64_t uuid = entity["Entity"];
 
             std::string name;
             auto tagComponent = entity["TagComponent"];
             if (!tagComponent.is_null())
                 name = tagComponent["Tag"];
 
-            Entity deserializedEntity = m_Scene->CreateEntity(name);
+            Entity deserializedEntity = m_Scene->CreateEntityWithUUID(UUID(), name);
 
             auto transformComponentJson = entity["TransformComponent"];
             if (!transformComponentJson.is_null())

@@ -1,14 +1,16 @@
 {
     "Entities": [
         {
-            "Entity": 3,
+            "Entity": 512741299892896783,
             "SpriteRendererComponent": {
                 "Color": [
                     0.7568627595901489,
                     0.7372549176216125,
                     0.0,
                     1.0
-                ]
+                ],
+                "TexturePath": "",
+                "TilingFactor": 1.0
             },
             "TagComponent": {
                 "Tag": "Top"
@@ -32,14 +34,16 @@
             }
         },
         {
-            "Entity": 2,
+            "Entity": 14009881874193275173,
             "SpriteRendererComponent": {
                 "Color": [
                     0.42352941632270813,
                     0.3921568691730499,
                     0.0,
                     1.0
-                ]
+                ],
+                "TexturePath": "",
+                "TilingFactor": 1.0
             },
             "TagComponent": {
                 "Tag": "Right"
@@ -63,14 +67,16 @@
             }
         },
         {
-            "Entity": 1,
+            "Entity": 10613870686789834101,
             "SpriteRendererComponent": {
                 "Color": [
                     1.0,
                     0.9490196108818054,
                     0.0,
                     1.0
-                ]
+                ],
+                "TexturePath": "",
+                "TilingFactor": 1.0
             },
             "TagComponent": {
                 "Tag": "Left"
@@ -107,7 +113,7 @@
                 "FixedAspectRatio": false,
                 "Primary": true
             },
-            "Entity": 0,
+            "Entity": 15512824018790300782,
             "TagComponent": {
                 "Tag": "Camera"
             },

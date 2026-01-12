@@ -1,18 +1,31 @@
 #pragma once
 
+// MykaEngine
+#include "SceneCamera.hpp"
+#include "ScriptableEntity.hpp"
+#include "MykaEngine/Renderer/Texture.hpp"
+#include "MykaEngine/Core/UUID.hpp"
+
+// glm
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 #define GLM_ENABLE_EXPERIMENTAL
 #include <glm/gtx/quaternion.hpp>
 
-#include "SceneCamera.hpp"
-#include "ScriptableEntity.hpp"
-#include "MykaEngine/Renderer/Texture.hpp"
-
+// box2d
 #include "box2d/id.h"
 
 namespace Myka
 {
+    struct IDComponent
+    {
+        UUID ID;
+
+        IDComponent() = default;
+        IDComponent(const IDComponent &) = default;
+        IDComponent(const UUID &uuid) : ID(uuid) {}
+    };
+
     struct TagComponent
     {
         std::string Tag;

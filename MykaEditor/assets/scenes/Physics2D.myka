@@ -14,7 +14,7 @@
                     0.5
                 ]
             },
-            "Entity": 3,
+            "Entity": 1619718781689688051,
             "Rigidbody2DComponent": {
                 "BodyType": "Dynamic",
                 "FixedRotation": false
@@ -64,7 +64,7 @@
                 "FixedAspectRatio": false,
                 "Primary": true
             },
-            "Entity": 2,
+            "Entity": 3171310426583555680,
             "TagComponent": {
                 "Tag": "Camera"
             },
@@ -100,7 +100,7 @@
                     0.5
                 ]
             },
-            "Entity": 1,
+            "Entity": 13305678583621638941,
             "Rigidbody2DComponent": {
                 "BodyType": "Static",
                 "FixedRotation": false
@@ -150,7 +150,7 @@
                     0.5
                 ]
             },
-            "Entity": 0,
+            "Entity": 13409215389745136453,
             "Rigidbody2DComponent": {
                 "BodyType": "Static",
                 "FixedRotation": false

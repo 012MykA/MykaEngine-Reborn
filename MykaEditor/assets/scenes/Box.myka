@@ -14,7 +14,7 @@
                 "FixedAspectRatio": false,
                 "Primary": true
             },
-            "Entity": 4,
+            "Entity": 5084756423236903249,
             "TagComponent": {
                 "Tag": "Camera"
             },
@@ -37,7 +37,7 @@
             }
         },
         {
-            "Entity": 3,
+            "Entity": 17009023397041142853,
             "SpriteRendererComponent": {
                 "Color": [
                     1.0,
@@ -70,7 +70,7 @@
             }
         },
         {
-            "Entity": 2,
+            "Entity": 5521232631242826438,
             "SpriteRendererComponent": {
                 "Color": [
                     0.47311830520629883,
@@ -103,7 +103,7 @@
             }
         },
         {
-            "Entity": 1,
+            "Entity": 16503273226831413303,
             "SpriteRendererComponent": {
                 "Color": [
                     0.698924720287323,
@@ -136,7 +136,7 @@
             }
         },
         {
-            "Entity": 0,
+            "Entity": 9557595077379515820,
             "TagComponent": {
                 "Tag": "Entity"
             },
