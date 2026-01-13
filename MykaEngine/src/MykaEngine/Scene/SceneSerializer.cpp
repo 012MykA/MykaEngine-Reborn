@@ -167,6 +167,18 @@ namespace Myka
             e["SpriteRendererComponent"] = componentData;
         }
 
+        if (entity.HasComponent<CircleRendererComponent>())
+        {
+            const auto &src = entity.GetComponent<CircleRendererComponent>();
+            json componentData;
+
+            componentData["Color"] = src.Color;
+            componentData["Thickness"] = src.Thickness;
+            componentData["Fade"] = src.Fade;
+
+            e["CircleRendererComponent"] = componentData;
+        }
+
         if (entity.HasComponent<Rigidbody2DComponent>())
         {
             const auto &rb2d = entity.GetComponent<Rigidbody2DComponent>();
@@ -296,7 +308,17 @@ namespace Myka
                     src.Texture = Texture2D::Create(texturePath);
                 }
                 src.Color = spriteRendererComponentJson["Color"];
-                src.TilingFactor = spriteRendererComponentJson.value("TilingFactor", 1.0f);
+                src.TilingFactor = spriteRendererComponentJson["TilingFactor"];
+            }
+
+            auto circleRendererComponentJson = entity["CircleRendererComponent"];
+            if (!circleRendererComponentJson.is_null())
+            {
+                auto &crc = deserializedEntity.AddComponent<CircleRendererComponent>();
+
+                crc.Color = circleRendererComponentJson["Color"];
+                crc.Thickness = circleRendererComponentJson["Thickness"];
+                crc.Fade = circleRendererComponentJson["Fade"];
             }
 
             auto rigidbody2DComponentComponentJson = entity["Rigidbody2DComponent"];

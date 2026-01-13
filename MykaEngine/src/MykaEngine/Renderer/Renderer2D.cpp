@@ -22,6 +22,18 @@ namespace Myka
         int EntityID;
     };
 
+    struct CircleVertex
+    {
+        glm::vec3 WorldPosition;
+        glm::vec3 LocalPosition;
+        glm::vec4 Color;
+        float Thickness;
+        float Fade;
+
+        // Editor only
+        int EntityID;
+    };
+
     struct Renderer2DData
     {
         static const uint32_t MaxQuads = 10000;
@@ -31,12 +43,20 @@ namespace Myka
 
         Ref<VertexArray> QuadVertexArray;
         Ref<VertexBuffer> QuadVertexBuffer;
-        Ref<Shader> TextureShader;
+        Ref<Shader> QuadShader;
         Ref<Texture2D> WhiteTexture;
+
+        Ref<VertexArray> CircleVertexArray;
+        Ref<VertexBuffer> CircleVertexBuffer;
+        Ref<Shader> CircleShader;
 
         uint32_t QuadIndexCount = 0;
         QuadVertex *QuadVertexBufferBase = nullptr;
         QuadVertex *QuadVertexBufferPtr = nullptr;
+
+        uint32_t CircleIndexCount = 0;
+        CircleVertex *CircleVertexBufferBase = nullptr;
+        CircleVertex *CircleVertexBufferPtr = nullptr;
 
         std::array<Ref<Texture2D>, MaxTextureSlots> TextureSlots;
         uint32_t TextureSlotIndex = 1; // 0 = white texture
@@ -89,9 +109,24 @@ namespace Myka
             offset += 4;
         }
 
-        Ref<IndexBuffer> m_IndexBuffer(IndexBuffer::Create(quadIndices, s_Data.MaxIndices));
-        s_Data.QuadVertexArray->SetIndexBuffer(m_IndexBuffer);
+        Ref<IndexBuffer> indexBuffer(IndexBuffer::Create(quadIndices, s_Data.MaxIndices));
+        s_Data.QuadVertexArray->SetIndexBuffer(indexBuffer);
         delete[] quadIndices;
+
+        // Circles
+        s_Data.CircleVertexArray = VertexArray::Create();
+
+        s_Data.CircleVertexBuffer = VertexBuffer::Create(s_Data.MaxVertices * sizeof(CircleVertex));
+        s_Data.CircleVertexBuffer->SetLayout({{ShaderDataType::Float3, "a_WorldPosition"},
+                                              {ShaderDataType::Float3, "a_LocalPosition"},
+                                              {ShaderDataType::Float4, "a_Color"},
+                                              {ShaderDataType::Float, "a_Thickness"},
+                                              {ShaderDataType::Float, "a_Fade"},
+                                              {ShaderDataType::Int, "a_EntityID"}});
+
+        s_Data.CircleVertexArray->AddVertexBuffer(s_Data.CircleVertexBuffer);
+        s_Data.CircleVertexArray->SetIndexBuffer(indexBuffer);
+        s_Data.CircleVertexBufferBase = new CircleVertex[s_Data.MaxVertices];
 
         s_Data.WhiteTexture = Texture2D::Create(1, 1);
         uint32_t whiteTextureData = 0xFFFFFFFF;
@@ -103,11 +138,8 @@ namespace Myka
             samplers[i] = i;
         }
 
-        s_Data.TextureShader = Shader::Create("../../MykaEditor/assets/shaders/Texture.glsl");
-
-        // TODO: replace
-        // s_Data.TextureShader->Bind();
-        // s_Data.TextureShader->SetIntArray("u_Textures", samplers, s_Data.MaxTextureSlots);
+        s_Data.QuadShader = Shader::Create("../../MykaEditor/assets/shaders/Renderer2D_Quad.glsl");
+        s_Data.CircleShader = Shader::Create("../../MykaEditor/assets/shaders/Renderer2D_Circle.glsl");
 
         // Set all texture slots to 0
         s_Data.TextureSlots[0] = s_Data.WhiteTexture;
@@ -131,17 +163,14 @@ namespace Myka
     {
         MYKA_PROFILE_FUNCTION();
 
-        // TODO: replace
-        // glm::mat4 viewProj = camera.GetProjection() * glm::inverse(transform);
-
-        // s_Data.TextureShader->Bind();
-        // s_Data.TextureShader->SetMat4("u_ViewProjection", viewProj);
-
         s_Data.CameraBuffer.ViewProjection = camera.GetProjection() * glm::inverse(transform);
         s_Data.CameraUniformBuffer->SetData(&s_Data.CameraBuffer, sizeof(Renderer2DData::CameraData));
 
         s_Data.QuadIndexCount = 0;
         s_Data.QuadVertexBufferPtr = s_Data.QuadVertexBufferBase;
+
+        s_Data.CircleIndexCount = 0;
+        s_Data.CircleVertexBufferPtr = s_Data.CircleVertexBufferBase;
 
         s_Data.TextureSlotIndex = 1;
     }
@@ -150,17 +179,14 @@ namespace Myka
     {
         MYKA_PROFILE_FUNCTION();
 
-        glm::mat4 viewProj = camera.GetViewProjection();
-
-        // TODO: replace
-        // s_Data.TextureShader->Bind();
-        // s_Data.TextureShader->SetMat4("u_ViewProjection", viewProj);
-
         s_Data.CameraBuffer.ViewProjection = camera.GetViewProjection();
         s_Data.CameraUniformBuffer->SetData(&s_Data.CameraBuffer, sizeof(Renderer2DData::CameraData));
 
         s_Data.QuadIndexCount = 0;
         s_Data.QuadVertexBufferPtr = s_Data.QuadVertexBufferBase;
+
+        s_Data.CircleIndexCount = 0;
+        s_Data.CircleVertexBufferPtr = s_Data.CircleVertexBufferBase;
 
         s_Data.TextureSlotIndex = 1;
     }
@@ -170,11 +196,15 @@ namespace Myka
         MYKA_PROFILE_FUNCTION();
 
         // TODO: replace
-        s_Data.TextureShader->Bind();
-        s_Data.TextureShader->SetMat4("u_ViewProjection", camera.GetViewProjectionMatrix());
+        MYKA_CORE_WARN("Using Legacy function! 'void Renderer2D::BeginScene(const OrthographicCamera &)'");
+        s_Data.QuadShader->Bind();
+        s_Data.QuadShader->SetMat4("u_ViewProjection", camera.GetViewProjectionMatrix());
 
         s_Data.QuadIndexCount = 0;
         s_Data.QuadVertexBufferPtr = s_Data.QuadVertexBufferBase;
+
+        s_Data.CircleIndexCount = 0;
+        s_Data.CircleVertexBufferPtr = s_Data.CircleVertexBufferBase;
 
         s_Data.TextureSlotIndex = 1;
     }
@@ -183,9 +213,6 @@ namespace Myka
     {
         MYKA_PROFILE_FUNCTION();
 
-        uint32_t dataSize = (uint32_t)((uint8_t *)s_Data.QuadVertexBufferPtr - (uint8_t *)s_Data.QuadVertexBufferBase);
-        s_Data.QuadVertexBuffer->SetData(s_Data.QuadVertexBufferBase, dataSize);
-
         Flush();
     }
 
@@ -193,28 +220,31 @@ namespace Myka
     {
         MYKA_PROFILE_FUNCTION();
 
-        if (s_Data.QuadIndexCount == 0)
-            return;
-
-        // Bind textures
-        for (uint32_t i = 0; i < s_Data.TextureSlotIndex; ++i)
+        if (s_Data.QuadIndexCount)
         {
-            s_Data.TextureSlots[i]->Bind(i);
+            uint32_t dataSize = (uint32_t)((uint8_t *)s_Data.QuadVertexBufferPtr - (uint8_t *)s_Data.QuadVertexBufferBase);
+            s_Data.QuadVertexBuffer->SetData(s_Data.QuadVertexBufferBase, dataSize);
+
+            // Bind textures
+            for (uint32_t i = 0; i < s_Data.TextureSlotIndex; ++i)
+            {
+                s_Data.TextureSlots[i]->Bind(i);
+            }
+
+            s_Data.QuadShader->Bind();
+            RenderCommand::DrawIndexed(s_Data.QuadVertexArray, s_Data.QuadIndexCount);
+            s_Data.Stats.DrawCalls++;
         }
 
-        s_Data.TextureShader->Bind();
-        RenderCommand::DrawIndexed(s_Data.QuadVertexArray, s_Data.QuadIndexCount);
-        s_Data.Stats.DrawCalls++;
-    }
+        if (s_Data.CircleIndexCount)
+        {
+            uint32_t dataSize = (uint32_t)((uint8_t *)s_Data.CircleVertexBufferPtr - (uint8_t *)s_Data.CircleVertexBufferBase);
+            s_Data.CircleVertexBuffer->SetData(s_Data.CircleVertexBufferBase, dataSize);
 
-    void Renderer2D::FlushAndReset()
-    {
-        EndScene();
-
-        s_Data.QuadIndexCount = 0;
-        s_Data.QuadVertexBufferPtr = s_Data.QuadVertexBufferBase;
-
-        s_Data.TextureSlotIndex = 1;
+            s_Data.CircleShader->Bind();
+            RenderCommand::DrawIndexed(s_Data.CircleVertexArray, s_Data.CircleIndexCount);
+            s_Data.Stats.DrawCalls++;
+        }
     }
 
     void Renderer2D::DrawQuad(const glm::vec2 &position, const glm::vec2 &size, const glm::vec4 &color)
@@ -230,7 +260,7 @@ namespace Myka
 
         if (s_Data.QuadIndexCount >= Renderer2DData::MaxIndices)
         {
-            FlushAndReset();
+            NextBatch();
         }
 
         const float textureIndex = 0.0f; // white texture
@@ -284,7 +314,7 @@ namespace Myka
 
         if (s_Data.QuadIndexCount >= Renderer2DData::MaxIndices)
         {
-            FlushAndReset();
+            NextBatch();
         }
 
         float textureIndex = 0.0f;
@@ -346,7 +376,7 @@ namespace Myka
 
         if (s_Data.QuadIndexCount >= Renderer2DData::MaxIndices)
         {
-            FlushAndReset();
+            NextBatch();
         }
 
         const float textureIndex = 0.0f; // white texture
@@ -395,7 +425,7 @@ namespace Myka
 
         if (s_Data.QuadIndexCount >= Renderer2DData::MaxIndices)
         {
-            FlushAndReset();
+            NextBatch();
         }
 
         float textureIndex = 0.0f;
@@ -466,7 +496,7 @@ namespace Myka
 
         if (s_Data.QuadIndexCount >= Renderer2DData::MaxIndices)
         {
-            FlushAndReset();
+            NextBatch();
         }
 
         const float textureIndex = 0.0f; // white texture
@@ -520,7 +550,7 @@ namespace Myka
 
         if (s_Data.QuadIndexCount >= Renderer2DData::MaxIndices)
         {
-            FlushAndReset();
+            NextBatch();
         }
 
         float textureIndex = 0.0f;
@@ -576,6 +606,56 @@ namespace Myka
         s_Data.Stats.QuadCount++;
     }
 
+    void Renderer2D::DrawCircle(const glm::mat4 &transform, const glm::vec4 &color, float thickness, float fade, int entityID)
+    {
+        MYKA_PROFILE_FUNCTION();
+
+        // TODO: impl for circles
+        // if (s_Data.QuadIndexCount >= Renderer2DData::MaxIndices)
+        // {
+        //     NextBatch();
+        // }
+
+        const float textureIndex = 0.0f; // white texture
+        const float tilingFactor = 1.0f; // default
+
+        s_Data.CircleVertexBufferPtr->WorldPosition = transform * s_Data.QuadVertexPositions[0];
+        s_Data.CircleVertexBufferPtr->LocalPosition = s_Data.QuadVertexPositions[0] * 2.0f;
+        s_Data.CircleVertexBufferPtr->Color = color;
+        s_Data.CircleVertexBufferPtr->Thickness = thickness;
+        s_Data.CircleVertexBufferPtr->Fade = fade;
+        s_Data.CircleVertexBufferPtr->EntityID = entityID;
+        s_Data.CircleVertexBufferPtr++;
+
+        s_Data.CircleVertexBufferPtr->WorldPosition = transform * s_Data.QuadVertexPositions[1];
+        s_Data.CircleVertexBufferPtr->LocalPosition = s_Data.QuadVertexPositions[1] * 2.0f;
+        s_Data.CircleVertexBufferPtr->Color = color;
+        s_Data.CircleVertexBufferPtr->Thickness = thickness;
+        s_Data.CircleVertexBufferPtr->Fade = fade;
+        s_Data.CircleVertexBufferPtr->EntityID = entityID;
+        s_Data.CircleVertexBufferPtr++;
+
+        s_Data.CircleVertexBufferPtr->WorldPosition = transform * s_Data.QuadVertexPositions[2];
+        s_Data.CircleVertexBufferPtr->LocalPosition = s_Data.QuadVertexPositions[2] * 2.0f;
+        s_Data.CircleVertexBufferPtr->Color = color;
+        s_Data.CircleVertexBufferPtr->Thickness = thickness;
+        s_Data.CircleVertexBufferPtr->Fade = fade;
+        s_Data.CircleVertexBufferPtr->EntityID = entityID;
+        s_Data.CircleVertexBufferPtr++;
+
+        s_Data.CircleVertexBufferPtr->WorldPosition = transform * s_Data.QuadVertexPositions[3];
+        s_Data.CircleVertexBufferPtr->LocalPosition = s_Data.QuadVertexPositions[3] * 2.0f;
+        s_Data.CircleVertexBufferPtr->Color = color;
+        s_Data.CircleVertexBufferPtr->Thickness = thickness;
+        s_Data.CircleVertexBufferPtr->Fade = fade;
+        s_Data.CircleVertexBufferPtr->EntityID = entityID;
+        s_Data.CircleVertexBufferPtr++;
+
+        s_Data.CircleIndexCount += 6;
+
+        s_Data.Stats.QuadCount++;
+    }
+
     void Renderer2D::DrawSprite(const glm::mat4 &transform, SpriteRendererComponent &src, int entityID)
     {
         MYKA_PROFILE_FUNCTION();
@@ -594,6 +674,23 @@ namespace Myka
     Renderer2D::Statistics Renderer2D::GetStats()
     {
         return s_Data.Stats;
+    }
+
+    void Renderer2D::StartBatch()
+    {
+        s_Data.QuadIndexCount = 0;
+        s_Data.QuadVertexBufferPtr = s_Data.QuadVertexBufferBase;
+
+        s_Data.CircleIndexCount = 0;
+        s_Data.CircleVertexBufferPtr = s_Data.CircleVertexBufferBase;
+
+        s_Data.TextureSlotIndex = 1;
+    }
+
+    void Renderer2D::NextBatch()
+    {
+        Flush();
+        StartBatch();
     }
 
 } // namespace Myka

@@ -60,6 +60,7 @@ namespace Myka
 
         CopyComponent<TransformComponent>(dstSceneRegistry, srcSceneRegistry, enttMap);
         CopyComponent<SpriteRendererComponent>(dstSceneRegistry, srcSceneRegistry, enttMap);
+        CopyComponent<CircleRendererComponent>(dstSceneRegistry, srcSceneRegistry, enttMap);
         CopyComponent<CameraComponent>(dstSceneRegistry, srcSceneRegistry, enttMap);
         CopyComponent<NativeScriptComponent>(dstSceneRegistry, srcSceneRegistry, enttMap);
         CopyComponent<Rigidbody2DComponent>(dstSceneRegistry, srcSceneRegistry, enttMap);
@@ -144,13 +145,28 @@ namespace Myka
     {
         Renderer2D::BeginScene(camera);
 
-        auto view = m_Registry.view<TransformComponent, SpriteRendererComponent>();
-        for (auto entity : view)
+        // Draw sprites
         {
-            auto &transform = view.get<TransformComponent>(entity);
-            auto &sprite = view.get<SpriteRendererComponent>(entity);
+            auto view = m_Registry.view<TransformComponent, SpriteRendererComponent>();
+            for (auto entity : view)
+            {
+                auto &transform = view.get<TransformComponent>(entity);
+                auto &sprite = view.get<SpriteRendererComponent>(entity);
 
-            Renderer2D::DrawSprite(transform.GetTransform(), sprite, static_cast<int>(entity));
+                Renderer2D::DrawSprite(transform.GetTransform(), sprite, static_cast<int>(entity));
+            }
+        }
+
+        // Draw circles
+        {
+            auto view = m_Registry.view<TransformComponent, CircleRendererComponent>();
+            for (auto entity : view)
+            {
+                auto &transform = view.get<TransformComponent>(entity);
+                auto &circle = view.get<CircleRendererComponent>(entity);
+
+                Renderer2D::DrawCircle(transform.GetTransform(), circle.Color, circle.Thickness, circle.Fade, static_cast<int>(entity));
+            }
         }
 
         Renderer2D::EndScene();
@@ -214,13 +230,28 @@ namespace Myka
         {
             Renderer2D::BeginScene(mainCamera->GetProjection(), cameraTransform);
 
-            auto view = m_Registry.view<TransformComponent, SpriteRendererComponent>();
-            for (auto entity : view)
+            // Draw sprites
             {
-                auto &transform = view.get<TransformComponent>(entity);
-                auto &sprite = view.get<SpriteRendererComponent>(entity);
+                auto view = m_Registry.view<TransformComponent, SpriteRendererComponent>();
+                for (auto entity : view)
+                {
+                    auto &transform = view.get<TransformComponent>(entity);
+                    auto &sprite = view.get<SpriteRendererComponent>(entity);
 
-                Renderer2D::DrawSprite(transform.GetTransform(), sprite);
+                    Renderer2D::DrawSprite(transform.GetTransform(), sprite, static_cast<int>(entity));
+                }
+            }
+
+            // Draw circles
+            {
+                auto view = m_Registry.view<TransformComponent, CircleRendererComponent>();
+                for (auto entity : view)
+                {
+                    auto &transform = view.get<TransformComponent>(entity);
+                    auto &circle = view.get<CircleRendererComponent>(entity);
+
+                    Renderer2D::DrawCircle(transform.GetTransform(), circle.Color, circle.Thickness, circle.Fade, static_cast<int>(entity));
+                }
             }
 
             Renderer2D::EndScene();
@@ -247,6 +278,7 @@ namespace Myka
 
         CopyComponentIfExists<TransformComponent>(newEntity, entity);
         CopyComponentIfExists<SpriteRendererComponent>(newEntity, entity);
+        CopyComponentIfExists<CircleRendererComponent>(newEntity, entity);
         CopyComponentIfExists<CameraComponent>(newEntity, entity);
         CopyComponentIfExists<NativeScriptComponent>(newEntity, entity);
         CopyComponentIfExists<Rigidbody2DComponent>(newEntity, entity);
@@ -291,6 +323,11 @@ namespace Myka
 
     template <>
     void Scene::OnComponentAdded<SpriteRendererComponent>(Entity entity, SpriteRendererComponent &component)
+    {
+    }
+
+    template <>
+    void Scene::OnComponentAdded<CircleRendererComponent>(Entity entity, CircleRendererComponent &component)
     {
     }
 

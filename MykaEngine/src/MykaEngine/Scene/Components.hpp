@@ -67,6 +67,17 @@ namespace Myka
         operator const glm::vec4 &() const { return Color; }
     };
 
+    struct CircleRendererComponent
+    {
+        glm::vec4 Color = glm::vec4(1.0f);
+        float Radius = 0.5f; // 1m
+        float Thickness = 1.0f;
+        float Fade = 0.005f;
+
+        CircleRendererComponent() = default;
+        CircleRendererComponent(const CircleRendererComponent &) = default;
+    };
+
     struct CameraComponent
     {
         SceneCamera Camera;
