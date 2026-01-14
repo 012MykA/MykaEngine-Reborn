@@ -93,103 +93,18 @@ namespace Myka
 
     void Scene::OnRuntimeStart()
     {
-        // Creating World
-        b2WorldDef physicsWorldDef = b2DefaultWorldDef();
-        physicsWorldDef.gravity = {0.0f, -9.81f};
-        physicsWorldDef.restitutionThreshold = 0.5f;
-
-        m_PhysicsWorldID = b2CreateWorld(&physicsWorldDef);
-
-        auto view = m_Registry.view<Rigidbody2DComponent>();
-        for (auto e : view)
-        {
-            Entity entity = {e, this};
-            auto &transform = entity.GetComponent<TransformComponent>();
-            auto &rb2d = entity.GetComponent<Rigidbody2DComponent>();
-
-            b2BodyDef bodyDef = b2DefaultBodyDef();
-            bodyDef.type = (b2BodyType)rb2d.Type;
-            bodyDef.position = {transform.Position.x, transform.Position.y};
-            bodyDef.rotation = b2MakeRot(transform.Rotation.z);
-            bodyDef.motionLocks.angularZ = rb2d.FixedRotation;
-
-            b2BodyId bodyID = b2CreateBody(m_PhysicsWorldID, &bodyDef);
-            rb2d.RuntimeBody = bodyID;
-
-            if (entity.HasComponent<BoxCollider2DComponent>())
-            {
-                auto &bc2d = entity.GetComponent<BoxCollider2DComponent>();
-
-                float hx = (bc2d.Size.x * transform.Scale.x) * 0.5f;
-                float hy = (bc2d.Size.y * transform.Scale.y) * 0.5f;
-
-                b2Vec2 center = {bc2d.Offset.x * transform.Scale.x, bc2d.Offset.y * transform.Scale.y};
-                b2Polygon box = b2MakeOffsetBox(hx, hy, center, b2Rot_identity);
-
-                b2ShapeDef shapeDef = b2DefaultShapeDef();
-                shapeDef.density = bc2d.Density;
-                shapeDef.material.friction = bc2d.Friction;
-                shapeDef.material.restitution = bc2d.Restitution;
-
-                bc2d.RuntimeShape = b2CreatePolygonShape(bodyID, &shapeDef, &box);
-            }
-
-            if (entity.HasComponent<CircleCollider2DComponent>())
-            {
-                auto &cc2d = entity.GetComponent<CircleCollider2DComponent>();
-
-                b2Circle circle;
-                circle.center = {cc2d.Offset.x * transform.Scale.x, cc2d.Offset.y * transform.Scale.y};
-                circle.radius = cc2d.Radius * std::max(transform.Scale.x, transform.Scale.y);
-
-                b2ShapeDef shapeDef = b2DefaultShapeDef();
-                shapeDef.density = cc2d.Density;
-                shapeDef.material.friction = cc2d.Friction;
-                shapeDef.material.restitution = cc2d.Restitution;
-
-                cc2d.RuntimeShape = b2CreateCircleShape(bodyID, &shapeDef, &circle);
-            }
-        }
+        OnPhysics2DStart();
     }
 
     void Scene::OnRuntimeStop()
     {
-        if (b2World_IsValid(m_PhysicsWorldID))
-        {
-            b2DestroyWorld(m_PhysicsWorldID);
-            m_PhysicsWorldID = b2_nullWorldId;
-        }
+        OnPhysics2DStop();
     }
 
     void Scene::OnUpdateEditor(Timestep ts, EditorCamera &camera)
     {
-        Renderer2D::BeginScene(camera);
-
-        // Draw sprites
-        {
-            auto view = m_Registry.view<TransformComponent, SpriteRendererComponent>();
-            for (auto entity : view)
-            {
-                auto &transform = view.get<TransformComponent>(entity);
-                auto &sprite = view.get<SpriteRendererComponent>(entity);
-
-                Renderer2D::DrawSprite(transform.GetTransform(), sprite, static_cast<int>(entity));
-            }
-        }
-
-        // Draw circles
-        {
-            auto view = m_Registry.view<TransformComponent, CircleRendererComponent>();
-            for (auto entity : view)
-            {
-                auto &transform = view.get<TransformComponent>(entity);
-                auto &circle = view.get<CircleRendererComponent>(entity);
-
-                Renderer2D::DrawCircle(transform.GetTransform(), circle.Color, circle.Thickness, circle.Fade, static_cast<int>(entity));
-            }
-        }
-
-        Renderer2D::EndScene();
+        // Render
+        RenderScene(camera);
     }
 
     void Scene::OnUpdateRuntime(Timestep ts)
@@ -278,6 +193,43 @@ namespace Myka
         }
     }
 
+    void Scene::OnSimulationStart()
+    {
+        OnPhysics2DStart();
+    }
+
+    void Scene::OnSimulationStop()
+    {
+        OnPhysics2DStop();
+    }
+
+    void Scene::OnUpdateSimulation(Timestep ts, EditorCamera &camera)
+    {
+        // Physics
+        {
+            b2World_Step(m_PhysicsWorldID, ts, 4);
+
+            auto view = m_Registry.view<Rigidbody2DComponent, TransformComponent>();
+            for (auto e : view)
+            {
+                Entity entity = {e, this};
+                auto &transform = entity.GetComponent<TransformComponent>();
+                auto &rb2d = entity.GetComponent<Rigidbody2DComponent>();
+
+                b2BodyId bodyID = rb2d.RuntimeBody;
+                const b2Vec2 &position = b2Body_GetPosition(bodyID);
+                const b2Rot &rotation = b2Body_GetRotation(bodyID);
+
+                transform.Position.x = position.x;
+                transform.Position.y = position.y;
+                transform.Rotation.z = b2Rot_GetAngle(rotation);
+            }
+        }
+
+        // Render
+        RenderScene(camera);
+    }
+
     void Scene::OnViewportResize(uint32_t width, uint32_t height)
     {
         m_ViewportWidth = width;
@@ -317,6 +269,127 @@ namespace Myka
         }
 
         return {};
+    }
+
+    void Scene::OnPhysics2DStart()
+    {
+        // Creating World
+        b2WorldDef physicsWorldDef = b2DefaultWorldDef();
+        physicsWorldDef.gravity = {0.0f, -9.81f};
+        physicsWorldDef.restitutionThreshold = 0.5f;
+
+        m_PhysicsWorldID = b2CreateWorld(&physicsWorldDef);
+
+        auto view = m_Registry.view<Rigidbody2DComponent>();
+        for (auto e : view)
+        {
+            Entity entity = {e, this};
+            auto &transform = entity.GetComponent<TransformComponent>();
+            auto &rb2d = entity.GetComponent<Rigidbody2DComponent>();
+
+            b2BodyDef bodyDef = b2DefaultBodyDef();
+            bodyDef.type = (b2BodyType)rb2d.Type;
+            bodyDef.position = {transform.Position.x, transform.Position.y};
+            bodyDef.rotation = b2MakeRot(transform.Rotation.z);
+            bodyDef.motionLocks.angularZ = rb2d.FixedRotation;
+
+            b2BodyId bodyID = b2CreateBody(m_PhysicsWorldID, &bodyDef);
+            rb2d.RuntimeBody = bodyID;
+
+            if (entity.HasComponent<BoxCollider2DComponent>())
+            {
+                auto &bc2d = entity.GetComponent<BoxCollider2DComponent>();
+
+                float hx = (bc2d.Size.x * transform.Scale.x) * 0.5f;
+                float hy = (bc2d.Size.y * transform.Scale.y) * 0.5f;
+
+                b2Vec2 center = {bc2d.Offset.x * transform.Scale.x, bc2d.Offset.y * transform.Scale.y};
+                b2Polygon box = b2MakeOffsetBox(hx, hy, center, b2Rot_identity);
+
+                b2ShapeDef shapeDef = b2DefaultShapeDef();
+                shapeDef.density = bc2d.Density;
+                shapeDef.material.friction = bc2d.Friction;
+                shapeDef.material.restitution = bc2d.Restitution;
+
+                bc2d.RuntimeShape = b2CreatePolygonShape(bodyID, &shapeDef, &box);
+            }
+
+            if (entity.HasComponent<CircleCollider2DComponent>())
+            {
+                auto &cc2d = entity.GetComponent<CircleCollider2DComponent>();
+
+                b2Circle circle;
+                circle.center = {cc2d.Offset.x * transform.Scale.x, cc2d.Offset.y * transform.Scale.y};
+                circle.radius = cc2d.Radius * std::max(transform.Scale.x, transform.Scale.y);
+
+                b2ShapeDef shapeDef = b2DefaultShapeDef();
+                shapeDef.density = cc2d.Density;
+                shapeDef.material.friction = cc2d.Friction;
+                shapeDef.material.restitution = cc2d.Restitution;
+
+                cc2d.RuntimeShape = b2CreateCircleShape(bodyID, &shapeDef, &circle);
+            }
+        }
+    }
+
+    void Scene::OnPhysics2DStop()
+    {
+        // Cleanup
+        auto view = m_Registry.view<Rigidbody2DComponent>();
+        for (auto e : view)
+        {
+            auto &rb2d = view.get<Rigidbody2DComponent>(e);
+            rb2d.RuntimeBody = b2_nullBodyId;
+
+            if (Entity entity = {e, this}; entity.HasComponent<BoxCollider2DComponent>())
+            {
+                auto &bc2d = entity.GetComponent<BoxCollider2DComponent>();
+                bc2d.RuntimeShape = b2_nullShapeId;
+            }
+
+            if (Entity entity = {e, this}; entity.HasComponent<CircleCollider2DComponent>())
+            {
+                auto &cc2d = entity.GetComponent<CircleCollider2DComponent>();
+                cc2d.RuntimeShape = b2_nullShapeId;
+            }
+        }
+
+        if (b2World_IsValid(m_PhysicsWorldID))
+        {
+            b2DestroyWorld(m_PhysicsWorldID);
+            m_PhysicsWorldID = b2_nullWorldId;
+        }
+    }
+
+    void Scene::RenderScene(EditorCamera &camera)
+    {
+        Renderer2D::BeginScene(camera);
+
+        // Draw sprites
+        {
+            auto view = m_Registry.view<TransformComponent, SpriteRendererComponent>();
+            for (auto entity : view)
+            {
+                auto &transform = view.get<TransformComponent>(entity);
+                auto &sprite = view.get<SpriteRendererComponent>(entity);
+
+                Renderer2D::DrawSprite(transform.GetTransform(), sprite, static_cast<int>(entity));
+            }
+        }
+
+        // Draw circles
+        {
+            auto view = m_Registry.view<TransformComponent, CircleRendererComponent>();
+            for (auto entity : view)
+            {
+                auto &transform = view.get<TransformComponent>(entity);
+                auto &circle = view.get<CircleRendererComponent>(entity);
+
+                Renderer2D::DrawCircle(transform.GetTransform(), circle.Color, circle.Thickness, circle.Fade, static_cast<int>(entity));
+            }
+        }
+
+        Renderer2D::EndScene();
     }
 
     template <typename T>

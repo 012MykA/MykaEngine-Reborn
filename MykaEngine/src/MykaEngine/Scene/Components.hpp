@@ -117,7 +117,7 @@ namespace Myka
         BodyType Type = BodyType::Static;
         bool FixedRotation = false;
 
-        b2BodyId RuntimeBody;
+        b2BodyId RuntimeBody = b2_nullBodyId;
 
         Rigidbody2DComponent() = default;
         Rigidbody2DComponent(const Rigidbody2DComponent &) = default;
@@ -133,7 +133,7 @@ namespace Myka
         float Friction = 0.5f;
         float Restitution = 0.0f;
 
-        b2ShapeId RuntimeShape;
+        b2ShapeId RuntimeShape = b2_nullShapeId;
 
         BoxCollider2DComponent() = default;
         BoxCollider2DComponent(const BoxCollider2DComponent &) = default;
@@ -149,7 +149,7 @@ namespace Myka
         float Friction = 0.5f;
         float Restitution = 0.0f;
 
-        b2ShapeId RuntimeShape;
+        b2ShapeId RuntimeShape = b2_nullShapeId;
 
         CircleCollider2DComponent() = default;
         CircleCollider2DComponent(const CircleCollider2DComponent &) = default;

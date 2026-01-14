@@ -21,6 +21,7 @@ namespace Myka
         MYKA_PROFILE_FUNCTION();
 
         m_IconPlay = Texture2D::Create(g_ResourcesDirectory / "Icons/PlayButton.png");
+        m_IconSimulate = Texture2D::Create(g_ResourcesDirectory / "Icons/SimulateButton.png");
         m_IconStop = Texture2D::Create(g_ResourcesDirectory / "Icons/StopButton.png");
 
         FramebufferSpecification fbSpec;
@@ -29,7 +30,8 @@ namespace Myka
         fbSpec.Height = 720;
         m_Framebuffer = Framebuffer::Create(fbSpec);
 
-        m_ActiveScene = CreateRef<Scene>();
+        m_EditorScene = CreateRef<Scene>();
+        m_ActiveScene = m_EditorScene;
 
         m_SceneHierarchyPanel.SetContext(m_ActiveScene);
 
@@ -53,7 +55,18 @@ namespace Myka
             m_Framebuffer->Resize((uint32_t)m_ViewportSize.x, (uint32_t)m_ViewportSize.y);
             m_CameraController.OnResize(m_ViewportSize.x, m_ViewportSize.y);
             m_EditorCamera.SetViewportSize(m_ViewportSize.x, m_ViewportSize.y);
-            m_ActiveScene->OnViewportResize((uint32_t)m_ViewportSize.x, (uint32_t)m_ViewportSize.y);
+
+            if (m_ActiveScene)
+                m_ActiveScene->OnViewportResize((uint32_t)m_ViewportSize.x, (uint32_t)m_ViewportSize.y);
+        }
+
+        if (!m_ActiveScene)
+        {
+            m_Framebuffer->Bind();
+            RenderCommand::SetClearColor({0.1f, 0.1f, 0.1f, 1.0f});
+            RenderCommand::Clear();
+            m_Framebuffer->Unbind();
+            return;
         }
 
         // Render
@@ -74,6 +87,13 @@ namespace Myka
             m_EditorCamera.OnUpdate(ts);
 
             m_ActiveScene->OnUpdateEditor(ts, m_EditorCamera);
+            break;
+        }
+        case SceneState::Simulate:
+        {
+            m_EditorCamera.OnUpdate(ts);
+
+            m_ActiveScene->OnUpdateSimulation(ts, m_EditorCamera);
             break;
         }
         case SceneState::Play:
@@ -323,17 +343,55 @@ namespace Myka
         ImGui::Begin("##toolbar", nullptr, ImGuiWindowFlags_NoDecoration | ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_NoScrollWithMouse | ImGuiWindowFlags_NoResize);
 
         float size = ImGui::GetWindowHeight() - 4.0f;
-        Ref<Texture2D> icon = m_SceneState == SceneState::Edit ? m_IconPlay : m_IconStop;
-        ImGui::SetCursorPosX((ImGui::GetWindowContentRegionMax().x * 0.5f) - (size * 0.5f));
-        ImGui::PushStyleVar(ImGuiStyleVar_FramePadding, ImVec2(0, 0));
-        if (ImGui::ImageButton("##playOrStopButton", (ImTextureID)icon->GetRendererID(), ImVec2(size, size), ImVec2(0, 0), ImVec2(1, 1)))
+
+        bool hasScene = m_EditorScene != nullptr;
+
+        // Play Button
         {
-            if (m_SceneState == SceneState::Edit)
-                OnScenePlay();
-            else if (m_SceneState == SceneState::Play)
-                OnSceneStop();
+            Ref<Texture2D> icon = (m_SceneState == SceneState::Edit || m_SceneState == SceneState::Simulate) ? m_IconPlay : m_IconStop;
+            ImGui::SetCursorPosX((ImGui::GetWindowContentRegionMax().x * 0.5f) - (size * 0.5f) - size * 0.6f);
+            ImGui::PushStyleVar(ImGuiStyleVar_FramePadding, ImVec2(0, 0));
+
+            if (!hasScene)
+                ImGui::BeginDisabled();
+
+            if (ImGui::ImageButton("##playOrStopButton", (ImTextureID)icon->GetRendererID(), ImVec2(size, size), ImVec2(0, 0), ImVec2(1, 1)))
+            {
+                if (m_SceneState == SceneState::Edit || m_SceneState == SceneState::Simulate)
+                    OnScenePlay();
+                else if (m_SceneState == SceneState::Play)
+                    OnSceneStop();
+            }
+
+            if (!hasScene)
+                ImGui::EndDisabled();
+
+            ImGui::PopStyleVar();
         }
-        ImGui::PopStyleVar();
+
+        ImGui::SameLine();
+
+        // Simulate Button
+        {
+            Ref<Texture2D> icon = (m_SceneState == SceneState::Edit || m_SceneState == SceneState::Play) ? m_IconSimulate : m_IconStop;
+            ImGui::PushStyleVar(ImGuiStyleVar_FramePadding, ImVec2(0, 0));
+
+            if (!hasScene)
+                ImGui::BeginDisabled();
+
+            if (ImGui::ImageButton("##SimulateButton", (ImTextureID)icon->GetRendererID(), ImVec2(size, size), ImVec2(0, 0), ImVec2(1, 1)))
+            {
+                if (m_SceneState == SceneState::Edit || m_SceneState == SceneState::Play)
+                    OnSceneSimulate();
+                else if (m_SceneState == SceneState::Simulate)
+                    OnSceneStop();
+            }
+
+            if (!hasScene)
+                ImGui::EndDisabled();
+
+            ImGui::PopStyleVar();
+        }
 
         ImGui::PopStyleVar(2);
         ImGui::PopStyleColor(3);
@@ -443,11 +501,17 @@ namespace Myka
 
     void EditorLayer::OnOverlayRender()
     {
+        if (!m_ActiveScene)
+            return;
 
         if (m_SceneState == SceneState::Play)
         {
             Entity camera = m_ActiveScene->GetPrimaryCameraEntity();
+            if (!camera)
+                return;
+
             Renderer2D::BeginScene(camera.GetComponent<CameraComponent>().Camera, camera.GetComponent<TransformComponent>().GetTransform());
+            
         }
         else
         {
@@ -461,23 +525,23 @@ namespace Myka
                 for (auto entity : view)
                 {
                     auto [tc, bc2d] = view.get<TransformComponent, BoxCollider2DComponent>(entity);
-    
+
                     glm::mat4 entityTransform = tc.GetTransform();
                     glm::mat4 overlayTransform = glm::translate(entityTransform, glm::vec3(bc2d.Offset, 0.01f)) * glm::scale(glm::mat4(1.0f), glm::vec3(bc2d.Size, 1.0f));
-    
+
                     Renderer2D::DrawRect(overlayTransform, colliders2DColor);
                 }
             }
-    
+
             { // Circle Colliders Render
                 auto view = m_ActiveScene->GetAllEntitiesWith<TransformComponent, CircleCollider2DComponent>();
                 for (auto entity : view)
                 {
                     auto [tc, cc2d] = view.get<TransformComponent, CircleCollider2DComponent>(entity);
-    
+
                     glm::mat4 entityTransform = tc.GetTransform();
                     glm::mat4 overlayTransform = glm::translate(entityTransform, glm::vec3(cc2d.Offset, 0.01f)) * glm::scale(glm::mat4(1.0f), glm::vec3(cc2d.Radius * 2.0f));
-    
+
                     Renderer2D::DrawCircle(overlayTransform, colliders2DColor, 0.01f);
                 }
             }
@@ -488,10 +552,14 @@ namespace Myka
 
     void EditorLayer::NewScene()
     {
-        m_ActiveScene = CreateRef<Scene>();
-        m_ActiveScene->OnViewportResize((uint32_t)m_ViewportSize.x, (uint32_t)m_ViewportSize.y);
-        m_SceneHierarchyPanel.SetContext(m_ActiveScene);
+        m_EditorScene = CreateRef<Scene>();
+        m_EditorScene->OnViewportResize((uint32_t)m_ViewportSize.x, (uint32_t)m_ViewportSize.y);
 
+        if (m_SceneState != SceneState::Edit)
+            OnSceneStop();
+
+        m_ActiveScene = m_EditorScene;
+        m_SceneHierarchyPanel.SetContext(m_ActiveScene);
         m_EditorScenePath = std::filesystem::path();
     }
 
@@ -556,19 +624,58 @@ namespace Myka
 
     void EditorLayer::OnScenePlay()
     {
+        if (m_SceneState == SceneState::Simulate)
+            OnSceneStop();
+
         m_SceneState = SceneState::Play;
 
-        m_ActiveScene = Scene::Copy(m_EditorScene);
-        m_ActiveScene->OnRuntimeStart();
+        if (m_EditorScene)
+        {
+            m_ActiveScene = Scene::Copy(m_EditorScene);
+            m_ActiveScene->OnRuntimeStart();
+            m_SceneHierarchyPanel.SetContext(m_ActiveScene);
+        }
+        else
+        {
+            MYKA_ERROR("Cannot play: no active scene!");
+            m_SceneState = SceneState::Edit;
+        }
+    }
+
+    void EditorLayer::OnSceneSimulate()
+    {
+        if (m_SceneState == SceneState::Play)
+            OnSceneStop();
+
+        m_SceneState = SceneState::Simulate;
+
+        if (m_EditorScene)
+        {
+            m_ActiveScene = Scene::Copy(m_EditorScene);
+            m_ActiveScene->OnSimulationStart();
+            m_SceneHierarchyPanel.SetContext(m_ActiveScene);
+        }
+        else
+        {
+            MYKA_ERROR("Cannot simulate: no active scene!");
+            m_SceneState = SceneState::Edit;
+        }
     }
 
     void EditorLayer::OnSceneStop()
     {
+        MYKA_ASSERT(m_SceneState == SceneState::Play || m_SceneState == SceneState::Simulate, "Unknown SceneState");
+
+        if (m_SceneState == SceneState::Play)
+            m_ActiveScene->OnRuntimeStop();
+        else if (m_SceneState == SceneState::Simulate)
+            m_ActiveScene->OnSimulationStop();
+
         m_SceneState = SceneState::Edit;
 
-        m_ActiveScene->OnRuntimeStop();
-        m_SceneHierarchyPanel.SetSelectedEntity({});
         m_ActiveScene = m_EditorScene;
+
+        m_SceneHierarchyPanel.SetContext(m_ActiveScene);
     }
 
     void EditorLayer::OnDuplicateEntity()

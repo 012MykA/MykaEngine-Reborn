@@ -122,7 +122,7 @@ namespace Myka
             CompileOrGetVulkanBinaries(shaderSources);
             CompileOrGetOpenGLBinaries();
             CreateProgram();
-            MYKA_CORE_WARN("Shader compilation took {0} ms", timer.ElapsedMilliseconds());
+            MYKA_CORE_TRACE("Shader compilation took {0} ms", timer.ElapsedMilliseconds());
         }
 
         // Get name from filepath
@@ -260,8 +260,8 @@ namespace Myka
             }
         }
 
-        for (auto &&[stage, data] : shaderData)
-            Reflect(stage, data);
+        // for (auto &&[stage, data] : shaderData)
+        //     Reflect(stage, data);
     }
 
     void OpenGLShader::CompileOrGetOpenGLBinaries()

@@ -28,16 +28,21 @@ namespace Myka
 
         void OnRuntimeStart();
         void OnRuntimeStop();
+        void OnUpdateRuntime(Timestep ts);
+
+        void OnSimulationStart();
+        void OnSimulationStop();
+        void OnUpdateSimulation(Timestep ts, EditorCamera &camera);
 
         void OnUpdateEditor(Timestep ts, EditorCamera &camera);
-        void OnUpdateRuntime(Timestep ts);
+
         void OnViewportResize(uint32_t width, uint32_t height);
 
         void DuplicateEntity(Entity entity);
 
         Entity GetPrimaryCameraEntity();
 
-        template<typename... Components>
+        template <typename... Components>
         auto GetAllEntitiesWith()
         {
             return m_Registry.view<Components...>();
@@ -46,6 +51,11 @@ namespace Myka
     private:
         template <typename T>
         void OnComponentAdded(Entity entity, T &component);
+
+        void OnPhysics2DStart();
+        void OnPhysics2DStop();
+
+        void RenderScene(EditorCamera &camera);
 
     private:
         entt::registry m_Registry;
