@@ -2,7 +2,6 @@
 
 ## 2D Final
 
-- **Physics Simulation Editor Mode**
 - **Beter Content Browser**
 
 - **AssetsManager**
