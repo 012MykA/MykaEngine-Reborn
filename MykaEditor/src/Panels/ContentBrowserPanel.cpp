@@ -28,6 +28,26 @@ namespace Myka
             }
         }
 
+        ImGui::SameLine();
+
+        // Assets
+        std::string pathString = m_CurrentDirectory.generic_string();
+        char buffer[512]{};
+        strncpy_s(buffer, pathString.c_str(), sizeof(buffer));
+
+        ImGui::PushItemWidth(-1);
+        if (ImGui::InputText("##PathBar", buffer, sizeof(buffer), ImGuiInputTextFlags_EnterReturnsTrue))
+        {
+            std::filesystem::path newPath(buffer);
+            if (std::filesystem::exists(newPath) && std::filesystem::is_directory(newPath))
+            {
+                m_CurrentDirectory = newPath;
+            }
+        }
+        ImGui::PopItemWidth();
+
+        ImGui::Separator();
+
         static float padding = 20.0f;
         static float thumbnailSize = 80.0f;
         float cellSize = thumbnailSize + padding;
@@ -50,11 +70,11 @@ namespace Myka
 
             if (ImGui::BeginDragDropSource())
             {
-                const wchar_t* itemPath = relativePath.c_str();
+                const wchar_t *itemPath = relativePath.c_str();
                 ImGui::SetDragDropPayload("CONTENT_BROWSER_ITEM", itemPath, (wcslen(itemPath) + 1) * sizeof(wchar_t));
                 ImGui::EndDragDropSource();
             }
-            
+
             if (ImGui::IsItemHovered() && ImGui::IsMouseDoubleClicked(ImGuiMouseButton_Left))
             {
                 if (directoryEntry.is_directory())
