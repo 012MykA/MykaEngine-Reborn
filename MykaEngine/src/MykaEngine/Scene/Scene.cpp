@@ -65,6 +65,7 @@ namespace Myka
         CopyComponent<NativeScriptComponent>(dstSceneRegistry, srcSceneRegistry, enttMap);
         CopyComponent<Rigidbody2DComponent>(dstSceneRegistry, srcSceneRegistry, enttMap);
         CopyComponent<BoxColider2DComponent>(dstSceneRegistry, srcSceneRegistry, enttMap);
+        CopyComponent<CircleColider2DComponent>(dstSceneRegistry, srcSceneRegistry, enttMap);
 
         return newScene;
     }
@@ -126,8 +127,23 @@ namespace Myka
                 shapeDef.material.friction = bc2d.Friction;
                 shapeDef.material.restitution = bc2d.Restitution;
 
-                b2ShapeId shapeID = b2CreatePolygonShape(bodyID, &shapeDef, &box);
-                bc2d.RuntimeShape = shapeID;
+                bc2d.RuntimeShape = b2CreatePolygonShape(bodyID, &shapeDef, &box);
+            }
+
+            if (entity.HasComponent<CircleColider2DComponent>())
+            {
+                auto &cc2d = entity.GetComponent<CircleColider2DComponent>();
+
+                b2Circle circle;
+                circle.center = {cc2d.Offset.x, cc2d.Offset.y};
+                circle.radius = cc2d.Radius;
+
+                b2ShapeDef shapeDef = b2DefaultShapeDef();
+                shapeDef.density = cc2d.Density;
+                shapeDef.material.friction = cc2d.Friction;
+                shapeDef.material.restitution = cc2d.Restitution;
+
+                cc2d.RuntimeShape = b2CreateCircleShape(bodyID, &shapeDef, &circle);
             }
         }
     }
@@ -283,6 +299,7 @@ namespace Myka
         CopyComponentIfExists<NativeScriptComponent>(newEntity, entity);
         CopyComponentIfExists<Rigidbody2DComponent>(newEntity, entity);
         CopyComponentIfExists<BoxColider2DComponent>(newEntity, entity);
+        CopyComponentIfExists<CircleColider2DComponent>(newEntity, entity);
     }
 
     Entity Scene::GetPrimaryCameraEntity()
@@ -348,6 +365,11 @@ namespace Myka
 
     template <>
     void Scene::OnComponentAdded<BoxColider2DComponent>(Entity entity, BoxColider2DComponent &component)
+    {
+    }
+
+    template <>
+    void Scene::OnComponentAdded<CircleColider2DComponent>(Entity entity, CircleColider2DComponent &component)
     {
     }
 

@@ -205,6 +205,21 @@ namespace Myka
             e["BoxColider2DComponent"] = componentData;
         }
 
+        if (entity.HasComponent<CircleColider2DComponent>())
+        {
+            const auto &cc2d = entity.GetComponent<CircleColider2DComponent>();
+
+            json componentData;
+            componentData["Offset"] = cc2d.Offset;
+            componentData["Radius"] = cc2d.Radius;
+
+            componentData["Density"] = cc2d.Density;
+            componentData["Friction"] = cc2d.Friction;
+            componentData["Restitution"] = cc2d.Restitution;
+
+            e["CircleColider2DComponent"] = componentData;
+        }
+
         out.push_back(e);
     }
 
@@ -338,6 +353,17 @@ namespace Myka
                 bc2d.Density = boxColider2DComponentComponentJson["Density"];
                 bc2d.Friction = boxColider2DComponentComponentJson["Friction"];
                 bc2d.Restitution = boxColider2DComponentComponentJson["Restitution"];
+            }
+
+            auto circleColider2DComponentJson = entity["CircleColider2DComponent"];
+            if (!circleColider2DComponentJson.is_null())
+            {
+                auto &cc2d = deserializedEntity.AddComponent<CircleColider2DComponent>();
+                cc2d.Offset = circleColider2DComponentJson["Offset"];
+                cc2d.Radius = circleColider2DComponentJson["Radius"];
+                cc2d.Density = circleColider2DComponentJson["Density"];
+                cc2d.Friction = circleColider2DComponentJson["Friction"];
+                cc2d.Restitution = circleColider2DComponentJson["Restitution"];
             }
 
             MYKA_CORE_TRACE("Deserialized entity: ID={0}, name={1}", uuid, name);

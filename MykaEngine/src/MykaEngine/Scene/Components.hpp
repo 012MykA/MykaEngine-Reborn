@@ -138,4 +138,21 @@ namespace Myka
         BoxColider2DComponent() = default;
         BoxColider2DComponent(const BoxColider2DComponent &) = default;
     };
+
+    struct CircleColider2DComponent
+    {
+        glm::vec2 Offset = {0.0f, 0.0f};
+        float Radius = 0.5f;
+
+        // TODO: move into Physics Matrial;
+        float Density = 1.0f;
+        float Friction = 0.5f;
+        float Restitution = 0.0f;
+
+        b2ShapeId RuntimeShape;
+
+        CircleColider2DComponent() = default;
+        CircleColider2DComponent(const CircleColider2DComponent &) = default;
+    };
+
 } // namespace Myka
