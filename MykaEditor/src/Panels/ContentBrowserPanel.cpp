@@ -12,13 +12,13 @@ namespace Myka
 
     ContentBrowserPanel::ContentBrowserPanel() : m_CurrentDirectory(g_AssetsDirectory)
     {
-        m_DirectoryIcon = Texture2D::Create(g_ResourcesDirectory / "icons/Explorer/folder-icon.png");
-        m_FileIcon = Texture2D::Create(g_ResourcesDirectory / "icons/Explorer/file-icon.png");
+        m_DirectoryIcon = Texture2D::Create(g_ResourcesDirectory / "icons/ContentBrowser/folder-icon.png");
+        m_FileIcon = Texture2D::Create(g_ResourcesDirectory / "icons/ContentBrowser/file-icon.png");
     }
 
     void ContentBrowserPanel::OnImGuiRender()
     {
-        ImGui::Begin("Explorer");
+        ImGui::Begin("Content Browser");
 
         if (m_CurrentDirectory != std::filesystem::path(g_AssetsDirectory))
         {
