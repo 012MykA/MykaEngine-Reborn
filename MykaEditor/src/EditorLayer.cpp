@@ -511,7 +511,6 @@ namespace Myka
                 return;
 
             Renderer2D::BeginScene(camera.GetComponent<CameraComponent>().Camera, camera.GetComponent<TransformComponent>().GetTransform());
-            
         }
         else
         {
@@ -685,7 +684,10 @@ namespace Myka
 
         Entity selectedEntity = m_SceneHierarchyPanel.GetSelectedEntity();
         if (selectedEntity)
-            m_EditorScene->DuplicateEntity(selectedEntity);
+        {
+            Entity newEntity = m_EditorScene->DuplicateEntity(selectedEntity);
+            m_SceneHierarchyPanel.SetSelectedEntity(newEntity);
+        }
     }
 
 } // namespace Myka

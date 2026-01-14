@@ -17,7 +17,7 @@ namespace Myka
         friend class SceneHierarchyPanel;
 
     public:
-        Scene();
+        Scene() = default;
         ~Scene() = default;
 
         static Ref<Scene> Copy(Ref<Scene> other);
@@ -38,7 +38,7 @@ namespace Myka
 
         void OnViewportResize(uint32_t width, uint32_t height);
 
-        void DuplicateEntity(Entity entity);
+        Entity DuplicateEntity(Entity entity);
 
         Entity GetPrimaryCameraEntity();
 
@@ -61,6 +61,6 @@ namespace Myka
         entt::registry m_Registry;
         uint32_t m_ViewportWidth = 0, m_ViewportHeight = 0;
 
-        b2WorldId m_PhysicsWorldID;
+        b2WorldId m_PhysicsWorldID = b2_nullWorldId;
     };
 } // namespace Myka

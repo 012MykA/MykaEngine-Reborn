@@ -12,7 +12,7 @@ namespace Myka
         Entity(const Entity &other) = default;
 
         template <typename T, typename... Args>
-        T &AddComponent(Args... args)
+        T &AddComponent(Args&&... args)
         {
             MYKA_CORE_ASSERT(!HasComponent<T>(), "Entity already has component!");
             T &component = m_Scene->m_Registry.emplace<T>(m_EntityHandle, std::forward<Args>(args)...);
@@ -22,7 +22,7 @@ namespace Myka
         }
 
         template <typename T, typename... Args>
-        T &AddOrReplaceComponent(Args... args)
+        T &AddOrReplaceComponent(Args&&... args)
         {
             T &component = m_Scene->m_Registry.emplace_or_replace<T>(m_EntityHandle, std::forward<Args>(args)...);
             m_Scene->OnComponentAdded<T>(*this, component);

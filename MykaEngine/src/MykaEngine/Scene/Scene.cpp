@@ -12,28 +12,46 @@
 
 namespace Myka
 {
-    Scene::Scene() {}
-
-    template <typename Component>
-    static void CopyComponent(entt::registry &dst, const entt::registry &src, const std::unordered_map<UUID, entt::entity> &enttMap)
+    // TODO: make src const ?
+    template <typename... Component>
+    static void CopyComponent(entt::registry &dst, entt::registry &src, const std::unordered_map<UUID, entt::entity> &enttMap)
     {
-        auto view = src.view<Component>();
-        for (auto e : view)
+        // Expand the parameter pack using a fold expression with a lambda.
+        // This executes the following block for each type in Component...
+        ([&]()
         {
-            UUID uuid = src.get<IDComponent>(e).ID;
-            MYKA_CORE_ASSERT(enttMap.find(uuid) != enttMap.end());
-            entt::entity dstEnttID = enttMap.at(uuid);
+            auto view = src.view<Component>();
+            for (auto srcEntity : view)
+            {
+                entt::entity dstEntity = enttMap.at(src.get<IDComponent>(srcEntity).ID);
 
-            auto &component = src.get<Component>(e);
-            dst.emplace_or_replace<Component>(dstEnttID, component);
-        }
+                auto& srcComponent = src.get<Component>(srcEntity);
+                dst.emplace_or_replace<Component>(dstEntity, srcComponent);
+            }
+        }(), ...);
     }
 
-    template <typename Component>
+    // TODO: make src const ?
+    template <typename... Component>
+    static void CopyComponent(ComponentGroup<Component...>, entt::registry &dst, entt::registry &src, const std::unordered_map<UUID, entt::entity> &enttMap)
+    {
+        CopyComponent<Component...>(dst, src, enttMap);
+    }
+
+    template <typename... Component>
     static void CopyComponentIfExists(Entity dst, Entity src)
     {
-        if (src.HasComponent<Component>())
-            dst.AddOrReplaceComponent<Component>(src.GetComponent<Component>());
+        ([&]()
+        {
+            if (src.HasComponent<Component>())
+                dst.AddOrReplaceComponent<Component>(src.GetComponent<Component>());
+        }(), ...);
+    }
+
+    template <typename... Component>
+    static void CopyComponentIfExists(ComponentGroup<Component...>, Entity dst, Entity src)
+    {
+        CopyComponentIfExists<Component...>(dst, src);
     }
 
     Ref<Scene> Scene::Copy(Ref<Scene> other)
@@ -58,14 +76,8 @@ namespace Myka
             enttMap[uuid] = (entt::entity)newEntity;
         }
 
-        CopyComponent<TransformComponent>(dstSceneRegistry, srcSceneRegistry, enttMap);
-        CopyComponent<SpriteRendererComponent>(dstSceneRegistry, srcSceneRegistry, enttMap);
-        CopyComponent<CircleRendererComponent>(dstSceneRegistry, srcSceneRegistry, enttMap);
-        CopyComponent<CameraComponent>(dstSceneRegistry, srcSceneRegistry, enttMap);
-        CopyComponent<NativeScriptComponent>(dstSceneRegistry, srcSceneRegistry, enttMap);
-        CopyComponent<Rigidbody2DComponent>(dstSceneRegistry, srcSceneRegistry, enttMap);
-        CopyComponent<BoxCollider2DComponent>(dstSceneRegistry, srcSceneRegistry, enttMap);
-        CopyComponent<CircleCollider2DComponent>(dstSceneRegistry, srcSceneRegistry, enttMap);
+        // Copy  Components (except IDComponent nad TagComponent)
+        CopyComponent(AllComponents{}, dstSceneRegistry, srcSceneRegistry, enttMap);
 
         return newScene;
     }
@@ -244,18 +256,11 @@ namespace Myka
         }
     }
 
-    void Scene::DuplicateEntity(Entity entity)
+    Entity Scene::DuplicateEntity(Entity entity)
     {
         Entity newEntity = CreateEntity(entity.GetComponent<TagComponent>().Tag);
-
-        CopyComponentIfExists<TransformComponent>(newEntity, entity);
-        CopyComponentIfExists<SpriteRendererComponent>(newEntity, entity);
-        CopyComponentIfExists<CircleRendererComponent>(newEntity, entity);
-        CopyComponentIfExists<CameraComponent>(newEntity, entity);
-        CopyComponentIfExists<NativeScriptComponent>(newEntity, entity);
-        CopyComponentIfExists<Rigidbody2DComponent>(newEntity, entity);
-        CopyComponentIfExists<BoxCollider2DComponent>(newEntity, entity);
-        CopyComponentIfExists<CircleCollider2DComponent>(newEntity, entity);
+        CopyComponentIfExists(AllComponents{}, newEntity, entity);
+        return newEntity;
     }
 
     Entity Scene::GetPrimaryCameraEntity()
@@ -395,59 +400,10 @@ namespace Myka
     template <typename T>
     void Scene::OnComponentAdded(Entity entity, T &component)
     {
-        static_assert(false);
+        if constexpr (std::is_same_v<T, CameraComponent>)
+        {
+            if (m_ViewportWidth > 0 && m_ViewportHeight > 0)
+                component.Camera.SetViewportSize(m_ViewportWidth, m_ViewportHeight);
+        }
     }
-
-    template <>
-    void Scene::OnComponentAdded<IDComponent>(Entity entity, IDComponent &component)
-    {
-    }
-
-    template <>
-    void Scene::OnComponentAdded<TransformComponent>(Entity entity, TransformComponent &component)
-    {
-    }
-
-    template <>
-    void Scene::OnComponentAdded<CameraComponent>(Entity entity, CameraComponent &component)
-    {
-        if (m_ViewportWidth > 0 && m_ViewportHeight > 0)
-            component.Camera.SetViewportSize(m_ViewportWidth, m_ViewportHeight);
-    }
-
-    template <>
-    void Scene::OnComponentAdded<SpriteRendererComponent>(Entity entity, SpriteRendererComponent &component)
-    {
-    }
-
-    template <>
-    void Scene::OnComponentAdded<CircleRendererComponent>(Entity entity, CircleRendererComponent &component)
-    {
-    }
-
-    template <>
-    void Scene::OnComponentAdded<TagComponent>(Entity entity, TagComponent &component)
-    {
-    }
-
-    template <>
-    void Scene::OnComponentAdded<NativeScriptComponent>(Entity entity, NativeScriptComponent &component)
-    {
-    }
-
-    template <>
-    void Scene::OnComponentAdded<Rigidbody2DComponent>(Entity entity, Rigidbody2DComponent &component)
-    {
-    }
-
-    template <>
-    void Scene::OnComponentAdded<BoxCollider2DComponent>(Entity entity, BoxCollider2DComponent &component)
-    {
-    }
-
-    template <>
-    void Scene::OnComponentAdded<CircleCollider2DComponent>(Entity entity, CircleCollider2DComponent &component)
-    {
-    }
-
 } // namespace Myka
