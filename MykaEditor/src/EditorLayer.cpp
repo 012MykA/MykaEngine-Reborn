@@ -210,6 +210,11 @@ namespace Myka
         ImGui::Text("Indices: %d", stats.GetTotalIndexCount());
         ImGui::End();
 
+        // Settings
+        ImGui::Begin("Settings");
+        ImGui::Checkbox("Show Physics Colliders", &m_ShowPhysicsColliders);
+        ImGui::End();
+
         // --- Viewport ---
         ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2{0, 0});
         ImGui::Begin("Viewport");
@@ -438,7 +443,6 @@ namespace Myka
 
     void EditorLayer::OnOverlayRender()
     {
-        auto view = m_ActiveScene->GetAllEntitiesWith<TransformComponent, CircleCollider2DComponent>();
 
         if (m_SceneState == SceneState::Play)
         {
@@ -450,15 +454,33 @@ namespace Myka
             Renderer2D::BeginScene(m_EditorCamera);
         }
 
-        for (auto entity : view)
+        if (m_ShowPhysicsColliders)
         {
-            auto [tc, cc2d] = view.get<TransformComponent, CircleCollider2DComponent>(entity);
-
-            glm::mat4 entityTransform = tc.GetTransform();
-            glm::mat4 overlayTransform = glm::translate(entityTransform, glm::vec3(cc2d.Offset, 0.01f))
-                * glm::scale(glm::mat4(1.0f), glm::vec3(cc2d.Radius * 2.0f));
-
-            Renderer2D::DrawCircle(overlayTransform, colliders2DColor, 0.05f);
+            { // Quad Colliders Render
+                auto view = m_ActiveScene->GetAllEntitiesWith<TransformComponent, BoxCollider2DComponent>();
+                for (auto entity : view)
+                {
+                    auto [tc, bc2d] = view.get<TransformComponent, BoxCollider2DComponent>(entity);
+    
+                    glm::mat4 entityTransform = tc.GetTransform();
+                    glm::mat4 overlayTransform = glm::translate(entityTransform, glm::vec3(bc2d.Offset, 0.01f)) * glm::scale(glm::mat4(1.0f), glm::vec3(bc2d.Size, 1.0f));
+    
+                    Renderer2D::DrawRect(overlayTransform, colliders2DColor);
+                }
+            }
+    
+            { // Circle Colliders Render
+                auto view = m_ActiveScene->GetAllEntitiesWith<TransformComponent, CircleCollider2DComponent>();
+                for (auto entity : view)
+                {
+                    auto [tc, cc2d] = view.get<TransformComponent, CircleCollider2DComponent>(entity);
+    
+                    glm::mat4 entityTransform = tc.GetTransform();
+                    glm::mat4 overlayTransform = glm::translate(entityTransform, glm::vec3(cc2d.Offset, 0.01f)) * glm::scale(glm::mat4(1.0f), glm::vec3(cc2d.Radius * 2.0f));
+    
+                    Renderer2D::DrawCircle(overlayTransform, colliders2DColor, 0.01f);
+                }
+            }
         }
 
         Renderer2D::EndScene();

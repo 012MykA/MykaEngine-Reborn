@@ -27,7 +27,7 @@ namespace Myka
     private:
         bool OnKeyPressed(KeyPressedEvent &e);
         bool OnMouseButtonPressed(MouseButtonPressedEvent &e);
-        
+
         void OnOverlayRender();
 
         void NewScene();
@@ -36,7 +36,7 @@ namespace Myka
         void SaveScene();
         void SaveSceneAs();
 
-        void SerializeScene(Ref<Scene> scene, const std::filesystem::path& path);
+        void SerializeScene(Ref<Scene> scene, const std::filesystem::path &path);
 
         void OnScenePlay();
         void OnSceneStop();
@@ -58,7 +58,7 @@ namespace Myka
         Ref<Scene> m_ActiveScene;
         Ref<Scene> m_EditorScene;
         std::filesystem::path m_EditorScenePath;
-        
+
         Entity m_SquareEntity;
         Entity m_CameraEntity;
         Entity m_SecondCamera;
@@ -84,6 +84,7 @@ namespace Myka
 
         int m_ImGuizmoType = -1;
         int m_ImGuizmoMode = 0;
+        bool m_ShowPhysicsColliders = false;
 
         SceneHierarchyPanel m_SceneHierarchyPanel;
         ContentBrowserPanel m_ContentBrowserPanel;

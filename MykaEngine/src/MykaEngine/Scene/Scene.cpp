@@ -120,7 +120,11 @@ namespace Myka
             {
                 auto &bc2d = entity.GetComponent<BoxCollider2DComponent>();
 
-                b2Polygon box = b2MakeBox(bc2d.Size.x * transform.Scale.x, bc2d.Size.y * transform.Scale.y);
+                float hx = (bc2d.Size.x * transform.Scale.x) * 0.5f;
+                float hy = (bc2d.Size.y * transform.Scale.y) * 0.5f;
+
+                b2Vec2 center = {bc2d.Offset.x * transform.Scale.x, bc2d.Offset.y * transform.Scale.y};
+                b2Polygon box = b2MakeOffsetBox(hx, hy, center, b2Rot_identity);
 
                 b2ShapeDef shapeDef = b2DefaultShapeDef();
                 shapeDef.density = bc2d.Density;
