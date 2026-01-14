@@ -64,8 +64,8 @@ namespace Myka
         CopyComponent<CameraComponent>(dstSceneRegistry, srcSceneRegistry, enttMap);
         CopyComponent<NativeScriptComponent>(dstSceneRegistry, srcSceneRegistry, enttMap);
         CopyComponent<Rigidbody2DComponent>(dstSceneRegistry, srcSceneRegistry, enttMap);
-        CopyComponent<BoxColider2DComponent>(dstSceneRegistry, srcSceneRegistry, enttMap);
-        CopyComponent<CircleColider2DComponent>(dstSceneRegistry, srcSceneRegistry, enttMap);
+        CopyComponent<BoxCollider2DComponent>(dstSceneRegistry, srcSceneRegistry, enttMap);
+        CopyComponent<CircleCollider2DComponent>(dstSceneRegistry, srcSceneRegistry, enttMap);
 
         return newScene;
     }
@@ -116,11 +116,11 @@ namespace Myka
             b2BodyId bodyID = b2CreateBody(m_PhysicsWorldID, &bodyDef);
             rb2d.RuntimeBody = bodyID;
 
-            if (entity.HasComponent<BoxColider2DComponent>())
+            if (entity.HasComponent<BoxCollider2DComponent>())
             {
-                auto &bc2d = entity.GetComponent<BoxColider2DComponent>();
+                auto &bc2d = entity.GetComponent<BoxCollider2DComponent>();
 
-                b2Polygon box = b2MakeBox(bc2d.Size.x * transform.Scale.x, bc2d.Size.x * transform.Scale.y);
+                b2Polygon box = b2MakeBox(bc2d.Size.x * transform.Scale.x, bc2d.Size.y * transform.Scale.y);
 
                 b2ShapeDef shapeDef = b2DefaultShapeDef();
                 shapeDef.density = bc2d.Density;
@@ -130,13 +130,13 @@ namespace Myka
                 bc2d.RuntimeShape = b2CreatePolygonShape(bodyID, &shapeDef, &box);
             }
 
-            if (entity.HasComponent<CircleColider2DComponent>())
+            if (entity.HasComponent<CircleCollider2DComponent>())
             {
-                auto &cc2d = entity.GetComponent<CircleColider2DComponent>();
+                auto &cc2d = entity.GetComponent<CircleCollider2DComponent>();
 
                 b2Circle circle;
-                circle.center = {cc2d.Offset.x, cc2d.Offset.y};
-                circle.radius = cc2d.Radius;
+                circle.center = {cc2d.Offset.x * transform.Scale.x, cc2d.Offset.y * transform.Scale.y};
+                circle.radius = cc2d.Radius * std::max(transform.Scale.x, transform.Scale.y);
 
                 b2ShapeDef shapeDef = b2DefaultShapeDef();
                 shapeDef.density = cc2d.Density;
@@ -298,8 +298,8 @@ namespace Myka
         CopyComponentIfExists<CameraComponent>(newEntity, entity);
         CopyComponentIfExists<NativeScriptComponent>(newEntity, entity);
         CopyComponentIfExists<Rigidbody2DComponent>(newEntity, entity);
-        CopyComponentIfExists<BoxColider2DComponent>(newEntity, entity);
-        CopyComponentIfExists<CircleColider2DComponent>(newEntity, entity);
+        CopyComponentIfExists<BoxCollider2DComponent>(newEntity, entity);
+        CopyComponentIfExists<CircleCollider2DComponent>(newEntity, entity);
     }
 
     Entity Scene::GetPrimaryCameraEntity()
@@ -364,12 +364,12 @@ namespace Myka
     }
 
     template <>
-    void Scene::OnComponentAdded<BoxColider2DComponent>(Entity entity, BoxColider2DComponent &component)
+    void Scene::OnComponentAdded<BoxCollider2DComponent>(Entity entity, BoxCollider2DComponent &component)
     {
     }
 
     template <>
-    void Scene::OnComponentAdded<CircleColider2DComponent>(Entity entity, CircleColider2DComponent &component)
+    void Scene::OnComponentAdded<CircleCollider2DComponent>(Entity entity, CircleCollider2DComponent &component)
     {
     }
 

@@ -1,14 +1,14 @@
 {
     "Entities": [
         {
-            "CircleColider2DComponent": {
+            "CircleCollider2DComponent": {
                 "Density": 1.0,
                 "Friction": 0.5,
                 "Offset": [
                     0.0,
                     0.0
                 ],
-                "Radius": 1.0,
+                "Radius": 0.5,
                 "Restitution": 0.0
             },
             "CircleRendererComponent": {
@@ -41,14 +41,14 @@
                     0.0
                 ],
                 "Scale": [
-                    2.0,
-                    2.0,
-                    2.0
+                    3.5999999046325684,
+                    3.5999999046325684,
+                    3.5999999046325684
                 ]
             }
         },
         {
-            "BoxColider2DComponent": {
+            "BoxCollider2DComponent": {
                 "Density": 1.0,
                 "Friction": 0.30000001192092896,
                 "Offset": [
@@ -134,7 +134,7 @@
             }
         },
         {
-            "BoxColider2DComponent": {
+            "BoxCollider2DComponent": {
                 "Density": 1.0,
                 "Friction": 0.10000000149011612,
                 "Offset": [
@@ -184,7 +184,7 @@
             }
         },
         {
-            "BoxColider2DComponent": {
+            "BoxCollider2DComponent": {
                 "Density": 1.0,
                 "Friction": 0.30000001192092896,
                 "Offset": [
@@ -234,14 +234,14 @@
             }
         },
         {
-            "CircleColider2DComponent": {
+            "CircleCollider2DComponent": {
                 "Density": 1.0,
                 "Friction": 0.5,
                 "Offset": [
                     0.0,
                     0.0
                 ],
-                "Radius": 1.0,
+                "Radius": 0.44999998807907104,
                 "Restitution": 0.5
             },
             "CircleRendererComponent": {
@@ -251,8 +251,8 @@
                     0.2867383360862732,
                     1.0
                 ],
-                "Fade": 0.004999999888241291,
-                "Thickness": 1.0
+                "Fade": 0.2939999997615814,
+                "Thickness": 0.32499998807907104
             },
             "Entity": 14768907732816255015,
             "Rigidbody2DComponent": {
@@ -274,9 +274,9 @@
                     0.0
                 ],
                 "Scale": [
-                    2.0,
-                    2.0,
-                    2.0
+                    4.349999904632568,
+                    4.349999904632568,
+                    4.349999904632568
                 ]
             }
         }

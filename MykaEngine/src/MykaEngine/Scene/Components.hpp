@@ -123,7 +123,7 @@ namespace Myka
         Rigidbody2DComponent(const Rigidbody2DComponent &) = default;
     };
 
-    struct BoxColider2DComponent
+    struct BoxCollider2DComponent
     {
         glm::vec2 Offset = {0.0f, 0.0f};
         glm::vec2 Size = {0.5f, 0.5f};
@@ -135,11 +135,11 @@ namespace Myka
 
         b2ShapeId RuntimeShape;
 
-        BoxColider2DComponent() = default;
-        BoxColider2DComponent(const BoxColider2DComponent &) = default;
+        BoxCollider2DComponent() = default;
+        BoxCollider2DComponent(const BoxCollider2DComponent &) = default;
     };
 
-    struct CircleColider2DComponent
+    struct CircleCollider2DComponent
     {
         glm::vec2 Offset = {0.0f, 0.0f};
         float Radius = 0.5f;
@@ -151,8 +151,8 @@ namespace Myka
 
         b2ShapeId RuntimeShape;
 
-        CircleColider2DComponent() = default;
-        CircleColider2DComponent(const CircleColider2DComponent &) = default;
+        CircleCollider2DComponent() = default;
+        CircleCollider2DComponent(const CircleCollider2DComponent &) = default;
     };
 
 } // namespace Myka

@@ -265,20 +265,20 @@ namespace Myka
                 }
             }
 
-            if (!m_SelectionContext.HasComponent<BoxColider2DComponent>())
+            if (!m_SelectionContext.HasComponent<BoxCollider2DComponent>())
             {
                 if (ImGui::MenuItem("Box Collider 2D"))
                 {
-                    m_SelectionContext.AddComponent<BoxColider2DComponent>();
+                    m_SelectionContext.AddComponent<BoxCollider2DComponent>();
                     ImGui::CloseCurrentPopup();
                 }
             }
 
-            if (!m_SelectionContext.HasComponent<CircleColider2DComponent>())
+            if (!m_SelectionContext.HasComponent<CircleCollider2DComponent>())
             {
                 if (ImGui::MenuItem("Circle Collider 2D"))
                 {
-                    m_SelectionContext.AddComponent<CircleColider2DComponent>();
+                    m_SelectionContext.AddComponent<CircleCollider2DComponent>();
                     ImGui::CloseCurrentPopup();
                 }
             }
@@ -401,16 +401,16 @@ namespace Myka
             
             ImGui::Checkbox("Fixed Rotation", &component.FixedRotation); });
 
-        DrawComponent<BoxColider2DComponent>("Box Collider 2D", entity, [](auto &component)
-                                             {
+        DrawComponent<BoxCollider2DComponent>("Box Collider 2D", entity, [](auto &component)
+                                              {
             ImGui::DragFloat2("Offset", glm::value_ptr(component.Offset));
             ImGui::DragFloat2("Size", glm::value_ptr(component.Size));
             ImGui::DragFloat("Density", &component.Density, 0.01f, 0.0f, 1.0f);
             ImGui::DragFloat("Friction", &component.Friction, 0.01f, 0.0f, 1.0f);
             ImGui::DragFloat("Restitution", &component.Restitution, 0.01f, 0.0f, 1.0f); });
 
-        DrawComponent<CircleColider2DComponent>("Circle Collider 2D", entity, [](auto &component)
-                                                {
+        DrawComponent<CircleCollider2DComponent>("Circle Collider 2D", entity, [](auto &component)
+                                                 {
             ImGui::DragFloat2("Offset", glm::value_ptr(component.Offset));
             ImGui::DragFloat("Radius", &component.Radius, 0.1f, 0.0f, 0.0f);
             ImGui::DragFloat("Density", &component.Density, 0.01f, 0.0f, 1.0f);

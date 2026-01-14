@@ -175,8 +175,6 @@ namespace Myka
                     if (ImGui::MenuItem("Save", "Ctrl+S"))
                         SaveScene();
 
-                    ImGui::Separator();
-
                     if (ImGui::MenuItem("Save As...", "Ctrl+Shift+S"))
                         SaveSceneAs();
 
@@ -440,7 +438,7 @@ namespace Myka
 
     void EditorLayer::OnOverlayRender()
     {
-        auto view = m_ActiveScene->GetAllEntitiesWith<TransformComponent, CircleColider2DComponent>();
+        auto view = m_ActiveScene->GetAllEntitiesWith<TransformComponent, CircleCollider2DComponent>();
 
         if (m_SceneState == SceneState::Play)
         {
@@ -451,16 +449,16 @@ namespace Myka
         {
             Renderer2D::BeginScene(m_EditorCamera);
         }
-        
+
         for (auto entity : view)
         {
-            auto [tc, cc2d] = view.get<TransformComponent, CircleColider2DComponent>(entity);
+            auto [tc, cc2d] = view.get<TransformComponent, CircleCollider2DComponent>(entity);
 
-            glm::vec3 translation = tc.Position + glm::vec3(cc2d.Offset, 0.01f);
-            glm::vec3 scale = glm::vec3(cc2d.Radius * 2.0f);
+            glm::mat4 entityTransform = tc.GetTransform();
+            glm::mat4 overlayTransform = glm::translate(entityTransform, glm::vec3(cc2d.Offset, 0.01f))
+                * glm::scale(glm::mat4(1.0f), glm::vec3(cc2d.Radius * 2.0f));
 
-            glm::mat4 transform = glm::translate(glm::mat4(1.0f), translation) * glm::scale(glm::mat4(1.0f), scale);
-            Renderer2D::DrawCircle(transform, colliders2DColor, 0.05f);
+            Renderer2D::DrawCircle(overlayTransform, colliders2DColor, 0.05f);
         }
 
         Renderer2D::EndScene();
@@ -547,6 +545,7 @@ namespace Myka
         m_SceneState = SceneState::Edit;
 
         m_ActiveScene->OnRuntimeStop();
+        m_SceneHierarchyPanel.SetSelectedEntity({});
         m_ActiveScene = m_EditorScene;
     }
 
