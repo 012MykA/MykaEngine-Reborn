@@ -103,6 +103,8 @@ namespace Myka
             m_HoveredEntity = pixelData == -1 ? Entity() : Entity((entt::entity)pixelData, m_ActiveScene.get());
         }
 
+        OnOverlayRender();
+
         m_Framebuffer->Unbind();
     }
 
@@ -434,6 +436,34 @@ namespace Myka
         }
 
         return false;
+    }
+
+    void EditorLayer::OnOverlayRender()
+    {
+        auto view = m_ActiveScene->GetAllEntitiesWith<TransformComponent, CircleColider2DComponent>();
+
+        if (m_SceneState == SceneState::Play)
+        {
+            Entity camera = m_ActiveScene->GetPrimaryCameraEntity();
+            Renderer2D::BeginScene(camera.GetComponent<CameraComponent>().Camera, camera.GetComponent<TransformComponent>().GetTransform());
+        }
+        else
+        {
+            Renderer2D::BeginScene(m_EditorCamera);
+        }
+        
+        for (auto entity : view)
+        {
+            auto [tc, cc2d] = view.get<TransformComponent, CircleColider2DComponent>(entity);
+
+            glm::vec3 translation = tc.Position + glm::vec3(cc2d.Offset, 0.01f);
+            glm::vec3 scale = glm::vec3(cc2d.Radius * 2.0f);
+
+            glm::mat4 transform = glm::translate(glm::mat4(1.0f), translation) * glm::scale(glm::mat4(1.0f), scale);
+            Renderer2D::DrawCircle(transform, colliders2DColor, 0.05f);
+        }
+
+        Renderer2D::EndScene();
     }
 
     void EditorLayer::NewScene()

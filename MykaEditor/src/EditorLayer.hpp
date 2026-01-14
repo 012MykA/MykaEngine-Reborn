@@ -27,6 +27,8 @@ namespace Myka
     private:
         bool OnKeyPressed(KeyPressedEvent &e);
         bool OnMouseButtonPressed(MouseButtonPressedEvent &e);
+        
+        void OnOverlayRender();
 
         void NewScene();
         void OpenScene();
@@ -45,6 +47,7 @@ namespace Myka
         void UI_ToolBar();
 
     private:
+        // TODO refactor whole section
         OrthographicCameraController m_CameraController;
 
         // Temp
@@ -64,6 +67,8 @@ namespace Myka
 
         bool m_PrimaryCamera = true;
         EditorCamera m_EditorCamera;
+
+        glm::vec4 colliders2DColor = {0.0f, 0.5f, 1.0f, 1.0f};
 
         bool m_ViewportFocused = false, m_ViewportHovered = false;
         glm::vec2 m_ViewportSize = {0.0f, 0.0f};
