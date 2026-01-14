@@ -109,9 +109,9 @@ target_link_libraries(MykaEngine
         Vulkan::Vulkan
     
     PRIVATE
-        ${VULKAN_LIB_DIR}/shaderc_shared.lib
-        ${VULKAN_LIB_DIR}/spirv-cross-core.lib
-        ${VULKAN_LIB_DIR}/spirv-cross-glsl.lib
+        $<IF:$<CONFIG:Debug>,${VULKAN_LIB_DIR}/shaderc_sharedd.lib,${VULKAN_LIB_DIR}/shaderc_shared.lib>
+        $<IF:$<CONFIG:Debug>,${VULKAN_LIB_DIR}/spirv-cross-cored.lib,${VULKAN_LIB_DIR}/spirv-cross-core.lib>
+        $<IF:$<CONFIG:Debug>,${VULKAN_LIB_DIR}/spirv-cross-glsld.lib,${VULKAN_LIB_DIR}/spirv-cross-glsl.lib>
     
     PUBLIC
         entt
