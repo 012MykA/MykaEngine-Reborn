@@ -245,8 +245,7 @@ namespace Myka
             if (const ImGuiPayload *payload = ImGui::AcceptDragDropPayload("CONTENT_BROWSER_ITEM"))
             {
                 const wchar_t *path = (const wchar_t *)payload->Data;
-
-                OpenScene(std::filesystem::path("assets") / path);
+                OpenScene(path);
             }
 
             ImGui::EndDragDropTarget();

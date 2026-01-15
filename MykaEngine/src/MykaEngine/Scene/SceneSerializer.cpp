@@ -157,7 +157,7 @@ namespace Myka
             const auto &src = entity.GetComponent<SpriteRendererComponent>();
             json componentData;
             if (src.Texture)
-                componentData["TexturePath"] = src.Texture->GetPath();
+                componentData["TexturePath"] = src.Texture->GetPath().generic_string();
             else
                 componentData["TexturePath"] = "";
 

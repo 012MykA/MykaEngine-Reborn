@@ -25,13 +25,10 @@ namespace Myka
 		if (std::filesystem::exists(workingDir))
 		{
 			std::filesystem::current_path(workingDir);
-			MYKA_CORE_INFO("Set working directory to: {0}", workingDir.string());
 		}
 		else
 		{
-			MYKA_CORE_WARN("Working directory does not exist: {0}", workingDir.string());
-			std::filesystem::create_directories(workingDir);
-			std::filesystem::current_path(workingDir);
+			MYKA_CORE_ERROR("Working directory does not exist: {0}", workingDir.string());
 		}
 
 		m_Window = Window::Create(WindowProps(m_Specification.Name));

@@ -57,7 +57,6 @@ namespace Myka
         for (auto &directoryEntry : std::filesystem::directory_iterator(m_CurrentDirectory))
         {
             const auto &path = directoryEntry.path();
-            auto relativePath = std::filesystem::relative(path, "assets");
             std::string filenameString = path.filename().string();
 
             Ref<Texture2D> icon = directoryEntry.is_directory() ? m_DirectoryIcon : m_FileIcon;
@@ -65,7 +64,7 @@ namespace Myka
 
             if (ImGui::BeginDragDropSource())
             {
-                const wchar_t *itemPath = relativePath.c_str();
+                const wchar_t *itemPath = path.c_str();
                 ImGui::SetDragDropPayload("CONTENT_BROWSER_ITEM", itemPath, (wcslen(itemPath) + 1) * sizeof(wchar_t));
                 ImGui::EndDragDropSource();
             }

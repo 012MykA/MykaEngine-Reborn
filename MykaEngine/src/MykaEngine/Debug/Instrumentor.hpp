@@ -125,8 +125,7 @@ namespace Myka
     };
 } // namespace Myka
 
-#define MYKA_PROFILE 1
-#if MYKA_PROFILE
+#ifdef MYKA_ENABLE_PROFILE
 #define MYKA_PROFILE_BEGIN_SESSION(name, filepath) ::Myka::Instrumentor::Get().BeginSession(name, filepath)
 #define MYKA_PROFILE_END_SESSION() ::Myka::Instrumentor::Get().EndSession()
 #define MYKA_PROFILE_SCOPE(name) ::Myka::InstrumentationTimer timer##__LINE__(name)

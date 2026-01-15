@@ -1,163 +1,163 @@
 {
-    "Entities": [
-        {
-            "CameraComponent": {
-                "Camera": {
-                    "OrthographicFar": 1.0,
-                    "OrthographicNear": -1.0,
-                    "OrthographicSize": 10.0,
-                    "PerspectiveFOV": 0.7853981852531433,
-                    "PerspectiveFar": 1000.0,
-                    "PerspectiveNear": 0.009999999776482582,
-                    "ProjectionType": 0
-                },
-                "FixedAspectRatio": false,
-                "Primary": true
-            },
-            "Entity": 5084756423236903249,
-            "TagComponent": {
-                "Tag": "Camera"
-            },
-            "TransformComponent": {
-                "Position": [
-                    0.0,
-                    3.0,
-                    6.300000190734863
-                ],
-                "Rotation": [
-                    -0.2617993950843811,
-                    0.0,
-                    0.0
-                ],
-                "Scale": [
-                    1.0,
-                    1.0,
-                    1.0
-                ]
-            }
+  "Entities": [
+    {
+      "CameraComponent": {
+        "Camera": {
+          "OrthographicFar": 1,
+          "OrthographicNear": -1,
+          "OrthographicSize": 10,
+          "PerspectiveFOV": 0.7853981852531433,
+          "PerspectiveFar": 1000,
+          "PerspectiveNear": 0.009999999776482582,
+          "ProjectionType": 0
         },
-        {
-            "Entity": 17009023397041142853,
-            "SpriteRendererComponent": {
-                "Color": [
-                    1.0,
-                    1.0,
-                    1.0,
-                    1.0
-                ],
-                "TexturePath": "C:\\dev\\MykaEngine-Reborn\\MykaEditor/assets\\textures\\box.png",
-                "TilingFactor": 1.0
-            },
-            "TagComponent": {
-                "Tag": "Left"
-            },
-            "TransformComponent": {
-                "Position": [
-                    -0.35777607560157776,
-                    0.0,
-                    0.00578628433868289
-                ],
-                "Rotation": [
-                    0.0,
-                    -0.7853982448577881,
-                    0.0
-                ],
-                "Scale": [
-                    1.0,
-                    1.0,
-                    1.0
-                ]
-            }
-        },
-        {
-            "Entity": 5521232631242826438,
-            "SpriteRendererComponent": {
-                "Color": [
-                    0.47311830520629883,
-                    0.47311830520629883,
-                    0.47311830520629883,
-                    1.0
-                ],
-                "TexturePath": "C:\\dev\\MykaEngine-Reborn\\MykaEditor/assets\\textures\\box.png",
-                "TilingFactor": 1.0
-            },
-            "TagComponent": {
-                "Tag": "Right"
-            },
-            "TransformComponent": {
-                "Position": [
-                    0.3500000238418579,
-                    0.0,
-                    0.0
-                ],
-                "Rotation": [
-                    0.0,
-                    0.7853982448577881,
-                    0.0
-                ],
-                "Scale": [
-                    1.0,
-                    1.0,
-                    1.0
-                ]
-            }
-        },
-        {
-            "Entity": 16503273226831413303,
-            "SpriteRendererComponent": {
-                "Color": [
-                    0.698924720287323,
-                    0.698924720287323,
-                    0.698924720287323,
-                    1.0
-                ],
-                "TexturePath": "C:\\dev\\MykaEngine-Reborn\\MykaEditor/assets\\textures\\box.png",
-                "TilingFactor": 1.0
-            },
-            "TagComponent": {
-                "Tag": "Top"
-            },
-            "TransformComponent": {
-                "Position": [
-                    -0.006347315851598978,
-                    0.5001170635223389,
-                    -0.34365028142929077
-                ],
-                "Rotation": [
-                    1.5707954168319702,
-                    0.785398006439209,
-                    4.2146837131440407e-08
-                ],
-                "Scale": [
-                    0.9999999403953552,
-                    0.9999997019767761,
-                    0.9999997019767761
-                ]
-            }
-        },
-        {
-            "Entity": 9557595077379515820,
-            "TagComponent": {
-                "Tag": "Entity"
-            },
-            "TransformComponent": {
-                "Position": [
-                    0.0,
-                    0.0,
-                    0.0
-                ],
-                "Rotation": [
-                    0.0,
-                    0.0,
-                    0.0
-                ],
-                "Scale": [
-                    1.0,
-                    1.0,
-                    1.0
-                ]
-            }
-        }
-    ],
-    "Scene": "Untilted"
+        "FixedAspectRatio": false,
+        "Primary": true
+      },
+      "Entity": 5084756423236903000,
+      "TagComponent": {
+        "Tag": "Camera"
+      },
+      "TransformComponent": {
+        "Position": [
+          0,
+          3,
+          6.300000190734863
+        ],
+        "Rotation": [
+          -0.2617993950843811,
+          0,
+          0
+        ],
+        "Scale": [
+          1,
+          1,
+          1
+        ]
+      }
+    },
+    {
+      "Entity": 17009023397041144000,
+      "SpriteRendererComponent": {
+        "Color": [
+          1,
+          1,
+          1,
+          1
+        ],
+        "TexturePath": "assets/textures/box.png",
+        "TilingFactor": 1
+      },
+      "TagComponent": {
+        "Tag": "Left"
+      },
+      "TransformComponent": {
+        "Position": [
+          -0.35777607560157776,
+          0,
+          0.00578628433868289
+        ],
+        "Rotation": [
+          0,
+          -0.7853982448577881,
+          0
+        ],
+        "Scale": [
+          1,
+          1,
+          1
+        ]
+      }
+    },
+    {
+      "Entity": 5521232631242827000,
+      "SpriteRendererComponent": {
+        "Color": [
+          0.47311830520629883,
+          0.47311830520629883,
+          0.47311830520629883,
+          1
+        ],
+        "TexturePath": "assets/textures/box.png",
+        "TilingFactor": 1
+      },
+      "TagComponent": {
+        "Tag": "Right"
+      },
+      "TransformComponent": {
+        "Position": [
+          0.3500000238418579,
+          0,
+          0
+        ],
+        "Rotation": [
+          0,
+          0.7853982448577881,
+          0
+        ],
+        "Scale": [
+          1,
+          1,
+          1
+        ]
+      }
+    },
+    {
+      "Entity": 16503273226831413000,
+      "SpriteRendererComponent": {
+        "Color": [
+          0.698924720287323,
+          0.698924720287323,
+          0.698924720287323,
+          1
+        ],
+        "TexturePath": "assets/textures/box-transp.png",
+        "TilingFactor": 1
+      },
+      "TagComponent": {
+        "Tag": "Top"
+      },
+      "TransformComponent": {
+        "Position": [
+          -0.006347315851598978,
+          0.5001170635223389,
+          -0.34365028142929077
+        ],
+        "Rotation": [
+          1.5707954168319702,
+          0.785398006439209,
+          4.2146837131440407e-8
+        ],
+        "Scale": [
+          0.9999999403953552,
+          0.9999997019767761,
+          0.9999997019767761
+        ]
+      }
+    },
+    {
+      "Entity": 9557595077379516000,
+      "TagComponent": {
+        "Tag": "Entity"
+      },
+      "TransformComponent": {
+        "Position": [
+          0,
+          0,
+          0
+        ],
+        "Rotation": [
+          0,
+          0,
+          0
+        ],
+        "Scale": [
+          1,
+          1,
+          1
+        ]
+      }
+    }
+  ],
+  "Scene": "Untilted"
 }
