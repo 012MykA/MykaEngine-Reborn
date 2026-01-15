@@ -8,32 +8,32 @@
                     0.0,
                     0.0
                 ],
-                "Radius": 0.30000001192092896,
-                "Restitution": 0.0
+                "Radius": 0.4000000059604645,
+                "Restitution": 0.5
             },
             "CircleRendererComponent": {
                 "Color": [
-                    0.7469070553779602,
+                    1.0,
                     0.2867383360862732,
-                    1.0,
+                    0.2867383360862732,
                     1.0
                 ],
-                "Fade": 0.3720000088214874,
-                "Thickness": 1.0
+                "Fade": 0.23499999940395355,
+                "Thickness": 0.32499998807907104
             },
-            "Entity": 12496188941886726201,
+            "Entity": 14768907732816255015,
             "Rigidbody2DComponent": {
                 "BodyType": "Dynamic",
                 "FixedRotation": false
             },
             "TagComponent": {
-                "Tag": "Purple Circle Collider"
+                "Tag": "Red Circle Collider"
             },
             "TransformComponent": {
                 "Position": [
-                    15.515734672546387,
-                    2.3590564727783203,
-                    -0.009999999776482582
+                    4.16295051574707,
+                    11.50864028930664,
+                    4.76837158203125e-07
                 ],
                 "Rotation": [
                     0.0,
@@ -41,145 +41,9 @@
                     0.0
                 ],
                 "Scale": [
-                    6.479999542236328,
-                    6.479999542236328,
-                    6.479999542236328
-                ]
-            }
-        },
-        {
-            "BoxCollider2DComponent": {
-                "Density": 1.0,
-                "Friction": 0.30000001192092896,
-                "Offset": [
-                    0.0,
-                    0.0
-                ],
-                "Restitution": 0.15000000596046448,
-                "Size": [
-                    1.0,
-                    1.0
-                ]
-            },
-            "Entity": 3651740915543713804,
-            "Rigidbody2DComponent": {
-                "BodyType": "Static",
-                "FixedRotation": false
-            },
-            "SpriteRendererComponent": {
-                "Color": [
-                    1.0,
-                    0.5054919719696045,
-                    0.021505355834960938,
-                    1.0
-                ],
-                "TexturePath": "",
-                "TilingFactor": 1.0
-            },
-            "TagComponent": {
-                "Tag": "Floor"
-            },
-            "TransformComponent": {
-                "Position": [
-                    -7.504796981811523,
-                    -2.8818440437316895,
-                    0.0
-                ],
-                "Rotation": [
-                    0.0,
-                    0.0,
-                    -0.48590725660324097
-                ],
-                "Scale": [
-                    21.65106201171875,
-                    0.6225685477256775,
-                    1.0
-                ]
-            }
-        },
-        {
-            "CameraComponent": {
-                "Camera": {
-                    "OrthographicFar": 1.0,
-                    "OrthographicNear": -1.0,
-                    "OrthographicSize": 10.0,
-                    "PerspectiveFOV": 0.7853981852531433,
-                    "PerspectiveFar": 1000.0,
-                    "PerspectiveNear": 0.009999999776482582,
-                    "ProjectionType": 0
-                },
-                "FixedAspectRatio": false,
-                "Primary": true
-            },
-            "Entity": 3171310426583555680,
-            "TagComponent": {
-                "Tag": "Camera"
-            },
-            "TransformComponent": {
-                "Position": [
-                    2.0,
-                    4.5,
-                    31.700000762939453
-                ],
-                "Rotation": [
-                    0.0,
-                    0.0,
-                    0.0
-                ],
-                "Scale": [
-                    1.0,
-                    1.0,
-                    1.0
-                ]
-            }
-        },
-        {
-            "BoxCollider2DComponent": {
-                "Density": 1.0,
-                "Friction": 0.10000000149011612,
-                "Offset": [
-                    0.0,
-                    0.0
-                ],
-                "Restitution": 0.25999999046325684,
-                "Size": [
-                    1.0,
-                    1.0
-                ]
-            },
-            "Entity": 1619718781689688051,
-            "Rigidbody2DComponent": {
-                "BodyType": "Dynamic",
-                "FixedRotation": false
-            },
-            "SpriteRendererComponent": {
-                "Color": [
-                    0.5140606760978699,
-                    0.9498207569122314,
-                    0.5328029990196228,
-                    1.0
-                ],
-                "TexturePath": "",
-                "TilingFactor": 1.0
-            },
-            "TagComponent": {
-                "Tag": "Rect"
-            },
-            "TransformComponent": {
-                "Position": [
-                    -9.754386901855469,
-                    5.570262432098389,
-                    -0.009999999776482582
-                ],
-                "Rotation": [
-                    0.0,
-                    0.0,
-                    1.0848681926727295
-                ],
-                "Scale": [
-                    4.415999889373779,
-                    4.415999889373779,
-                    4.415999889373779
+                    11.449198722839355,
+                    11.449198722839355,
+                    11.449198722839355
                 ]
             }
         },
@@ -234,39 +98,78 @@
             }
         },
         {
-            "CircleCollider2DComponent": {
+            "BoxCollider2DComponent": {
                 "Density": 1.0,
-                "Friction": 0.5,
+                "Friction": 0.10000000149011612,
                 "Offset": [
                     0.0,
                     0.0
                 ],
-                "Radius": 0.3799999952316284,
-                "Restitution": 0.5
-            },
-            "CircleRendererComponent": {
-                "Color": [
+                "Restitution": 0.25999999046325684,
+                "Size": [
                     1.0,
-                    0.2867383360862732,
-                    0.2867383360862732,
                     1.0
-                ],
-                "Fade": 0.23499999940395355,
-                "Thickness": 0.32499998807907104
+                ]
             },
-            "Entity": 14768907732816255015,
+            "Entity": 1619718781689688051,
             "Rigidbody2DComponent": {
                 "BodyType": "Dynamic",
                 "FixedRotation": false
             },
+            "SpriteRendererComponent": {
+                "Color": [
+                    0.5140606760978699,
+                    0.9498207569122314,
+                    0.5328029990196228,
+                    1.0
+                ],
+                "TexturePath": "",
+                "TilingFactor": 1.0
+            },
             "TagComponent": {
-                "Tag": "Red Circle Collider"
+                "Tag": "Rect"
             },
             "TransformComponent": {
                 "Position": [
-                    4.16295051574707,
-                    11.50864028930664,
-                    4.76837158203125e-07
+                    -9.754386901855469,
+                    5.570262432098389,
+                    -0.009999999776482582
+                ],
+                "Rotation": [
+                    0.0,
+                    0.0,
+                    1.0848681926727295
+                ],
+                "Scale": [
+                    4.415999889373779,
+                    4.415999889373779,
+                    4.415999889373779
+                ]
+            }
+        },
+        {
+            "CameraComponent": {
+                "Camera": {
+                    "OrthographicFar": 1.0,
+                    "OrthographicNear": -1.0,
+                    "OrthographicSize": 10.0,
+                    "PerspectiveFOV": 0.7853981852531433,
+                    "PerspectiveFar": 1000.0,
+                    "PerspectiveNear": 0.009999999776482582,
+                    "ProjectionType": 0
+                },
+                "FixedAspectRatio": false,
+                "Primary": true
+            },
+            "Entity": 3171310426583555680,
+            "TagComponent": {
+                "Tag": "Camera"
+            },
+            "TransformComponent": {
+                "Position": [
+                    2.0,
+                    4.5,
+                    31.700000762939453
                 ],
                 "Rotation": [
                     0.0,
@@ -274,9 +177,106 @@
                     0.0
                 ],
                 "Scale": [
-                    11.449198722839355,
-                    11.449198722839355,
-                    11.449198722839355
+                    1.0,
+                    1.0,
+                    1.0
+                ]
+            }
+        },
+        {
+            "BoxCollider2DComponent": {
+                "Density": 1.0,
+                "Friction": 0.30000001192092896,
+                "Offset": [
+                    0.0,
+                    0.0
+                ],
+                "Restitution": 0.15000000596046448,
+                "Size": [
+                    1.0,
+                    1.0
+                ]
+            },
+            "Entity": 3651740915543713804,
+            "Rigidbody2DComponent": {
+                "BodyType": "Static",
+                "FixedRotation": false
+            },
+            "SpriteRendererComponent": {
+                "Color": [
+                    1.0,
+                    0.5054919719696045,
+                    0.021505355834960938,
+                    1.0
+                ],
+                "TexturePath": "",
+                "TilingFactor": 1.0
+            },
+            "TagComponent": {
+                "Tag": "Floor"
+            },
+            "TransformComponent": {
+                "Position": [
+                    -7.504796981811523,
+                    -2.8818440437316895,
+                    0.0
+                ],
+                "Rotation": [
+                    0.0,
+                    0.0,
+                    -0.48590725660324097
+                ],
+                "Scale": [
+                    21.65106201171875,
+                    0.6225685477256775,
+                    1.0
+                ]
+            }
+        },
+        {
+            "CircleCollider2DComponent": {
+                "Density": 1.0,
+                "Friction": 0.5,
+                "Offset": [
+                    0.0,
+                    0.0
+                ],
+                "Radius": 0.3499999940395355,
+                "Restitution": 0.0
+            },
+            "CircleRendererComponent": {
+                "Color": [
+                    0.7469070553779602,
+                    0.2867383360862732,
+                    1.0,
+                    1.0
+                ],
+                "Fade": 0.3720000088214874,
+                "Thickness": 1.0
+            },
+            "Entity": 12496188941886726201,
+            "Rigidbody2DComponent": {
+                "BodyType": "Dynamic",
+                "FixedRotation": false
+            },
+            "TagComponent": {
+                "Tag": "Purple Circle Collider"
+            },
+            "TransformComponent": {
+                "Position": [
+                    15.515734672546387,
+                    2.3590564727783203,
+                    -0.009999999776482582
+                ],
+                "Rotation": [
+                    0.0,
+                    0.0,
+                    0.0
+                ],
+                "Scale": [
+                    6.479999542236328,
+                    6.479999542236328,
+                    6.479999542236328
                 ]
             }
         }

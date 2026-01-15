@@ -7,9 +7,6 @@
   - Resources Cash
   - Hot Reload
 
-
-- **!!! GLOBAL CODE REFACTOR !!!**
-
 - **C# Scripting**
 - **Write setup scripts**
 

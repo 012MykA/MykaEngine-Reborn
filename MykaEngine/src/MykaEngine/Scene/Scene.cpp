@@ -12,9 +12,8 @@
 
 namespace Myka
 {
-    // TODO: make src const ?
     template <typename... Component>
-    static void CopyComponent(entt::registry &dst, entt::registry &src, const std::unordered_map<UUID, entt::entity> &enttMap)
+    static void CopyComponent(entt::registry &dst, const entt::registry &src, const std::unordered_map<UUID, entt::entity> &enttMap)
     {
         // Expand the parameter pack using a fold expression with a lambda.
         // This executes the following block for each type in Component...
@@ -31,9 +30,8 @@ namespace Myka
         }(), ...);
     }
 
-    // TODO: make src const ?
     template <typename... Component>
-    static void CopyComponent(ComponentGroup<Component...>, entt::registry &dst, entt::registry &src, const std::unordered_map<UUID, entt::entity> &enttMap)
+    static void CopyComponent(ComponentGroup<Component...>, entt::registry &dst, const entt::registry &src, const std::unordered_map<UUID, entt::entity> &enttMap)
     {
         CopyComponent<Component...>(dst, src, enttMap);
     }
