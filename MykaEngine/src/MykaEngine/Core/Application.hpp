@@ -22,12 +22,19 @@ namespace Myka
 		}
 	};
 
+	struct ApplicationSpecification
+	{
+		std::string Name = "MykaEngine Application";
+		std::string WorkingDirectory;
+		ApplicationCommandLineArgs CommandLineArgs;
+	};
+
 	class Application
 	{
 		friend int ::main(int argc, char **argv);
 
 	public:
-		Application(const std::string &name = "MykaEngine App", ApplicationCommandLineArgs args = ApplicationCommandLineArgs());
+		Application(const ApplicationSpecification &specification);
 		virtual ~Application();
 
 		void OnEvent(Event &e);
@@ -40,6 +47,7 @@ namespace Myka
 		void Close();
 
 		ImGuiLayer *GetImGuiLayer() { return m_ImGuiLayer; }
+		const ApplicationSpecification &GetSpecification() const { return m_Specification; }
 
 		static Application &Get() { return *s_Instance; }
 
@@ -49,7 +57,7 @@ namespace Myka
 		bool OnWindowResize(WindowResizeEvent &e);
 
 	private:
-		ApplicationCommandLineArgs m_CommandLineArgs;
+		ApplicationSpecification m_Specification;
 		Scope<Window> m_Window;
 		ImGuiLayer *m_ImGuiLayer;
 		bool m_Running = true;

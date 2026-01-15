@@ -228,7 +228,7 @@ namespace Myka
         json data;
 
         // Scene
-        std::string sceneName = "Untilted"; // TODO: remove
+        std::string sceneName = "Untilted";
         data["Scene"] = sceneName;
 
         // Entites
@@ -365,8 +365,6 @@ namespace Myka
                 cc2d.Friction = circleCollider2DComponentJson["Friction"];
                 cc2d.Restitution = circleCollider2DComponentJson["Restitution"];
             }
-
-            MYKA_CORE_TRACE("Deserialized entity: ID={0}, name={1}", uuid, name);
         }
 
         return true;

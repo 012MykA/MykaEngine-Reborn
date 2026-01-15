@@ -10,19 +10,15 @@
 
 namespace Myka
 {
-    // TODO: refactor
-    extern const std::filesystem::path g_AssetsDirectory = std::filesystem::current_path().parent_path().parent_path() / "MykaEditor/assets";
-    extern const std::filesystem::path g_ResourcesDirectory = std::filesystem::current_path().parent_path().parent_path() / "MykaEditor/Resources";
-
-    EditorLayer::EditorLayer() : Layer("EditorLayer"), m_CameraController(1280.0f / 720.0f) {}
+    EditorLayer::EditorLayer() : Layer("EditorLayer") {}
 
     void EditorLayer::OnAttach()
     {
         MYKA_PROFILE_FUNCTION();
 
-        m_IconPlay = Texture2D::Create(g_ResourcesDirectory / "Icons/PlayButton.png");
-        m_IconSimulate = Texture2D::Create(g_ResourcesDirectory / "Icons/SimulateButton.png");
-        m_IconStop = Texture2D::Create(g_ResourcesDirectory / "Icons/StopButton.png");
+        m_IconPlay = Texture2D::Create("Resources/icons/PlayButton.png");
+        m_IconSimulate = Texture2D::Create("Resources/icons/SimulateButton.png");
+        m_IconStop = Texture2D::Create("Resources/icons/StopButton.png");
 
         FramebufferSpecification fbSpec;
         fbSpec.Attachments = {FramebufferTextureFormat::RGBA8, FramebufferTextureFormat::RED_INTEGER, FramebufferTextureFormat::Depth};
@@ -53,7 +49,6 @@ namespace Myka
             (spec.Width != m_ViewportSize.x || spec.Height != m_ViewportSize.y))
         {
             m_Framebuffer->Resize((uint32_t)m_ViewportSize.x, (uint32_t)m_ViewportSize.y);
-            m_CameraController.OnResize(m_ViewportSize.x, m_ViewportSize.y);
             m_EditorCamera.SetViewportSize(m_ViewportSize.x, m_ViewportSize.y);
 
             if (m_ActiveScene)
@@ -81,9 +76,6 @@ namespace Myka
         {
         case SceneState::Edit:
         {
-            if (m_ViewportFocused)
-                m_CameraController.OnUpdate(ts);
-
             m_EditorCamera.OnUpdate(ts);
 
             m_ActiveScene->OnUpdateEditor(ts, m_EditorCamera);
@@ -104,7 +96,6 @@ namespace Myka
         }
 
         auto [mx, my] = ImGui::GetMousePos();
-
         mx -= m_ViewportBounds[0].x;
         my -= m_ViewportBounds[0].y;
 
@@ -158,56 +149,55 @@ namespace Myka
 
         // --- Dockspace ---
         ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2{0.0f, 0.0f});
-        if (ImGui::Begin("DockSpace Demo", &dockspaceOpen, window_flags))
+        ImGui::Begin("DockSpace Demo", &dockspaceOpen, window_flags);
+        ImGui::PopStyleVar();
+
+        if (opt_fullscreen)
+            ImGui::PopStyleVar(2);
+
+        // DockSpace
+        ImGuiIO &io = ImGui::GetIO();
+        ImGuiStyle &style = ImGui::GetStyle();
+        float minWinSizeX = style.WindowMinSize.x;
+        style.WindowMinSize.x = 370.0f;
+        if (io.ConfigFlags & ImGuiConfigFlags_DockingEnable)
         {
-            ImGui::PopStyleVar();
-
-            if (opt_fullscreen)
-                ImGui::PopStyleVar(2);
-
-            // DockSpace
-            ImGuiIO &io = ImGui::GetIO();
-            ImGuiStyle &style = ImGui::GetStyle();
-            float minWinSizeX = style.WindowMinSize.x;
-            style.WindowMinSize.x = 370.0f;
-            if (io.ConfigFlags & ImGuiConfigFlags_DockingEnable)
-            {
-                ImGuiID dockspace_id = ImGui::GetID("MyDockSpace");
-                ImGui::DockSpace(dockspace_id, ImVec2{0.0f, 0.0f}, dockspace_flags);
-            }
-            style.WindowMinSize.x = minWinSizeX;
-
-            // Menu bar
-            if (ImGui::BeginMenuBar())
-            {
-                if (ImGui::BeginMenu("File"))
-                {
-                    if (ImGui::MenuItem("New", "Ctrl+N"))
-                        NewScene();
-
-                    ImGui::Separator();
-
-                    if (ImGui::MenuItem("Open...", "Ctrl+O"))
-                        OpenScene();
-
-                    ImGui::Separator();
-
-                    if (ImGui::MenuItem("Save", "Ctrl+S"))
-                        SaveScene();
-
-                    if (ImGui::MenuItem("Save As...", "Ctrl+Shift+S"))
-                        SaveSceneAs();
-
-                    ImGui::Separator();
-
-                    if (ImGui::MenuItem("Exit"))
-                        Application::Get().Close();
-
-                    ImGui::EndMenu();
-                }
-                ImGui::EndMenuBar();
-            }
+            ImGuiID dockspace_id = ImGui::GetID("MyDockSpace");
+            ImGui::DockSpace(dockspace_id, ImVec2{0.0f, 0.0f}, dockspace_flags);
         }
+        style.WindowMinSize.x = minWinSizeX;
+
+        // Menu bar
+        if (ImGui::BeginMenuBar())
+        {
+            if (ImGui::BeginMenu("File"))
+            {
+                if (ImGui::MenuItem("New", "Ctrl+N"))
+                    NewScene();
+
+                ImGui::Separator();
+
+                if (ImGui::MenuItem("Open...", "Ctrl+O"))
+                    OpenScene();
+
+                ImGui::Separator();
+
+                if (ImGui::MenuItem("Save", "Ctrl+S"))
+                    SaveScene();
+
+                if (ImGui::MenuItem("Save As...", "Ctrl+Shift+S"))
+                    SaveSceneAs();
+
+                ImGui::Separator();
+
+                if (ImGui::MenuItem("Exit"))
+                    Application::Get().Close();
+
+                ImGui::EndMenu();
+            }
+            ImGui::EndMenuBar();
+        }
+
         ImGui::End();
 
         // SceneHierarchyPanel Render
@@ -256,7 +246,7 @@ namespace Myka
             {
                 const wchar_t *path = (const wchar_t *)payload->Data;
 
-                OpenScene(g_AssetsDirectory / path);
+                OpenScene(std::filesystem::path("assets") / path);
             }
 
             ImGui::EndDragDropTarget();
@@ -400,7 +390,6 @@ namespace Myka
 
     void EditorLayer::OnEvent(Event &e)
     {
-        m_CameraController.OnEvent(e);
         m_EditorCamera.OnEvent(e);
 
         EventDispatcher dp(e);

@@ -26,7 +26,7 @@ namespace Myka
 
         static std::filesystem::path GetCacheDirectory()
         {
-            return std::filesystem::path("../../MykaEditor/assets/cache/opengl");
+            return std::filesystem::path("assets/cache/opengl");
         }
 
         static void CreateCacheDirectoryIfNeeded()

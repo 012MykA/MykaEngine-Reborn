@@ -12,20 +12,30 @@
 
 namespace Myka
 {
-
-#define BIND_EVENT_FN(x) std::bind(&Application::x, this, std::placeholders::_1)
-
 	Application *Application::s_Instance = nullptr;
 
-	Application::Application(const std::string &name, ApplicationCommandLineArgs args)
+	Application::Application(const ApplicationSpecification &specification) : m_Specification(specification)
 	{
 		MYKA_PROFILE_FUNCTION();
 
 		MYKA_CORE_ASSERT(!s_Instance, "Application already exists!");
 		s_Instance = this;
 
-		m_Window = Window::Create(WindowProps(name));
-		m_Window->SetEventCallback(BIND_EVENT_FN(OnEvent));
+		std::filesystem::path workingDir(m_Specification.WorkingDirectory);
+		if (std::filesystem::exists(workingDir))
+		{
+			std::filesystem::current_path(workingDir);
+			MYKA_CORE_INFO("Set working directory to: {0}", workingDir.string());
+		}
+		else
+		{
+			MYKA_CORE_WARN("Working directory does not exist: {0}", workingDir.string());
+			std::filesystem::create_directories(workingDir);
+			std::filesystem::current_path(workingDir);
+		}
+
+		m_Window = Window::Create(WindowProps(m_Specification.Name));
+		m_Window->SetEventCallback(MYKA_BIND_EVENT_FN(OnEvent));
 
 		Renderer::Init();
 
@@ -45,8 +55,8 @@ namespace Myka
 		MYKA_PROFILE_FUNCTION();
 
 		EventDispatcher dispatcher(e);
-		dispatcher.Dispatch<WindowCloseEvent>(BIND_EVENT_FN(OnWindowClose));
-		dispatcher.Dispatch<WindowResizeEvent>(BIND_EVENT_FN(OnWindowResize));
+		dispatcher.Dispatch<WindowCloseEvent>(MYKA_BIND_EVENT_FN(OnWindowClose));
+		dispatcher.Dispatch<WindowResizeEvent>(MYKA_BIND_EVENT_FN(OnWindowResize));
 
 		for (auto it = m_LayerStack.rbegin(); it != m_LayerStack.rend(); ++it)
 		{

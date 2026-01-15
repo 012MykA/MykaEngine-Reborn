@@ -5,22 +5,17 @@
 
 namespace Myka
 {
-    // TODO: refactor
-    // TODO: change
-    extern const std::filesystem::path g_AssetsDirectory;
-    extern const std::filesystem::path g_ResourcesDirectory;
-
-    ContentBrowserPanel::ContentBrowserPanel() : m_CurrentDirectory(g_AssetsDirectory)
+    ContentBrowserPanel::ContentBrowserPanel() : m_CurrentDirectory("assets")
     {
-        m_DirectoryIcon = Texture2D::Create(g_ResourcesDirectory / "icons/ContentBrowser/folder-icon.png");
-        m_FileIcon = Texture2D::Create(g_ResourcesDirectory / "icons/ContentBrowser/file-icon.png");
+        m_DirectoryIcon = Texture2D::Create("Resources/icons/ContentBrowser/folder-icon.png");
+        m_FileIcon = Texture2D::Create("Resources/icons/ContentBrowser/file-icon.png");
     }
 
     void ContentBrowserPanel::OnImGuiRender()
     {
         ImGui::Begin("Content Browser");
 
-        if (m_CurrentDirectory != std::filesystem::path(g_AssetsDirectory))
+        if (m_CurrentDirectory != std::filesystem::path("assets"))
         {
             if (ImGui::Button("<-"))
             {
@@ -62,7 +57,7 @@ namespace Myka
         for (auto &directoryEntry : std::filesystem::directory_iterator(m_CurrentDirectory))
         {
             const auto &path = directoryEntry.path();
-            auto relativePath = std::filesystem::relative(path, g_AssetsDirectory);
+            auto relativePath = std::filesystem::relative(path, "assets");
             std::string filenameString = path.filename().string();
 
             Ref<Texture2D> icon = directoryEntry.is_directory() ? m_DirectoryIcon : m_FileIcon;

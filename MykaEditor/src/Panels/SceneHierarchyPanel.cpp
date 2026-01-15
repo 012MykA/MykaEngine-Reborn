@@ -7,9 +7,6 @@
 
 namespace Myka
 {
-    // TODO: refactor
-    extern const std::filesystem::path g_AssetsDirectory;
-
     template <typename T, typename UIFunction>
     static void DrawComponent(const std::string &name, Entity entity, UIFunction uiFunction)
     {
@@ -361,7 +358,7 @@ namespace Myka
                 if (const ImGuiPayload *payload = ImGui::AcceptDragDropPayload("CONTENT_BROWSER_ITEM"))
                 {
                     const wchar_t *path = (const wchar_t *)payload->Data;
-                    std::filesystem::path texturePath(g_AssetsDirectory / path);
+                    std::filesystem::path texturePath(path);
                     component.Texture = Texture2D::Create(texturePath.string());
                 }
 

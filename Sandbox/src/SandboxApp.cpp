@@ -6,7 +6,7 @@
 class Sandbox : public Myka::Application
 {
 public:
-	Sandbox(Myka::ApplicationCommandLineArgs args) : Myka::Application("Sandbox", args)
+	Sandbox(const Myka::ApplicationSpecification& specification) : Myka::Application(specification)
 	{
 		PushLayer(new Sandbox2D());
 	}
@@ -16,5 +16,10 @@ public:
 
 Myka::Application *Myka::CreateApplication(Myka::ApplicationCommandLineArgs args)
 {
-	return new Sandbox(args);
+	ApplicationSpecification spec;
+	spec.Name = "Sandbox";
+	spec.WorkingDirectory = "../../Sandbox";
+	spec.CommandLineArgs = args;
+
+	return new Sandbox(spec);
 }

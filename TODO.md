@@ -2,8 +2,6 @@
 
 ## 2D Final
 
-- **Beter Content Browser**
-
 - **AssetsManager**
 
   - Resources Cash
