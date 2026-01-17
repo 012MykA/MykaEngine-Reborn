@@ -85,7 +85,7 @@ namespace Myka
             {{-0.5f, 0.5f, -0.5f}, {-1.0f, 0.0f, 0.0f}, {0.0f, 1.0f}},
         };
 
-        std::vector<unsigned int> indices = {
+        std::vector<uint32_t> indices = {
             0, 1, 2, 2, 3, 0,
             4, 5, 6, 6, 7, 4,
             8, 9, 10, 10, 11, 8,
