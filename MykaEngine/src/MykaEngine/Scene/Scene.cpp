@@ -2,6 +2,7 @@
 #include "Scene.hpp"
 #include "Components.hpp"
 #include "MykaEngine/Renderer/Renderer2D.hpp"
+#include "MykaEngine/Renderer/Renderer3D.hpp"
 #include "Entity.hpp"
 
 #include <glm/glm.hpp>
@@ -18,7 +19,7 @@ namespace Myka
         // Expand the parameter pack using a fold expression with a lambda.
         // This executes the following block for each type in Component...
         ([&]()
-        {
+         {
             auto view = src.view<Component>();
             for (auto srcEntity : view)
             {
@@ -26,8 +27,7 @@ namespace Myka
 
                 auto& srcComponent = src.get<Component>(srcEntity);
                 dst.emplace_or_replace<Component>(dstEntity, srcComponent);
-            }
-        }(), ...);
+            } }(), ...);
     }
 
     template <typename... Component>
@@ -40,16 +40,60 @@ namespace Myka
     static void CopyComponentIfExists(Entity dst, Entity src)
     {
         ([&]()
-        {
+         {
             if (src.HasComponent<Component>())
-                dst.AddOrReplaceComponent<Component>(src.GetComponent<Component>());
-        }(), ...);
+                dst.AddOrReplaceComponent<Component>(src.GetComponent<Component>()); }(), ...);
     }
 
     template <typename... Component>
     static void CopyComponentIfExists(ComponentGroup<Component...>, Entity dst, Entity src)
     {
         CopyComponentIfExists<Component...>(dst, src);
+    }
+
+    Scene::Scene()
+    {
+        std::vector<Vertex> vertices = {
+            {{-0.5f, -0.5f, 0.5f}, {0.0f, 0.0f, 1.0f}, {0.0f, 0.0f}},
+            {{0.5f, -0.5f, 0.5f}, {0.0f, 0.0f, 1.0f}, {1.0f, 0.0f}},
+            {{0.5f, 0.5f, 0.5f}, {0.0f, 0.0f, 1.0f}, {1.0f, 1.0f}},
+            {{-0.5f, 0.5f, 0.5f}, {0.0f, 0.0f, 1.0f}, {0.0f, 1.0f}},
+
+            {{-0.5f, -0.5f, -0.5f}, {0.0f, 0.0f, -1.0f}, {1.0f, 0.0f}},
+            {{-0.5f, 0.5f, -0.5f}, {0.0f, 0.0f, -1.0f}, {1.0f, 1.0f}},
+            {{0.5f, 0.5f, -0.5f}, {0.0f, 0.0f, -1.0f}, {0.0f, 1.0f}},
+            {{0.5f, -0.5f, -0.5f}, {0.0f, 0.0f, -1.0f}, {0.0f, 0.0f}},
+
+            {{-0.5f, 0.5f, -0.5f}, {0.0f, 1.0f, 0.0f}, {0.0f, 1.0f}},
+            {{-0.5f, 0.5f, 0.5f}, {0.0f, 1.0f, 0.0f}, {0.0f, 0.0f}},
+            {{0.5f, 0.5f, 0.5f}, {0.0f, 1.0f, 0.0f}, {1.0f, 0.0f}},
+            {{0.5f, 0.5f, -0.5f}, {0.0f, 1.0f, 0.0f}, {1.0f, 1.0f}},
+
+            {{-0.5f, -0.5f, -0.5f}, {0.0f, -1.0f, 0.0f}, {1.0f, 1.0f}},
+            {{0.5f, -0.5f, -0.5f}, {0.0f, -1.0f, 0.0f}, {0.0f, 1.0f}},
+            {{0.5f, -0.5f, 0.5f}, {0.0f, -1.0f, 0.0f}, {0.0f, 0.0f}},
+            {{-0.5f, -0.5f, 0.5f}, {0.0f, -1.0f, 0.0f}, {1.0f, 0.0f}},
+
+            {{0.5f, -0.5f, -0.5f}, {1.0f, 0.0f, 0.0f}, {1.0f, 0.0f}},
+            {{0.5f, 0.5f, -0.5f}, {1.0f, 0.0f, 0.0f}, {1.0f, 1.0f}},
+            {{0.5f, 0.5f, 0.5f}, {1.0f, 0.0f, 0.0f}, {0.0f, 1.0f}},
+            {{0.5f, -0.5f, 0.5f}, {1.0f, 0.0f, 0.0f}, {0.0f, 0.0f}},
+
+            {{-0.5f, -0.5f, -0.5f}, {-1.0f, 0.0f, 0.0f}, {0.0f, 0.0f}},
+            {{-0.5f, -0.5f, 0.5f}, {-1.0f, 0.0f, 0.0f}, {1.0f, 0.0f}},
+            {{-0.5f, 0.5f, 0.5f}, {-1.0f, 0.0f, 0.0f}, {1.0f, 1.0f}},
+            {{-0.5f, 0.5f, -0.5f}, {-1.0f, 0.0f, 0.0f}, {0.0f, 1.0f}},
+        };
+
+        std::vector<unsigned int> indices = {
+            0, 1, 2, 2, 3, 0,
+            4, 5, 6, 6, 7, 4,
+            8, 9, 10, 10, 11, 8,
+            12, 13, 14, 14, 15, 12,
+            16, 17, 18, 18, 19, 16,
+            20, 21, 22, 22, 23, 20};
+
+        m_CubeMesh = CreateRef<Mesh>(vertices, indices);
     }
 
     Ref<Scene> Scene::Copy(Ref<Scene> other)
@@ -366,6 +410,14 @@ namespace Myka
 
     void Scene::RenderScene(EditorCamera &camera)
     {
+        Renderer3D::BeginScene(camera);
+
+        Renderer3D::DrawMesh(m_CubeMesh, glm::translate(glm::mat4(1.0f), {-3.0f, 0.0f, 0.0f}), {1.0f, 0.2f, 0.2f, 1.0f});
+        Renderer3D::DrawMesh(m_CubeMesh, glm::translate(glm::mat4(1.0f), {0.0f, 0.0f, 0.0f}), {0.2f, 1.0f, 0.2f, 1.0f});
+        Renderer3D::DrawMesh(m_CubeMesh, glm::translate(glm::mat4(1.0f), {3.0f, 0.0f, 0.0f}), {0.2f, 0.2f, 1.0f, 1.0f});
+
+        Renderer3D::EndScene();
+
         Renderer2D::BeginScene(camera);
 
         // Draw sprites

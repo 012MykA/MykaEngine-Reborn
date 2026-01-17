@@ -5,6 +5,7 @@
 #include "MykaEngine/Core/Timestep.hpp"
 #include "MykaEngine/Renderer/EditorCamera.hpp"
 #include "MykaEngine/Core/UUID.hpp"
+#include "MykaEngine/Renderer/Mesh.hpp" // TODO: remove
 
 #include "box2d/id.h"
 
@@ -17,7 +18,7 @@ namespace Myka
         friend class SceneHierarchyPanel;
 
     public:
-        Scene() = default;
+        Scene(); // TODO: make default
         ~Scene() = default;
 
         static Ref<Scene> Copy(Ref<Scene> other);
@@ -58,6 +59,7 @@ namespace Myka
         void RenderScene(EditorCamera &camera);
 
     private:
+        Ref<Mesh> m_CubeMesh; // TODO: remove
         entt::registry m_Registry;
         uint32_t m_ViewportWidth = 0, m_ViewportHeight = 0;
 

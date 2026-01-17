@@ -54,7 +54,7 @@ namespace Myka
 
     // IndexBuffer
 
-    OpenGLIndexBuffer::OpenGLIndexBuffer(uint32_t *indices, uint32_t count) : m_Count(count)
+    OpenGLIndexBuffer::OpenGLIndexBuffer(const uint32_t *indices, uint32_t count) : m_Count(count)
     {
         MYKA_PROFILE_FUNCTION();
 

@@ -5,6 +5,7 @@
 #include <glm/gtc/type_ptr.hpp>
 
 #include "MykaEngine/Scene/SceneSerializer.hpp"
+#include "MykaEngine/Renderer/Renderer3D.hpp"
 #include "MykaEngine/Core/MouseCodes.hpp"
 #include "MykaEngine/Utils/PlatformUtils.hpp"
 
@@ -66,6 +67,7 @@ namespace Myka
 
         // Render
         Renderer2D::ResetStats();
+        Renderer3D::ResetStats();
         m_Framebuffer->Bind();
         RenderCommand::SetClearColor({0.1f, 0.1f, 0.1f, 1.0f});
         RenderCommand::Clear();
@@ -205,23 +207,32 @@ namespace Myka
         m_ContentBrowserPanel.OnImGuiRender();
 
         //  --- Renderer2D Stats ---
-        ImGui::Begin("Renderer2D Stats");
+        if (ImGui::Begin("Renderer2D Stats"))
+        {
+            auto stats = Renderer2D::GetStats();
+            ImGui::Text("Draw Calls: %d", stats.DrawCalls);
+            ImGui::Text("Quads: %d", stats.QuadCount);
+            ImGui::Text("Vertices: %d", stats.GetTotalVertexCount());
+            ImGui::Text("Indices: %d", stats.GetTotalIndexCount());
+        }
+        ImGui::End();
 
+        //  --- Rendere3D Stats ---
+        if (ImGui::Begin("Renderer3D Stats"))
+        {
+            auto stats = Renderer3D::GetStats();
+            ImGui::Text("Draw Calls: %d", stats.DrawCalls);
+            ImGui::Text("Indices: %d", stats.IndicesCount);
+        }
+        ImGui::End();
+
+        // Settings
+        ImGui::Begin("Settings");
         std::string name = "None";
         if (static_cast<bool>(m_HoveredEntity))
             name = m_HoveredEntity.GetComponent<TagComponent>().Tag;
 
         ImGui::Text("Hovered Entity: %s", name.c_str());
-
-        auto stats = Renderer2D::GetStats();
-        ImGui::Text("Draw Calls: %d", stats.DrawCalls);
-        ImGui::Text("Quads: %d", stats.QuadCount);
-        ImGui::Text("Vertices: %d", stats.GetTotalVertexCount());
-        ImGui::Text("Indices: %d", stats.GetTotalIndexCount());
-        ImGui::End();
-
-        // Settings
-        ImGui::Begin("Settings");
         ImGui::Checkbox("Show Physics Colliders", &m_ShowPhysicsColliders);
         ImGui::End();
 

@@ -27,7 +27,7 @@ namespace Myka
     class OpenGLIndexBuffer : public IndexBuffer
     {
     public:
-        OpenGLIndexBuffer(uint32_t *indices, uint32_t count);
+        OpenGLIndexBuffer(const uint32_t *indices, uint32_t count);
         virtual ~OpenGLIndexBuffer();
 
         virtual void Bind() const override;
