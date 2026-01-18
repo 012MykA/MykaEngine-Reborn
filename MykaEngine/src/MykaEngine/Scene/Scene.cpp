@@ -412,8 +412,11 @@ namespace Myka
     {
         Renderer3D::BeginScene(camera);
 
+        glm::mat4 transform = glm::translate(glm::mat4(1.0f), {0.0f, 2.0f, 0.0f});
+        transform *= glm::toMat4(glm::quat(glm::vec3(45.0f, 0.0f, 0.0f)));
+
         Renderer3D::DrawMesh(m_CubeMesh, glm::translate(glm::mat4(1.0f), {-3.0f, 0.0f, 0.0f}), {1.0f, 0.2f, 0.2f, 1.0f});
-        Renderer3D::DrawMesh(m_CubeMesh, glm::translate(glm::mat4(1.0f), {0.0f, 0.0f, 0.0f}), {0.2f, 1.0f, 0.2f, 1.0f});
+        Renderer3D::DrawMesh(m_CubeMesh, transform, {0.2f, 1.0f, 0.2f, 1.0f});
         Renderer3D::DrawMesh(m_CubeMesh, glm::translate(glm::mat4(1.0f), {3.0f, 0.0f, 0.0f}), {0.2f, 0.2f, 1.0f, 1.0f});
 
         Renderer3D::EndScene();

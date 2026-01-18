@@ -5,6 +5,8 @@
 #include "ScriptableEntity.hpp"
 #include "MykaEngine/Renderer/Texture.hpp"
 #include "MykaEngine/Core/UUID.hpp"
+#include "MykaEngine/Renderer/Mesh.hpp"
+#include "MykaEngine/Renderer/Material.hpp"
 
 // glm
 #include <glm/glm.hpp>
@@ -51,6 +53,31 @@ namespace Myka
 
             return glm::translate(glm::mat4(1.0f), Position) * rotation * glm::scale(glm::mat4(1.0f), Scale);
         }
+    };
+
+    struct MeshFilterComponent
+    {
+        Ref<Mesh> _Mesh;
+
+        MeshFilterComponent() = default;
+        MeshFilterComponent(const MeshFilterComponent &) = default;
+        MeshFilterComponent(const Ref<Mesh> &mesh) : _Mesh(mesh) {}
+
+        operator Ref<Mesh>() { return _Mesh; }
+    };
+
+    struct MeshRendererComponent
+    {
+        Ref<Material> _Material;
+
+        bool CastShadows = true;
+        bool ReceiveShadows = true;
+
+        MeshRendererComponent() = default;
+        MeshRendererComponent(const MeshRendererComponent &) = default;
+        MeshRendererComponent(const Ref<Material> &mesh) : _Material(mesh) {}
+
+        operator Ref<Material>() { return _Material; }
     };
 
     struct SpriteRendererComponent
@@ -161,6 +188,7 @@ namespace Myka
     };
 
     using AllComponents = ComponentGroup<TransformComponent,
+                                         MeshFilterComponent, MeshRendererComponent,
                                          SpriteRendererComponent, CircleRendererComponent,
                                          CameraComponent,
                                          NativeScriptComponent,

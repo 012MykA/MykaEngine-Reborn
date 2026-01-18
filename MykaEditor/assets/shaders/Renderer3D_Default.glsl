@@ -25,7 +25,7 @@ layout(location = 3) out flat int v_EntityID;
 void main()
 {
     v_Color = u_Color;
-    v_Normal = a_Normal;
+    v_Normal = mat3(u_Transform) * a_Normal;
     v_TexCoord = a_TexCoord;
     v_EntityID = u_EntityID;
     
@@ -44,7 +44,14 @@ layout(location = 2) in vec2 v_TexCoord;
 layout(location = 3) in flat int v_EntityID;
 
 void main()
-{    
-    o_Color = v_Color;
+{
+    vec3 normal = normalize(v_Normal);
+    
+    vec3 lightDir = normalize(vec3(0.5, 1.0, 0.8));
+    
+    float diffuse = max(dot(normal, lightDir), 0.0);
+    float ambient = 0.3; 
+    
+    o_Color = v_Color * (diffuse + ambient);
     o_EntityID = v_EntityID;
 }

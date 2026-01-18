@@ -1,3 +1,4 @@
+#include "mykapch.hpp"
 #include "Renderer3D.hpp"
 
 #include "Shader.hpp"
@@ -7,7 +8,7 @@
 namespace Myka
 {
     struct Renderer3DData
-    {
+    {        
         struct EntityData
         {
             glm::mat4 Transform;

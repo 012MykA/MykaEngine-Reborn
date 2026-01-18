@@ -75,6 +75,13 @@ namespace Myka
         glDrawElements(GL_TRIANGLES, count, GL_UNSIGNED_INT, 0);
     }
 
+    void OpenGLRendererAPI::DrawIndexedInstanced(const Ref<VertexArray> &vertexArray, uint32_t instanceCount, uint32_t indexCount)
+    {
+        vertexArray->Bind();
+        uint32_t count = indexCount ? indexCount : vertexArray->GetIndexBuffer()->GetCount();
+        glDrawElementsInstanced(GL_TRIANGLES, count, GL_UNSIGNED_INT, nullptr, instanceCount);
+    }
+
     void OpenGLRendererAPI::DrawLines(const Ref<VertexArray> &vertexArray, uint32_t vertexCount)
     {
         vertexArray->Bind();
