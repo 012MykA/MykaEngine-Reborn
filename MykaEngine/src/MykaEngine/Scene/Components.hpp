@@ -55,22 +55,13 @@ namespace Myka
         }
     };
 
-    struct MeshComponent
+    struct ModelComponent
     {
-        Ref<Mesh> _Mesh;
+        Ref<Model> _Model;
 
-        MeshComponent() = default;
-        MeshComponent(const MeshComponent &) = default;
-        MeshComponent(const Ref<Mesh> &mesh) : _Mesh(mesh) {}
-    };
-
-    struct MaterialComponent
-    {
-        Ref<Material> _Material;
-
-        MaterialComponent() = default;
-        MaterialComponent(const MaterialComponent &) = default;
-        MaterialComponent(const Ref<Material> &material) : _Material(material) {}
+        ModelComponent() = default;
+        ModelComponent(const ModelComponent &) = default;
+        ModelComponent(const Ref<Model> &model) : _Model(model) {}
     };
 
     struct SpriteRendererComponent
@@ -181,7 +172,7 @@ namespace Myka
     };
 
     using AllComponents = ComponentGroup<TransformComponent,
-                                         MeshComponent, MaterialComponent,
+                                         ModelComponent,
                                          SpriteRendererComponent, CircleRendererComponent,
                                          CameraComponent,
                                          NativeScriptComponent,

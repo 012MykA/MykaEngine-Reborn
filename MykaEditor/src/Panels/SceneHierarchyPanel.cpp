@@ -235,6 +235,15 @@ namespace Myka
                 }
             }
 
+            if (!m_SelectionContext.HasComponent<ModelComponent>())
+            {
+                if (ImGui::MenuItem("Model"))
+                {
+                    m_SelectionContext.AddComponent<ModelComponent>();
+                    ImGui::CloseCurrentPopup();
+                }
+            }
+
             if (!m_SelectionContext.HasComponent<SpriteRendererComponent>())
             {
                 if (ImGui::MenuItem("Sprite Renderer"))
@@ -349,6 +358,28 @@ namespace Myka
                 
                 ImGui::Checkbox("Fixed Aspect Ratio", &component.FixedAspectRatio);
             } });
+
+        DrawComponent<ModelComponent>("Model", entity, [](auto &component)
+        {
+            ImGui::Button("Model", ImVec2(100.0f, 0.0f));
+            if (ImGui::BeginDragDropTarget())
+            {
+                if (const ImGuiPayload *payload = ImGui::AcceptDragDropPayload("CONTENT_BROWSER_ITEM"))
+                {
+                    const wchar_t *path = (const wchar_t *)payload->Data;
+                    std::filesystem::path modelPath(path);
+                    if (modelPath.extension().string() != ".gltf" && modelPath.extension().string() != ".glb")
+                    {
+                        MYKA_CORE_WARN("Could not load model: {0}. Supported formats: .gltf, .glb", modelPath.filename().string());
+                        return;
+                    }
+
+                    component._Model = Model::Create(modelPath);
+                }
+
+                ImGui::EndDragDropTarget();
+            }
+        });
 
         DrawComponent<SpriteRendererComponent>("Sprite Renderer", entity, [](auto &component)
                                                {

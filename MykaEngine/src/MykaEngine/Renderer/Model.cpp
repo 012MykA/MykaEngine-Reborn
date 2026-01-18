@@ -149,7 +149,7 @@ namespace Myka
         }
     }
     
-    Model::Model(const std::filesystem::path &path)
+    Model::Model(const std::filesystem::path &path) : m_Path(path)
     {
         LoadModel(path);
     }

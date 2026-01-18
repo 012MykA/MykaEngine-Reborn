@@ -152,6 +152,19 @@ namespace Myka
             };
         }
 
+        if (entity.HasComponent<ModelComponent>())
+        {
+            const auto &mc = entity.GetComponent<ModelComponent>();
+
+            json componentData;
+            if (mc._Model)
+                componentData["ModelPath"] = mc._Model->GetPath();
+            else
+                componentData["ModelPath"] = "";
+
+            e["ModelComponent"] = componentData;
+        }
+
         if (entity.HasComponent<SpriteRendererComponent>())
         {
             const auto &src = entity.GetComponent<SpriteRendererComponent>();
@@ -310,6 +323,18 @@ namespace Myka
 
                 cc.Primary = cameraComponentJson["Primary"];
                 cc.FixedAspectRatio = cameraComponentJson["FixedAspectRatio"];
+            }
+
+            auto modelComponentJson = entity["ModelComponent"];
+            if (!modelComponentJson.is_null())
+            {
+                auto &src = deserializedEntity.AddComponent<ModelComponent>();
+
+                std::filesystem::path modelPath = modelComponentJson.value("ModelPath", "");
+                if (!modelPath.empty())
+                {
+                    src._Model = Model::Create(modelPath);
+                }
             }
 
             auto spriteRendererComponentJson = entity["SpriteRendererComponent"];

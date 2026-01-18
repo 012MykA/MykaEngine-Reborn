@@ -53,6 +53,7 @@ namespace Myka
 
     Scene::Scene()
     {
+        // TODO: remove
         std::vector<Vertex> vertices = {
             {{-0.5f, -0.5f, 0.5f}, {0.0f, 0.0f, 1.0f}, {0.0f, 0.0f}},
             {{0.5f, -0.5f, 0.5f}, {0.0f, 0.0f, 1.0f}, {1.0f, 0.0f}},
@@ -94,9 +95,6 @@ namespace Myka
             20, 21, 22, 22, 23, 20};
 
         m_CubeMesh = CreateRef<Mesh>(vertices, indices);
-
-        m_StanfordDragon = Model::Create("assets/models/stanford_dragon/scene.gltf");
-        m_Porche911 = Model::Create("assets/models/porsche_911_gt3/scene.gltf");
     }
 
     Ref<Scene> Scene::Copy(Ref<Scene> other)
@@ -414,40 +412,19 @@ namespace Myka
     void Scene::RenderScene(EditorCamera &camera)
     {
         Renderer3D::BeginScene(camera);
-        
-        {   // Porsche 911
-            glm::mat4 transform = glm::mat4(1.0f);
-            transform = glm::translate(transform, {0.0f, 0.0f, 0.0f});
-            transform = glm::scale(transform, glm::vec3(1.0f));
-    
-            Renderer3D::DrawModel(m_Porche911, transform);
+
+        // Draw models
+        {
+            auto view = m_Registry.view<TransformComponent, ModelComponent>();
+            for (auto entity : view)
+            {
+                auto &transform = view.get<TransformComponent>(entity);
+                auto &model = view.get<ModelComponent>(entity);
+
+                if (model._Model)
+                    Renderer3D::DrawModel(model._Model, transform.GetTransform(), static_cast<int>(entity));
+            }
         }
-
-        {   // Dragon
-            glm::mat4 transform = glm::mat4(1.0f);
-            transform = glm::translate(transform, {-5.0f, 0.0f, 0.0f});
-            transform = glm::scale(transform, glm::vec3(20.0f));
-    
-            Renderer3D::DrawModel(m_StanfordDragon, transform);
-        }
-
-        // {
-        //     glm::mat4 transform = glm::translate(glm::mat4(1.0f), {0.0f, 2.0f, 0.0f});
-        //     transform *= glm::toMat4(glm::quat(glm::vec3(45.0f, 0.0f, 0.0f)));
-
-        //     auto red = Material::Create();
-        //     red->AlbedoColor = {1.0f, 0.2f, 0.2f, 1.0f};
-
-        //     auto green = Material::Create();
-        //     green->AlbedoColor = {0.2f, 1.0f, 0.2f, 1.0f};
-
-        //     auto blue = Material::Create();
-        //     blue->AlbedoColor = {0.2f, 0.2f, 1.0f, 1.0f};
-    
-        //     Renderer3D::DrawMesh(m_CubeMesh, red, glm::translate(glm::mat4(1.0f), {-3.0f, 0.0f, 0.0f}));
-        //     Renderer3D::DrawMesh(m_CubeMesh, green, transform);
-        //     Renderer3D::DrawMesh(m_CubeMesh, blue, glm::translate(glm::mat4(1.0f), {3.0f, 0.0f, 0.0f}));
-        // }
 
         Renderer3D::EndScene();
 

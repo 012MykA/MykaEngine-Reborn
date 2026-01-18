@@ -60,8 +60,6 @@ namespace Myka
         void RenderScene(EditorCamera &camera);
 
     private:
-        Ref<Model> m_StanfordDragon;
-        Ref<Model> m_Porche911;
         Ref<Mesh> m_CubeMesh; // TODO: remove
         entt::registry m_Registry;
         uint32_t m_ViewportWidth = 0, m_ViewportHeight = 0;
