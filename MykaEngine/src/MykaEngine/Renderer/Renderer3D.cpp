@@ -12,13 +12,13 @@ namespace Myka
         struct EntityData
         {
             glm::mat4 Transform;
-            glm::vec4 Color;
+            glm::vec4 AlbedoColor;
             int EntityID;
         };
         EntityData EntityBuffer;
         Ref<UniformBuffer> EntityUniformBuffer;
 
-        Ref<Shader> DefaultShader;
+        Ref<Shader> MaterialShader;
 
         Renderer3D::Statistics Stats;
 
@@ -34,15 +34,13 @@ namespace Myka
 
     void Renderer3D::Init()
     {
-        s_Data.DefaultShader = Shader::Create("assets/shaders/Renderer3D_Default.glsl");
+        s_Data.MaterialShader = Shader::Create("assets/shaders/Renderer3D_Material.glsl");
 
         s_Data.CameraUniformBuffer = UniformBuffer::Create(sizeof(Renderer3DData::CameraData), 0);
         s_Data.EntityUniformBuffer = UniformBuffer::Create(sizeof(Renderer3DData::EntityData), 1);
     }
 
-    void Renderer3D::Shutdown()
-    {
-    }
+    void Renderer3D::Shutdown() {}
 
     void Renderer3D::BeginScene(const EditorCamera &camera)
     {
@@ -54,29 +52,32 @@ namespace Myka
     {
     }
 
-    void Renderer3D::DrawMesh(const Ref<Mesh> &mesh, const glm::mat4 &transform, const glm::vec4 &color, int entityID)
+    void Renderer3D::DrawMesh(const Ref<Mesh> &mesh, const Ref<Material> &material, const glm::mat4 &transform, int entityID)
     {
         s_Data.EntityBuffer.Transform = transform;
-        s_Data.EntityBuffer.Color = color;
+        s_Data.EntityBuffer.AlbedoColor = material->AlbedoColor;
         s_Data.EntityBuffer.EntityID = entityID;
         s_Data.EntityUniformBuffer->SetData(&s_Data.EntityBuffer, sizeof(Renderer3DData::EntityData));
 
-        s_Data.DefaultShader->Bind();
+        s_Data.MaterialShader->Bind();
         RenderCommand::DrawIndexed(mesh->GetVertexArray(), mesh->GetIndexCount());
 
         s_Data.Stats.DrawCalls++;
+        s_Data.Stats.MeshesCount++;
         s_Data.Stats.IndicesCount += mesh->GetIndexCount();
     }
 
-    void Renderer3D::DrawModel(const Ref<Model> &model, const glm::mat4 &transform, const glm::vec4 &color, int entityID)
+    void Renderer3D::DrawModel(const Ref<Model> &model, const glm::mat4 &transform, int entityID)
     {
         for (const auto &node : model->GetNodes())
         {
             if (node._Mesh)
             {
-                DrawMesh(node._Mesh, transform * node.LocalTransform, color, entityID);
+                DrawMesh(node._Mesh, node._Material, transform * node.LocalTransform, entityID);
             }
         }
+
+        s_Data.Stats.ModelsCount++;
     }
 
     void Renderer3D::ResetStats()

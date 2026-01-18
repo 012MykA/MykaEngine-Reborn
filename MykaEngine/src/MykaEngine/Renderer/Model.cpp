@@ -111,10 +111,34 @@ namespace Myka
                         indices.push_back(ptr[i]);
                 }
 
+                // Material
+                glm::vec4 albedoColor = glm::vec4(1.0f);
+                float metallic = 0.0f;
+                float roughness = 0.5f;
+
+                if (primitive.material > -1)
+                {
+                    const tinygltf::Material& material = input.materials[primitive.material];
+                    const auto& pbr = material.pbrMetallicRoughness;
+
+                    albedoColor.r = (float)pbr.baseColorFactor[0];
+                    albedoColor.g = (float)pbr.baseColorFactor[1];
+                    albedoColor.b = (float)pbr.baseColorFactor[2];
+                    albedoColor.w = (float)pbr.baseColorFactor[3];
+
+                    metallic = (float)pbr.metallicFactor;
+                    roughness = (float)pbr.roughnessFactor;
+                }
+
                 Model::Node resNode;
                 resNode._Mesh = CreateRef<Mesh>(vertices, indices);
                 resNode.LocalTransform = globalTransform;
+
                 resNode._Material = Material::Create();
+                resNode._Material->AlbedoColor = albedoColor;
+                resNode._Material->Metallic = metallic;
+                resNode._Material->Roughness = roughness;
+
                 dst.PushNode(resNode);
             }
         }

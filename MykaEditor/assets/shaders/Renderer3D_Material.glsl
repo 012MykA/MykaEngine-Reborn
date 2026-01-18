@@ -13,18 +13,18 @@ layout(std140, binding = 0) uniform Camera
 layout(std140, binding = 1) uniform Entity
 {
     mat4 u_Transform;
-    vec4 u_Color;
+    vec4 u_AlbedoColor;
     int u_EntityID;
 };
 
-layout(location = 0) out vec4 v_Color;
+layout(location = 0) out vec4 v_AlbedoColor;
 layout(location = 1) out vec3 v_Normal;
 layout(location = 2) out vec2 v_TexCoord;
 layout(location = 3) out flat int v_EntityID;
 
 void main()
 {
-    v_Color = u_Color;
+    v_AlbedoColor = u_AlbedoColor;
     v_Normal = mat3(u_Transform) * a_Normal;
     v_TexCoord = a_TexCoord;
     v_EntityID = u_EntityID;
@@ -38,7 +38,7 @@ void main()
 layout(location = 0) out vec4 o_Color;
 layout(location = 1) out int o_EntityID;
 
-layout(location = 0) in vec4 v_Color;
+layout(location = 0) in vec4 v_AlbedoColor;
 layout(location = 1) in vec3 v_Normal;
 layout(location = 2) in vec2 v_TexCoord;
 layout(location = 3) in flat int v_EntityID;
@@ -52,6 +52,6 @@ void main()
     float diffuse = max(dot(normal, lightDir), 0.0);
     float ambient = 0.3; 
     
-    o_Color = v_Color * (diffuse + ambient);
+    o_Color = v_AlbedoColor * (diffuse + ambient);
     o_EntityID = v_EntityID;
 }

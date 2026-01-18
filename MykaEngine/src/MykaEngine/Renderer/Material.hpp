@@ -6,11 +6,9 @@
 
 namespace Myka
 {
-    class Material
+    struct Material
     {
-    public:
-        glm::vec4 AlbedoColor{1.0f, 1.0f, 1.0f, 1.0f};
-        Ref<Texture2D> AlbedoMap;
+        glm::vec4 AlbedoColor = {1.0f, 1.0f, 1.0f, 1.0f};
         float Metallic = 0.0f;
         float Roughness = 0.5f;
 
