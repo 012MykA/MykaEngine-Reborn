@@ -8,7 +8,7 @@
 namespace Myka
 {
     struct Renderer3DData
-    {        
+    {
         struct EntityData
         {
             glm::mat4 Transform;
@@ -17,7 +17,7 @@ namespace Myka
         };
         EntityData EntityBuffer;
         Ref<UniformBuffer> EntityUniformBuffer;
-        
+
         Ref<Shader> DefaultShader;
 
         Renderer3D::Statistics Stats;
@@ -54,7 +54,7 @@ namespace Myka
     {
     }
 
-    void Renderer3D::DrawMesh(const Ref<Mesh> &mesh, const glm::mat4 &transform, const glm::vec4& color, int entityID)
+    void Renderer3D::DrawMesh(const Ref<Mesh> &mesh, const glm::mat4 &transform, const glm::vec4 &color, int entityID)
     {
         s_Data.EntityBuffer.Transform = transform;
         s_Data.EntityBuffer.Color = color;
@@ -66,6 +66,17 @@ namespace Myka
 
         s_Data.Stats.DrawCalls++;
         s_Data.Stats.IndicesCount += mesh->GetIndexCount();
+    }
+
+    void Renderer3D::DrawModel(const Ref<Model> &model, const glm::mat4 &transform, const glm::vec4 &color, int entityID)
+    {
+        for (const auto &node : model->GetNodes())
+        {
+            if (node._Mesh)
+            {
+                DrawMesh(node._Mesh, transform * node.LocalTransform, color, entityID);
+            }
+        }
     }
 
     void Renderer3D::ResetStats()

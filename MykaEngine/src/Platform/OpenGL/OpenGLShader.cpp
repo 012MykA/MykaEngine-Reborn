@@ -117,7 +117,7 @@ namespace Myka
 
         {
             MYKA_PROFILE_SCOPE("Shader Compilation");
-            MYKA_CORE_TRACE("Compiling a shader: {0}", filepath.filename().string());
+            MYKA_CORE_TRACE("Compiling the shader: {0}", filepath.filename().string());
 
             Timer timer;
             CompileOrGetVulkanBinaries(shaderSources);

@@ -67,11 +67,12 @@ target_include_directories(entt INTERFACE
     ${CMAKE_CURRENT_SOURCE_DIR}/vendor/entt/include
 )
 
-# glfw - glm - spdlog - nlohmann/json
+# glfw - glm - spdlog - nlohmann/json - tiny_gltf
 add_subdirectory(vendor/glfw)
 add_subdirectory(vendor/glm)
 add_subdirectory(vendor/spdlog)
 add_subdirectory(vendor/json)
+add_subdirectory(vendor/tinygltf)
 add_subdirectory(vendor/Box2D)
 
 # Sources
@@ -94,6 +95,7 @@ target_include_directories(MykaEngine
         ${CMAKE_CURRENT_SOURCE_DIR}/vendor/imgui/backends
         ${CMAKE_CURRENT_SOURCE_DIR}/vendor/glm
         ${CMAKE_CURRENT_SOURCE_DIR}/vendor/json/include
+        ${CMAKE_CURRENT_SOURCE_DIR}/vendor/tinygltf
         ${CMAKE_CURRENT_SOURCE_DIR}/vendor/Box2D/include
 )
 

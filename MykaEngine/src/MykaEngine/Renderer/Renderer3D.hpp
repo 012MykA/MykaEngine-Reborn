@@ -2,6 +2,7 @@
 
 #include "EditorCamera.hpp"
 #include "Mesh.hpp"
+#include "Model.hpp"
 
 namespace Myka
 {
@@ -11,11 +12,12 @@ namespace Myka
         static void Init();
         static void Shutdown();
 
-        static void BeginScene(const EditorCamera& camera);
+        static void BeginScene(const EditorCamera &camera);
         static void EndScene();
 
-        static void DrawMesh(const Ref<Mesh>& mesh, const glm::mat4& transform, const glm::vec4& color, int entityID = -1);
+        static void DrawModel(const Ref<Model> &model, const glm::mat4 &transform, const glm::vec4 &color, int entityID = -1);
 
+        static void DrawMesh(const Ref<Mesh> &mesh, const glm::mat4 &transform, const glm::vec4 &color, int entityID = -1);
 
         struct Statistics
         {

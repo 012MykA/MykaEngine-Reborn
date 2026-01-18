@@ -7,3 +7,6 @@ imgui.ini
 
 # Cache
 MykaEditor/assets/cache
+
+# Models
+assets/models

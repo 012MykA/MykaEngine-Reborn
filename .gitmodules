@@ -19,3 +19,6 @@
 [submodule "MykaEngine/vendor/Box2D"]
 	path = MykaEngine/vendor/Box2D
 	url = https://github.com/erincatto/box2d.git
+[submodule "MykaEngine/vendor/tinygltf"]
+	path = MykaEngine/vendor/tinygltf
+	url = https://github.com/syoyo/tinygltf.git

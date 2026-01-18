@@ -94,6 +94,8 @@ namespace Myka
             20, 21, 22, 22, 23, 20};
 
         m_CubeMesh = CreateRef<Mesh>(vertices, indices);
+
+        m_StanfordDragon = Model::Create("assets/models/stanford_dragon/scene.gltf");
     }
 
     Ref<Scene> Scene::Copy(Ref<Scene> other)
@@ -411,13 +413,24 @@ namespace Myka
     void Scene::RenderScene(EditorCamera &camera)
     {
         Renderer3D::BeginScene(camera);
+        
+        {
+            glm::vec4 color = {0.145f, 0.769f, 0.549f, 1.0f};
+            glm::mat4 transform = glm::mat4(1.0f);
+            transform = glm::translate(transform, {0.0f, 0.0f, 5.0f});
+            transform = glm::scale(transform, glm::vec3(20.0f));
+    
+            Renderer3D::DrawModel(m_StanfordDragon, transform, color);
+        }
 
-        glm::mat4 transform = glm::translate(glm::mat4(1.0f), {0.0f, 2.0f, 0.0f});
-        transform *= glm::toMat4(glm::quat(glm::vec3(45.0f, 0.0f, 0.0f)));
-
-        Renderer3D::DrawMesh(m_CubeMesh, glm::translate(glm::mat4(1.0f), {-3.0f, 0.0f, 0.0f}), {1.0f, 0.2f, 0.2f, 1.0f});
-        Renderer3D::DrawMesh(m_CubeMesh, transform, {0.2f, 1.0f, 0.2f, 1.0f});
-        Renderer3D::DrawMesh(m_CubeMesh, glm::translate(glm::mat4(1.0f), {3.0f, 0.0f, 0.0f}), {0.2f, 0.2f, 1.0f, 1.0f});
+        {
+            glm::mat4 transform = glm::translate(glm::mat4(1.0f), {0.0f, 2.0f, 0.0f});
+            transform *= glm::toMat4(glm::quat(glm::vec3(45.0f, 0.0f, 0.0f)));
+    
+            Renderer3D::DrawMesh(m_CubeMesh, glm::translate(glm::mat4(1.0f), {-3.0f, 0.0f, 0.0f}), {1.0f, 0.2f, 0.2f, 1.0f});
+            Renderer3D::DrawMesh(m_CubeMesh, transform, {0.2f, 1.0f, 0.2f, 1.0f});
+            Renderer3D::DrawMesh(m_CubeMesh, glm::translate(glm::mat4(1.0f), {3.0f, 0.0f, 0.0f}), {0.2f, 0.2f, 1.0f, 1.0f});
+        }
 
         Renderer3D::EndScene();
 
