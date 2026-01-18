@@ -55,29 +55,22 @@ namespace Myka
         }
     };
 
-    struct MeshFilterComponent
+    struct MeshComponent
     {
         Ref<Mesh> _Mesh;
 
-        MeshFilterComponent() = default;
-        MeshFilterComponent(const MeshFilterComponent &) = default;
-        MeshFilterComponent(const Ref<Mesh> &mesh) : _Mesh(mesh) {}
-
-        operator Ref<Mesh>() { return _Mesh; }
+        MeshComponent() = default;
+        MeshComponent(const MeshComponent &) = default;
+        MeshComponent(const Ref<Mesh> &mesh) : _Mesh(mesh) {}
     };
 
-    struct MeshRendererComponent
+    struct MaterialComponent
     {
         Ref<Material> _Material;
 
-        bool CastShadows = true;
-        bool ReceiveShadows = true;
-
-        MeshRendererComponent() = default;
-        MeshRendererComponent(const MeshRendererComponent &) = default;
-        MeshRendererComponent(const Ref<Material> &mesh) : _Material(mesh) {}
-
-        operator Ref<Material>() { return _Material; }
+        MaterialComponent() = default;
+        MaterialComponent(const MaterialComponent &) = default;
+        MaterialComponent(const Ref<Material> &material) : _Material(material) {}
     };
 
     struct SpriteRendererComponent
@@ -188,7 +181,7 @@ namespace Myka
     };
 
     using AllComponents = ComponentGroup<TransformComponent,
-                                         MeshFilterComponent, MeshRendererComponent,
+                                         MeshComponent, MaterialComponent,
                                          SpriteRendererComponent, CircleRendererComponent,
                                          CameraComponent,
                                          NativeScriptComponent,
