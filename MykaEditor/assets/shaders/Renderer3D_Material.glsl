@@ -17,16 +17,21 @@ layout(std140, binding = 1) uniform Entity
     int u_EntityID;
 };
 
-layout(location = 0) out vec4 v_AlbedoColor;
-layout(location = 1) out vec3 v_Normal;
-layout(location = 2) out vec2 v_TexCoord;
+struct VertexOutput
+{
+    vec4 AlbedoColor;
+    vec3 Normal;
+    vec2 TexCoord;
+};
+
+layout(location = 0) out VertexOutput v_Output;
 layout(location = 3) out flat int v_EntityID;
 
 void main()
 {
-    v_AlbedoColor = u_AlbedoColor;
-    v_Normal = mat3(u_Transform) * a_Normal;
-    v_TexCoord = a_TexCoord;
+    v_Output.AlbedoColor = u_AlbedoColor;
+    v_Output.Normal = mat3(u_Transform) * a_Normal;
+    v_Output.TexCoord = a_TexCoord;
     v_EntityID = u_EntityID;
     
     gl_Position = u_ViewProjection * u_Transform * vec4(a_Position, 1.0);
@@ -38,20 +43,25 @@ void main()
 layout(location = 0) out vec4 o_Color;
 layout(location = 1) out int o_EntityID;
 
-layout(location = 0) in vec4 v_AlbedoColor;
-layout(location = 1) in vec3 v_Normal;
-layout(location = 2) in vec2 v_TexCoord;
+struct VertexOutput
+{
+    vec4 AlbedoColor;
+    vec3 Normal;
+    vec2 TexCoord;
+};
+
+layout(location = 0) in VertexOutput v_Input;
 layout(location = 3) in flat int v_EntityID;
 
 void main()
 {
-    vec3 normal = normalize(v_Normal);
+    vec3 normal = normalize(v_Input.Normal);
     
     vec3 lightDir = normalize(vec3(0.5, 1.0, 0.8));
     
     float diffuse = max(dot(normal, lightDir), 0.0);
-    float ambient = 0.3; 
+    float ambient = 0.3;
     
-    o_Color = v_AlbedoColor * (diffuse + ambient);
+    o_Color = v_Input.AlbedoColor * (diffuse + ambient);
     o_EntityID = v_EntityID;
 }
