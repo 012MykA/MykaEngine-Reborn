@@ -165,9 +165,10 @@ namespace Myka
         s_Data.LineVertexBufferBase = new LineVertex[s_Data.MaxVertices];
 
         s_Data.WhiteTexture = Texture2D::Create(1, 1);
-        uint32_t whiteTextureData = 0xFFFFFFFF;
+        const uint32_t whiteTextureData = 0xFFFFFFFF;
         s_Data.WhiteTexture->SetData(&whiteTextureData, sizeof(uint32_t));
 
+        // TODO: remove
         int32_t samplers[s_Data.MaxTextureSlots];
         for (uint32_t i = 0; i < s_Data.MaxTextureSlots; ++i)
         {

@@ -16,8 +16,19 @@
 
 namespace Myka
 {
-    static void ProcessNode(tinygltf::Model &input, tinygltf::Node &node, const glm::mat4 &parentTransform, Model& dst)
+    static void ProcessNode(tinygltf::Model &input, tinygltf::Node &node, const glm::mat4 &parentTransform, Model &dst)
     {
+        auto LoadGLTFTexture = [&](int textureIndex) -> Ref<Texture2D>
+        {
+            const tinygltf::Texture &tex = input.textures[textureIndex];
+            const tinygltf::Image &image = input.images[tex.source];
+
+            Ref<Texture2D> result = Texture2D::Create(image.width, image.height);
+            result->SetData(image.image.data(), image.image.size());
+
+            return result;
+        };
+
         glm::mat4 localTransform = glm::mat4(1.0f);
 
         if (node.matrix.size() == 16)
@@ -84,13 +95,23 @@ namespace Myka
                     normPtr = reinterpret_cast<const float *>(&(input.buffers[bv.buffer].data[acc.byteOffset + bv.byteOffset]));
                 }
 
+                // UV
+                const float *uvPtr = nullptr;
+                if (primitive.attributes.count("TEXCOORD_0"))
+                {
+                    const auto &acc = input.accessors[primitive.attributes.at("TEXCOORD_0")];
+                    const auto &bv = input.bufferViews[acc.bufferView];
+                    uvPtr = reinterpret_cast<const float *>(&(input.buffers[bv.buffer].data[acc.byteOffset + bv.byteOffset]));
+                }
+
                 // Vertices
                 for (size_t i = 0; i < vertexCount; ++i)
                 {
                     Vertex v;
                     v.Position = glm::make_vec3(&posPtr[i * 3]);
                     v.Normal = normPtr ? glm::make_vec3(&normPtr[i * 3]) : glm::vec3(0.0f);
-                    v.TexCoord = glm::vec2(0.0f);
+                    v.TexCoord = uvPtr ? glm::make_vec2(&uvPtr[i * 2]) : glm::vec2(0.0f);
+
                     vertices.push_back(v);
                 }
 
@@ -116,18 +137,30 @@ namespace Myka
                 float metallic = 0.0f;
                 float roughness = 0.5f;
 
+                Ref<Texture2D> whiteTex = Texture2D::Create(1, 1);
+                uint32_t whiteData = 0xFFFFFFFF;
+                whiteTex->SetData(&whiteData, sizeof(uint32_t));
+
+                Ref<Texture2D> albedoColorTexture = whiteTex;
+                Ref<Texture2D> metallicRoughnessTexture = whiteTex;
+
                 if (primitive.material > -1)
                 {
-                    const tinygltf::Material& material = input.materials[primitive.material];
-                    const auto& pbr = material.pbrMetallicRoughness;
+                    const tinygltf::Material &material = input.materials[primitive.material];
+                    const auto &pbr = material.pbrMetallicRoughness;
 
-                    albedoColor.r = (float)pbr.baseColorFactor[0];
-                    albedoColor.g = (float)pbr.baseColorFactor[1];
-                    albedoColor.b = (float)pbr.baseColorFactor[2];
-                    albedoColor.w = (float)pbr.baseColorFactor[3];
+                    albedoColor = glm::make_vec4(pbr.baseColorFactor.data());
+                    if (pbr.baseColorTexture.index >= 0)
+                    {
+                        albedoColorTexture = LoadGLTFTexture(pbr.baseColorTexture.index);
+                    }
 
                     metallic = (float)pbr.metallicFactor;
                     roughness = (float)pbr.roughnessFactor;
+                    if (pbr.metallicRoughnessTexture.index >= 0)
+                    {
+                        metallicRoughnessTexture = LoadGLTFTexture(pbr.metallicRoughnessTexture.index);
+                    }
                 }
 
                 Model::Node resNode;
@@ -136,8 +169,10 @@ namespace Myka
 
                 resNode._Material = Material::Create();
                 resNode._Material->AlbedoColor = albedoColor;
+                resNode._Material->AlbedoColorTexture = albedoColorTexture;
                 resNode._Material->Metallic = metallic;
                 resNode._Material->Roughness = roughness;
+                resNode._Material->MetallicRoughnessTexture = metallicRoughnessTexture;
 
                 dst.PushNode(resNode);
             }
@@ -148,7 +183,7 @@ namespace Myka
             ProcessNode(input, input.nodes[childIdx], globalTransform, dst);
         }
     }
-    
+
     Model::Model(const std::filesystem::path &path) : m_Path(path)
     {
         LoadModel(path);

@@ -1,0 +1,57 @@
+{
+    "Entities": [
+        {
+            "Entity": 9472653096281079332,
+            "ModelComponent": {
+                "ModelPath": "assets\\models\\x\\scene.gltf"
+            },
+            "TagComponent": {
+                "Tag": "anime girl"
+            },
+            "TransformComponent": {
+                "Position": [
+                    -23.09136199951172,
+                    -1.915487289428711,
+                    3.0070961276607022e-09
+                ],
+                "Rotation": [
+                    1.5707963705062866,
+                    -1.5707954168319702,
+                    0.0
+                ],
+                "Scale": [
+                    3.039998769760132,
+                    3.039999485015869,
+                    3.039999008178711
+                ]
+            }
+        },
+        {
+            "Entity": 2014038585238885283,
+            "ModelComponent": {
+                "ModelPath": "assets\\models\\blender\\Untitled.glb"
+            },
+            "TagComponent": {
+                "Tag": "chlen"
+            },
+            "TransformComponent": {
+                "Position": [
+                    -19.787057876586914,
+                    0.6710819602012634,
+                    0.0
+                ],
+                "Rotation": [
+                    0.0,
+                    0.0,
+                    1.5835773944854736
+                ],
+                "Scale": [
+                    0.4323001205921173,
+                    0.4333338141441345,
+                    0.43230003118515015
+                ]
+            }
+        }
+    ],
+    "Scene": "Untilted"
+}

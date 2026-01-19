@@ -19,7 +19,7 @@ namespace Myka
         virtual uint32_t GetRendererID() const override { return m_RendererID; }
         virtual const std::filesystem::path &GetPath() const override { return m_Path; }
 
-        virtual void SetData(void *data, uint32_t size) override;
+        virtual void SetData(const void *data, uint32_t size) override;
 
         virtual void Bind(uint32_t slot = 0) const override;
 

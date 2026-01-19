@@ -79,7 +79,7 @@ namespace Myka
         glDeleteTextures(1, &m_RendererID);
     }
 
-    void OpenGLTexture2D::SetData(void *data, uint32_t size)
+    void OpenGLTexture2D::SetData(const void *data, uint32_t size)
     {
         MYKA_PROFILE_FUNCTION();
 

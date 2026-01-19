@@ -14,6 +14,8 @@ layout(std140, binding = 1) uniform Entity
 {
     mat4 u_Transform;
     vec4 u_AlbedoColor;
+    int u_AlbedoTexIndex;
+    int u_MetRoughTexIndex;
     int u_EntityID;
 };
 
@@ -53,15 +55,35 @@ struct VertexOutput
 layout(location = 0) in VertexOutput v_Input;
 layout(location = 3) in flat int v_EntityID;
 
+layout(std140, binding = 1) uniform Entity
+{
+    mat4 u_Transform;
+    vec4 u_AlbedoColor;
+    int u_AlbedoTexIndex;
+    int u_MetRoughTexIndex;
+    int u_EntityID;
+};
+
+layout(binding = 0) uniform sampler2D u_Textures[32];
+
 void main()
 {
-    vec3 normal = normalize(v_Input.Normal);
+    // Albedo Color
+    vec4 texColor = texture(u_Textures[u_AlbedoTexIndex], v_Input.TexCoord);
+    vec4 albedo = v_Input.AlbedoColor * texColor;
+
+    // Metallic & Roughness
+    vec4 mrSample = texture(u_Textures[u_MetRoughTexIndex], v_Input.TexCoord);
+    float roughness = mrSample.g;
+    float metallic = mrSample.b;
     
+    vec3 normal = normalize(v_Input.Normal);   
     vec3 lightDir = normalize(vec3(0.5, 1.0, 0.8));
-    
+
     float diffuse = max(dot(normal, lightDir), 0.0);
-    float ambient = 0.3;
+    float ambient = 0.15;
     
-    o_Color = v_Input.AlbedoColor * (diffuse + ambient);
+    o_Color = vec4(albedo.rgb * (diffuse + ambient), albedo.a);
+
     o_EntityID = v_EntityID;
 }

@@ -1,0 +1,31 @@
+{
+    "Entities": [
+        {
+            "Entity": 11932466286144308182,
+            "ModelComponent": {
+                "ModelPath": "assets\\models\\mercedes\\scene.gltf"
+            },
+            "TagComponent": {
+                "Tag": "Car"
+            },
+            "TransformComponent": {
+                "Position": [
+                    0.0,
+                    0.0,
+                    0.0
+                ],
+                "Rotation": [
+                    0.0,
+                    0.0,
+                    0.0
+                ],
+                "Scale": [
+                    1.5899999141693115,
+                    1.5899999141693115,
+                    1.5899999141693115
+                ]
+            }
+        }
+    ],
+    "Scene": "Untilted"
+}

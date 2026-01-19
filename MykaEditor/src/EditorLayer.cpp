@@ -222,9 +222,8 @@ namespace Myka
         {
             auto stats = Renderer3D::GetStats();
             ImGui::Text("Draw Calls: %d", stats.DrawCalls);
+            ImGui::Text("Triangles: %d", stats.Triangles);
             ImGui::Text("Models: %d", stats.ModelsCount);
-            ImGui::Text("Meshes: %d", stats.MeshesCount);
-            ImGui::Text("Indices: %d", stats.IndicesCount);
         }
         ImGui::End();
 

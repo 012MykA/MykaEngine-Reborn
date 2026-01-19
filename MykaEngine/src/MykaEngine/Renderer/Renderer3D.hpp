@@ -23,9 +23,8 @@ namespace Myka
         struct Statistics
         {
             uint32_t DrawCalls = 0;
+            uint32_t Triangles = 0;
             uint32_t ModelsCount = 0;
-            uint32_t MeshesCount = 0;
-            uint32_t IndicesCount = 0;
         };
 
         static void ResetStats();
