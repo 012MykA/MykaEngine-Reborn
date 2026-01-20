@@ -163,7 +163,12 @@ namespace Myka
                     }
                 }
 
+                std::string nodeName = node.name;
+                if (nodeName.empty())
+                    nodeName = "Unnamed_Node";
+
                 Model::Node resNode;
+                resNode.Name = nodeName;
                 resNode._Mesh = CreateRef<Mesh>(vertices, indices);
                 resNode.LocalTransform = globalTransform;
 

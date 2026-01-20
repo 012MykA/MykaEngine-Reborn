@@ -116,6 +116,31 @@ namespace Myka
         ImGui::PopID();
     }
 
+    static void DrawNode(const Model::Node &node)
+    {
+        if (ImGui::TreeNode(node.Name.c_str()))
+        {
+            ImGui::Text("Triangles: %d", node._Mesh->GetIndexCount() / 3);
+
+            auto &material = node._Material;
+            ImGui::ColorEdit4("Color", glm::value_ptr(material->AlbedoColor));
+            // TODO: AlbedoColorTexture DragDrop
+
+            ImGui::DragFloat("Metallic", &material->Metallic, 0.1f, 0.0f, 1.0f);
+            ImGui::DragFloat("Roughness", &material->Roughness, 0.1f, 0.0f, 1.0f);
+            // TODO: MetallicRoughnessTexture DragDrop
+
+            ImGui::Text("Child Node Count: %d", node.Children.size());
+
+            for (const auto &childNode : node.Children)
+            {
+                DrawNode(childNode);
+            }
+
+            ImGui::TreePop();
+        }
+    };
+
     SceneHierarchyPanel::SceneHierarchyPanel(const Ref<Scene> &scene)
     {
         SetContext(scene);
@@ -360,7 +385,7 @@ namespace Myka
             } });
 
         DrawComponent<ModelComponent>("Model", entity, [](auto &component)
-        {
+                                      {
             ImGui::Button("Model", ImVec2(100.0f, 0.0f));
             if (ImGui::BeginDragDropTarget())
             {
@@ -373,13 +398,25 @@ namespace Myka
                         MYKA_CORE_WARN("Could not load model: {0}. Supported formats: .gltf, .glb", modelPath.filename().string());
                         return;
                     }
-
                     component._Model = Model::Create(modelPath);
                 }
-
                 ImGui::EndDragDropTarget();
             }
-        });
+
+            if (ImGui::CollapsingHeader("Nodes"))
+            {
+                uint32_t nodeCount = 0;
+                for (const auto& node : component._Model->GetNodes())
+                {
+                    std::string nodeID = "nodeID##" + std::to_string(nodeCount);
+                    ImGui::PushID(nodeID.c_str());
+
+                    DrawNode(node);
+
+                    ImGui::PopID();
+                    nodeCount++;
+                }
+            } });
 
         DrawComponent<SpriteRendererComponent>("Sprite Renderer", entity, [](auto &component)
                                                {

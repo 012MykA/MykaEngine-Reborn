@@ -64,6 +64,22 @@ namespace Myka
         ModelComponent(const Ref<Model> &model) : _Model(model) {}
     };
 
+    // TODO
+    struct MeshComponent
+    {
+        Ref<Mesh> _Mesh;
+
+        MeshComponent() = default;
+        MeshComponent(const MeshComponent &) = default;
+        MeshComponent(const Ref<Mesh> &mesh) : _Mesh(mesh) {}
+    };
+
+    // TODO
+    struct MaterialComponent
+    {
+
+    };
+
     struct SpriteRendererComponent
     {
         Ref<Texture2D> Texture;

@@ -14,6 +14,7 @@ namespace Myka
 
         struct Node
         {
+            std::string Name;
             Ref<Mesh> _Mesh;
             Ref<Material> _Material;
             glm::mat4 LocalTransform;

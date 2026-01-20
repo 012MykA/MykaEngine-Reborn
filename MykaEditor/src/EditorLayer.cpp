@@ -397,6 +397,8 @@ namespace Myka
         ImGui::PopStyleVar(2);
         ImGui::PopStyleColor(3);
         ImGui::End();
+
+        ImGui::ShowDemoWindow();
     }
 
     void EditorLayer::OnEvent(Event &e)

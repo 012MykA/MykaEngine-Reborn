@@ -2,9 +2,6 @@
 .vscode/
 build/
 
-# ImGui
-imgui.ini
-
 # Cache
 MykaEditor/assets/cache/
 
