@@ -5,6 +5,7 @@
 #include "ScriptableEntity.hpp"
 #include "MykaEngine/Renderer/Texture.hpp"
 #include "MykaEngine/Core/UUID.hpp"
+#include "MykaEngine/Renderer/Model.hpp"
 #include "MykaEngine/Renderer/Mesh.hpp"
 #include "MykaEngine/Renderer/Material.hpp"
 
@@ -64,7 +65,6 @@ namespace Myka
         ModelComponent(const Ref<Model> &model) : _Model(model) {}
     };
 
-    // TODO
     struct MeshComponent
     {
         Ref<Mesh> _Mesh;
@@ -74,10 +74,13 @@ namespace Myka
         MeshComponent(const Ref<Mesh> &mesh) : _Mesh(mesh) {}
     };
 
-    // TODO
     struct MaterialComponent
     {
+        Ref<Material> _Material;
 
+        MaterialComponent() = default;
+        MaterialComponent(const MaterialComponent &) = default;
+        MaterialComponent(const Ref<Material> &material) : _Material(material) {}
     };
 
     struct SpriteRendererComponent
@@ -188,7 +191,7 @@ namespace Myka
     };
 
     using AllComponents = ComponentGroup<TransformComponent,
-                                         ModelComponent,
+                                         MeshComponent, MaterialComponent, ModelComponent,
                                          SpriteRendererComponent, CircleRendererComponent,
                                          CameraComponent,
                                          NativeScriptComponent,

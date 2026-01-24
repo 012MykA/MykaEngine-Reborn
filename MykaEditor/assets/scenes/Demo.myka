@@ -1,0 +1,113 @@
+{
+    "Entities": [
+        {
+            "Entity": 7929133393417996186,
+            "ModelComponent": {
+                "ModelPath": "assets\\models\\porsche_911_gt3\\scene.gltf"
+            },
+            "TagComponent": {
+                "Tag": "Empty Entity"
+            },
+            "TransformComponent": {
+                "Position": [
+                    1.822279691696167,
+                    -2.0,
+                    1.7366375923156738
+                ],
+                "Rotation": [
+                    0.0,
+                    0.0,
+                    0.0
+                ],
+                "Scale": [
+                    1.0,
+                    1.0,
+                    1.0
+                ]
+            }
+        },
+        {
+            "Entity": 16477160064615016082,
+            "SpriteRendererComponent": {
+                "Color": [
+                    1.0,
+                    1.0,
+                    1.0,
+                    1.0
+                ],
+                "TexturePath": "assets/textures/box.png",
+                "TilingFactor": 1.0
+            },
+            "TagComponent": {
+                "Tag": "Floor"
+            },
+            "TransformComponent": {
+                "Position": [
+                    0.0,
+                    -2.0,
+                    5.121763138049573e-07
+                ],
+                "Rotation": [
+                    1.5707958936691284,
+                    0.0,
+                    0.0
+                ],
+                "Scale": [
+                    9.48699951171875,
+                    9.486992835998535,
+                    9.486992835998535
+                ]
+            }
+        },
+        {
+            "Entity": 13113837368856073141,
+            "ModelComponent": {
+                "ModelPath": "assets\\models\\stanford_dragon\\scene.gltf"
+            },
+            "TagComponent": {
+                "Tag": "Dragon"
+            },
+            "TransformComponent": {
+                "Position": [
+                    -1.4221386909484863,
+                    -0.43337002396583557,
+                    -0.177828848361969
+                ],
+                "Rotation": [
+                    0.0,
+                    0.0,
+                    0.0
+                ],
+                "Scale": [
+                    20.0,
+                    20.0,
+                    20.0
+                ]
+            }
+        },
+        {
+            "Entity": 11590209670157693717,
+            "TagComponent": {
+                "Tag": "Cube"
+            },
+            "TransformComponent": {
+                "Position": [
+                    -1.8700788021087646,
+                    -0.5234935283660889,
+                    2.756251335144043
+                ],
+                "Rotation": [
+                    0.0,
+                    0.0,
+                    0.0
+                ],
+                "Scale": [
+                    1.0,
+                    1.0,
+                    1.0
+                ]
+            }
+        }
+    ],
+    "Scene": "Untilted"
+}

@@ -2,7 +2,6 @@
 
 #include "OrthographicCamera.hpp"
 #include "Texture.hpp"
-#include "SubTexture2D.hpp"
 
 #include "Camera.hpp"
 #include "EditorCamera.hpp"

@@ -12,19 +12,19 @@ namespace Myka
     {
         m_VertexArray = VertexArray::Create();
 
-        auto vb = VertexBuffer::Create(vertices.size() * sizeof(Vertex));
+        auto vb = VertexBuffer::Create(static_cast<uint32_t>(vertices.size()) * sizeof(Vertex));
         vb->SetLayout({
             {ShaderDataType::Float3, "a_Position"},
             {ShaderDataType::Float3, "a_Normal"},
             {ShaderDataType::Float2, "a_TexCoord"},
         });
-        vb->SetData(vertices.data(), vertices.size() * sizeof(Vertex));
+        vb->SetData(vertices.data(), static_cast<uint32_t>(vertices.size()) * sizeof(Vertex));
         m_VertexArray->AddVertexBuffer(vb);
 
-        auto ib = IndexBuffer::Create(indices.data(), indices.size());
+        auto ib = IndexBuffer::Create(indices.data(), static_cast<uint32_t>(indices.size()));
         m_VertexArray->SetIndexBuffer(ib);
 
-        m_IndexCount = indices.size();
+        m_IndexCount = static_cast<uint32_t>(indices.size());
     }
 
 } // namespace Myka

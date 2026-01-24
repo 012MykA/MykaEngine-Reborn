@@ -251,11 +251,20 @@ namespace Myka
 
         if (ImGui::BeginPopup("Add Component"))
         {
-            if (!m_SelectionContext.HasComponent<CameraComponent>())
+            if (!m_SelectionContext.HasComponent<MeshComponent>())
             {
-                if (ImGui::MenuItem("Camera"))
+                if (ImGui::MenuItem("Mesh"))
                 {
-                    m_SelectionContext.AddComponent<CameraComponent>();
+                    m_SelectionContext.AddComponent<MeshComponent>();
+                    ImGui::CloseCurrentPopup();
+                }
+            }
+
+            if (!m_SelectionContext.HasComponent<MaterialComponent>())
+            {
+                if (ImGui::MenuItem("Material"))
+                {
+                    m_SelectionContext.AddComponent<MaterialComponent>();
                     ImGui::CloseCurrentPopup();
                 }
             }
@@ -287,6 +296,8 @@ namespace Myka
                 }
             }
 
+            ImGui::Separator();
+
             if (!m_SelectionContext.HasComponent<Rigidbody2DComponent>())
             {
                 if (ImGui::MenuItem("Rigidbody 2D"))
@@ -314,6 +325,17 @@ namespace Myka
                 }
             }
 
+            ImGui::Separator();
+
+            if (!m_SelectionContext.HasComponent<CameraComponent>())
+            {
+                if (ImGui::MenuItem("Camera"))
+                {
+                    m_SelectionContext.AddComponent<CameraComponent>();
+                    ImGui::CloseCurrentPopup();
+                }
+            }
+
             ImGui::EndPopup();
         }
         ImGui::PopItemWidth();
@@ -327,61 +349,24 @@ namespace Myka
 
                 DrawVec3Control("Scale", component.Scale, 1.0f); });
 
-        DrawComponent<CameraComponent>("Camera", entity, [](auto &component)
-                                       {
-            auto &camera = component .Camera;
-                
-            ImGui::Checkbox("Primary", &component.Primary);
-            
-            const char *projectionTypeStrings[] = {"Perspective", "Orthographic"};
-            const char *currentProjectionTypeString = projectionTypeStrings[(int)camera.GetProjectionType()];
-            if (ImGui::BeginCombo("Projection", currentProjectionTypeString))
+        DrawComponent<MeshComponent>("Mesh", entity, [](auto &component)
+                                     {
+            if (component._Mesh)
             {
-                for (int i = 0; i < 2; ++i)
-                {
-                    bool isSelected = currentProjectionTypeString == projectionTypeStrings[i];
-                    if (ImGui::Selectable(projectionTypeStrings[i], isSelected))
-                    {
-                        currentProjectionTypeString = projectionTypeStrings[i];
-                        camera.SetProjectionType((SceneCamera::ProjectionType)i);
-                    }
-                    
-                    if (isSelected)
-                    ImGui::SetItemDefaultFocus();
-                }
-                ImGui::EndCombo();
-            }
-            
-            if (camera.GetProjectionType() == SceneCamera::ProjectionType::Perspective)
-            {
-                float perspectiveFOV = glm::degrees(camera.GetPerspectiveFOV());
-                if (ImGui::DragFloat("FOV", &perspectiveFOV))
-                camera.SetPerspectiveFOV(glm::radians(perspectiveFOV));
-                
-                float perspectiveNear = camera.GetPerspectiveNear();
-                if (ImGui::DragFloat("Near", &perspectiveNear))
-                camera.SetPerspectiveNear(perspectiveNear);
-                
-                float perspectiveFar = camera.GetPerspectiveFar();
-                if (ImGui::DragFloat("Far", &perspectiveFar))
-                camera.SetPerspectiveFar(perspectiveFar);
-            }
+                ImGui::Text("Triangles", component._Mesh->GetIndexCount() / 3);
+            } });
 
-            if (camera.GetProjectionType() == SceneCamera::ProjectionType::Orthographic)
+        DrawComponent<MaterialComponent>("Material", entity, [](auto &component)
+                                         {
+            auto& material = component._Material;
+            if (material)
             {
-                float orthoSize = camera.GetOrthographicSize();
-                if (ImGui::DragFloat("Size", &orthoSize))
-                camera.SetOrthographicSize(orthoSize);
-                
-                float orthoNear = camera.GetOrthographicNear();
-                if (ImGui::DragFloat("Near", &orthoNear))
-                camera.SetOrthographicNear(orthoNear);
-                
-                float orthoFar = camera.GetOrthographicFar();
-                if (ImGui::DragFloat("Far", &orthoFar))
-                camera.SetOrthographicFar(orthoFar);
-                
-                ImGui::Checkbox("Fixed Aspect Ratio", &component.FixedAspectRatio);
+                ImGui::ColorEdit4("Color", glm::value_ptr(material->AlbedoColor));
+                // TODO: AlbedoColorTexture DragDrop
+    
+                ImGui::DragFloat("Metallic", &material->Metallic, 0.1f, 0.0f, 1.0f);
+                ImGui::DragFloat("Roughness", &material->Roughness, 0.1f, 0.0f, 1.0f);
+                // TODO: MetallicRoughnessTexture DragDrop
             } });
 
         DrawComponent<ModelComponent>("Model", entity, [](auto &component)
@@ -403,18 +388,21 @@ namespace Myka
                 ImGui::EndDragDropTarget();
             }
 
-            if (ImGui::CollapsingHeader("Nodes"))
+            if (component._Model)
             {
-                uint32_t nodeCount = 0;
-                for (const auto& node : component._Model->GetNodes())
+                if (ImGui::CollapsingHeader("Nodes"))
                 {
-                    std::string nodeID = "nodeID##" + std::to_string(nodeCount);
-                    ImGui::PushID(nodeID.c_str());
+                    uint32_t nodeCount = 0;
+                    for (const auto& node : component._Model->GetNodes())
+                    {
+                        std::string nodeID = "nodeID##" + std::to_string(nodeCount);
+                        ImGui::PushID(nodeID.c_str());
 
-                    DrawNode(node);
+                        DrawNode(node);
 
-                    ImGui::PopID();
-                    nodeCount++;
+                        ImGui::PopID();
+                        nodeCount++;
+                    }
                 }
             } });
 
@@ -481,5 +469,62 @@ namespace Myka
             ImGui::DragFloat("Density", &component.Density, 0.01f, 0.0f, 1.0f);
             ImGui::DragFloat("Friction", &component.Friction, 0.01f, 0.0f, 1.0f);
             ImGui::DragFloat("Restitution", &component.Restitution, 0.01f, 0.0f, 1.0f); });
+
+        DrawComponent<CameraComponent>("Camera", entity, [](auto &component)
+                                       {
+            auto &camera = component .Camera;
+                
+            ImGui::Checkbox("Primary", &component.Primary);
+            
+            const char *projectionTypeStrings[] = {"Perspective", "Orthographic"};
+            const char *currentProjectionTypeString = projectionTypeStrings[(int)camera.GetProjectionType()];
+            if (ImGui::BeginCombo("Projection", currentProjectionTypeString))
+            {
+                for (int i = 0; i < 2; ++i)
+                {
+                    bool isSelected = currentProjectionTypeString == projectionTypeStrings[i];
+                    if (ImGui::Selectable(projectionTypeStrings[i], isSelected))
+                    {
+                        currentProjectionTypeString = projectionTypeStrings[i];
+                        camera.SetProjectionType((SceneCamera::ProjectionType)i);
+                    }
+                    
+                    if (isSelected)
+                    ImGui::SetItemDefaultFocus();
+                }
+                ImGui::EndCombo();
+            }
+            
+            if (camera.GetProjectionType() == SceneCamera::ProjectionType::Perspective)
+            {
+                float perspectiveFOV = glm::degrees(camera.GetPerspectiveFOV());
+                if (ImGui::DragFloat("FOV", &perspectiveFOV))
+                camera.SetPerspectiveFOV(glm::radians(perspectiveFOV));
+                
+                float perspectiveNear = camera.GetPerspectiveNear();
+                if (ImGui::DragFloat("Near", &perspectiveNear))
+                camera.SetPerspectiveNear(perspectiveNear);
+                
+                float perspectiveFar = camera.GetPerspectiveFar();
+                if (ImGui::DragFloat("Far", &perspectiveFar))
+                camera.SetPerspectiveFar(perspectiveFar);
+            }
+
+            if (camera.GetProjectionType() == SceneCamera::ProjectionType::Orthographic)
+            {
+                float orthoSize = camera.GetOrthographicSize();
+                if (ImGui::DragFloat("Size", &orthoSize))
+                camera.SetOrthographicSize(orthoSize);
+                
+                float orthoNear = camera.GetOrthographicNear();
+                if (ImGui::DragFloat("Near", &orthoNear))
+                camera.SetOrthographicNear(orthoNear);
+                
+                float orthoFar = camera.GetOrthographicFar();
+                if (ImGui::DragFloat("Far", &orthoFar))
+                camera.SetOrthographicFar(orthoFar);
+                
+                ImGui::Checkbox("Fixed Aspect Ratio", &component.FixedAspectRatio);
+            } });
     }
 } // namespace Myka

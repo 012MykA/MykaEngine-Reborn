@@ -68,11 +68,28 @@ namespace Myka
 
     void Renderer3D::DrawMesh(const Ref<Mesh> &mesh, const Ref<Material> &material, const glm::mat4 &transform, int entityID)
     {
-        int albedoSlot = 1;
-        int metRoughSlot = 2;
+        int albedoSlot = 0;
+        int metRoughSlot = 0;
 
-        material->AlbedoColorTexture->Bind(1);
-        material->MetallicRoughnessTexture->Bind(2);
+        if (material->AlbedoColorTexture)
+        {
+            albedoSlot = 1;
+            material->AlbedoColorTexture->Bind(albedoSlot);
+        }
+        else
+        {
+            s_Data.WhiteTexture->Bind(0);
+        }
+
+        if (material->MetallicRoughnessTexture)
+        {
+            metRoughSlot = 2;
+            material->MetallicRoughnessTexture->Bind(metRoughSlot);
+        }
+        else
+        {
+            s_Data.WhiteTexture->Bind(0);
+        }
 
         s_Data.EntityBuffer.Transform = transform;
         s_Data.EntityBuffer.AlbedoColor = material->AlbedoColor;
