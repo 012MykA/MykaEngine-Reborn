@@ -353,7 +353,7 @@ namespace Myka
                                      {
             if (component._Mesh)
             {
-                ImGui::Text("Triangles", component._Mesh->GetIndexCount() / 3);
+                ImGui::Text("Triangles %d", component._Mesh->GetIndexCount() / 3);
             } });
 
         DrawComponent<MaterialComponent>("Material", entity, [](auto &component)

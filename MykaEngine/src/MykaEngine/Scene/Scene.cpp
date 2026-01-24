@@ -389,7 +389,8 @@ namespace Myka
                 auto &mesh = view.get<MeshComponent>(entity)._Mesh;
                 auto &material = view.get<MaterialComponent>(entity)._Material;
 
-                Renderer3D::DrawMesh(mesh, material, tc.GetTransform(), static_cast<int>(entity));
+                if (mesh && material)
+                    Renderer3D::DrawMesh(mesh, material, tc.GetTransform(), static_cast<int>(entity));
             }
         }
 
