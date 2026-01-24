@@ -23,7 +23,11 @@ namespace Myka
             const tinygltf::Texture &tex = input.textures[textureIndex];
             const tinygltf::Image &image = input.images[tex.source];
 
-            Ref<Texture2D> result = Texture2D::Create(image.width, image.height);
+            TextureSpecification spec;
+            spec.Width = static_cast<uint32_t>(image.width);
+            spec.Height = static_cast<uint32_t>(image.height);
+
+            Ref<Texture2D> result = Texture2D::Create(spec);
             result->SetData(image.image.data(), image.image.size());
 
             return result;
@@ -137,7 +141,7 @@ namespace Myka
                 float metallic = 0.0f;
                 float roughness = 0.5f;
 
-                Ref<Texture2D> whiteTex = Texture2D::Create(1, 1);
+                Ref<Texture2D> whiteTex = Texture2D::Create(TextureSpecification());
                 uint32_t whiteData = 0xFFFFFFFF;
                 whiteTex->SetData(&whiteData, sizeof(uint32_t));
 

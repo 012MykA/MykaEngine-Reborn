@@ -42,7 +42,7 @@ namespace Myka
 
     void Renderer3D::Init()
     {
-        s_Data.WhiteTexture = Texture2D::Create(1, 1);
+        s_Data.WhiteTexture = Texture2D::Create(TextureSpecification());
         const uint32_t whiteTextureData = 0xFFFFFFFF;
         s_Data.WhiteTexture->SetData(&whiteTextureData, sizeof(uint32_t));
 

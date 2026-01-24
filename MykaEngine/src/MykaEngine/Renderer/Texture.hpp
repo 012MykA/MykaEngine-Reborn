@@ -7,14 +7,35 @@
 
 namespace Myka
 {
+    enum class ImageFormat
+    {
+        None = 0,
+        R8,
+        RGB8,
+        RGBA8,
+        RGBA32F
+    };
+
+    struct TextureSpecification
+    {
+        uint32_t Width = 1;
+        uint32_t Height = 1;
+        ImageFormat Format = ImageFormat::RGBA8;
+        bool GenerateMips = true;
+    };
+
     class Texture
     {
     public:
         virtual ~Texture() = default;
 
+        virtual const TextureSpecification &GetSpecification() const = 0;
+
         virtual uint32_t GetWidth() const = 0;
         virtual uint32_t GetHeight() const = 0;
         virtual uint32_t GetRendererID() const = 0;
+
+        virtual const std::filesystem::path &GetPath() const = 0;
 
         virtual void SetData(const void *data, uint32_t size) = 0;
 
@@ -26,9 +47,7 @@ namespace Myka
     class Texture2D : public Texture
     {
     public:
-        static Ref<Texture2D> Create(uint32_t width, uint32_t height);
+        static Ref<Texture2D> Create(const TextureSpecification &specification);
         static Ref<Texture2D> Create(const std::filesystem::path &path);
-
-        virtual const std::filesystem::path &GetPath() const = 0;
     };
 } // namespace Myka
