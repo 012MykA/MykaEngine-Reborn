@@ -67,24 +67,11 @@ namespace Myka
 
     struct MeshComponent
     {
-        enum class MeshType
-        {
-            Custom = 0,
-            Cube,
-            Sphere,
-            Plane,
-            Cylinder,
-            Cone,
-            Torus
-        };
-
         Ref<Mesh> _Mesh;
-        MeshType Type;
 
         MeshComponent() = default;
         MeshComponent(const MeshComponent &) = default;
-        MeshComponent(const Ref<Mesh> &mesh, MeshType type = MeshType::Custom) : _Mesh(mesh), Type(type) {}
-        MeshComponent(MeshType type) : Type(type) {}
+        MeshComponent(const Ref<Mesh> &mesh, MeshType type = MeshType::Custom) : _Mesh(mesh) {}
     };
 
     struct MaterialComponent
