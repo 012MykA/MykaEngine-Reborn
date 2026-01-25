@@ -10,6 +10,7 @@ namespace Myka
     struct Renderer3DData
     {
         static constexpr uint32_t MaxTextureSlots = 32;
+        static constexpr uint32_t MaxLightsCount = 10;
 
         Ref<Texture2D> WhiteTexture;
         std::array<Ref<Texture2D>, MaxTextureSlots> TextureSlots;
@@ -28,14 +29,25 @@ namespace Myka
 
         Ref<Shader> MaterialShader;
 
-        Renderer3D::Statistics Stats;
-
+        struct LightData
+        {
+            glm::vec3 Position;
+            float Intensity;
+            glm::vec3 Color;
+            float Radius;
+        };
+        LightData LightBuffer[MaxLightsCount];
+        Ref<UniformBuffer> LightUniformBuffer;
+        
         struct CameraData
         {
             glm::mat4 ViewProjection;
+            glm::vec3 Position;
         };
         CameraData CameraBuffer;
         Ref<UniformBuffer> CameraUniformBuffer;
+        
+        Renderer3D::Statistics Stats;
     };
 
     static Renderer3DData s_Data;
@@ -52,6 +64,7 @@ namespace Myka
 
         s_Data.CameraUniformBuffer = UniformBuffer::Create(sizeof(Renderer3DData::CameraData), 0);
         s_Data.EntityUniformBuffer = UniformBuffer::Create(sizeof(Renderer3DData::EntityData), 1);
+        s_Data.LightUniformBuffer = UniformBuffer::Create(sizeof(Renderer3DData::LightData) * Renderer3DData::MaxLightsCount, 2);
     }
 
     void Renderer3D::Shutdown() {}
@@ -59,6 +72,7 @@ namespace Myka
     void Renderer3D::BeginScene(const EditorCamera &camera)
     {
         s_Data.CameraBuffer.ViewProjection = camera.GetViewProjection();
+        s_Data.CameraBuffer.Position = camera.GetPosition();
         s_Data.CameraUniformBuffer->SetData(&s_Data.CameraBuffer, sizeof(Renderer3DData::CameraData));
     }
 

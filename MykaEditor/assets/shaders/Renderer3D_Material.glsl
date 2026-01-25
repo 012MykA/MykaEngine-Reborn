@@ -24,19 +24,23 @@ struct VertexOutput
     vec4 AlbedoColor;
     vec3 Normal;
     vec2 TexCoord;
+    vec3 WorldPos;
 };
 
 layout(location = 0) out VertexOutput v_Output;
-layout(location = 3) out flat int v_EntityID;
+layout(location = 4) out flat int v_EntityID;
 
 void main()
 {
+    vec4 worldPos = u_Transform * vec4(a_Position, 1.0);
+
     v_Output.AlbedoColor = u_AlbedoColor;
-    v_Output.Normal = mat3(u_Transform) * a_Normal;
+    v_Output.Normal = normalize(mat3(u_Transform) * a_Normal);
     v_Output.TexCoord = a_TexCoord;
+    v_Output.WorldPos = worldPos.xyz;
     v_EntityID = u_EntityID;
     
-    gl_Position = u_ViewProjection * u_Transform * vec4(a_Position, 1.0);
+    gl_Position = u_ViewProjection * worldPos;
 }
 
 #type fragment
@@ -50,10 +54,11 @@ struct VertexOutput
     vec4 AlbedoColor;
     vec3 Normal;
     vec2 TexCoord;
+    vec3 WorldPos;
 };
 
 layout(location = 0) in VertexOutput v_Input;
-layout(location = 3) in flat int v_EntityID;
+layout(location = 4) in flat int v_EntityID;
 
 layout(std140, binding = 1) uniform Entity
 {
