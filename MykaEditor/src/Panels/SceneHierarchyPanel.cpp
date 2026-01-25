@@ -251,6 +251,25 @@ namespace Myka
 
         if (ImGui::BeginPopup("Add Component"))
         {
+            if (!m_SelectionContext.HasComponent<PointLightComponent>())
+            {
+                if (ImGui::BeginMenu("Light"))
+                {
+                    if (ImGui::MenuItem("Point Light"))
+                    {
+                        m_SelectionContext.AddComponent<PointLightComponent>();
+                        ImGui::CloseCurrentPopup();
+                    }
+                    if (ImGui::MenuItem("Directional Light"))
+                    {
+                        // m_SelectionContext.AddComponent<>();
+                        ImGui::CloseCurrentPopup();
+                    }
+
+                    ImGui::EndMenu();
+                }
+            }
+            
             if (!m_SelectionContext.HasComponent<MeshComponent>())
             {
                 if (ImGui::MenuItem("Mesh"))
@@ -348,6 +367,13 @@ namespace Myka
                 component.Rotation = glm::radians(rotation);
 
                 DrawVec3Control("Scale", component.Scale, 1.0f); });
+
+        DrawComponent<PointLightComponent>("Mesh", entity, [](auto &component)
+                                           {
+            ImGui::ColorEdit3("Color", glm::value_ptr(component.Color));
+            ImGui::DragFloat("Intensity", &component.Intensity);
+            ImGui::DragFloat("Radius", &component.Radius);
+            ImGui::DragFloat("Falloff", &component.Falloff); });
 
         DrawComponent<MeshComponent>("Mesh", entity, [](auto &component)
                                      {

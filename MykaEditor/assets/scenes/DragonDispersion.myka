@@ -3,7 +3,7 @@
         {
             "Entity": 13340601839224160069,
             "ModelComponent": {
-                "ModelPath": "assets\\models\\DragonDispersion.glb"
+                "ModelPath": "assets\\models\\glb-demos\\DragonDispersion.glb"
             },
             "TagComponent": {
                 "Tag": "Dragon Disparation"

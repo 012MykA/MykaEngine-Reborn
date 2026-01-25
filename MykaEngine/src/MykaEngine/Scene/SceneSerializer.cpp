@@ -152,6 +152,19 @@ namespace Myka
             };
         }
 
+        if (entity.HasComponent<PointLightComponent>())
+        {
+            const auto &plc = entity.GetComponent<PointLightComponent>();
+
+            json componentData;
+            componentData["Color"] = plc.Color;
+            componentData["Intensity"] = plc.Intensity;
+            componentData["Radius"] = plc.Radius;
+            componentData["Falloff"] = plc.Falloff;
+
+            e["PointLightComponent"] = componentData;
+        }
+
         if (entity.HasComponent<ModelComponent>())
         {
             const auto &mc = entity.GetComponent<ModelComponent>();
@@ -325,15 +338,26 @@ namespace Myka
                 cc.FixedAspectRatio = cameraComponentJson["FixedAspectRatio"];
             }
 
+            auto pointLightComponentJson = entity["PointLightComponent"];
+            if (!pointLightComponentJson.is_null())
+            {
+                auto &plc = deserializedEntity.AddComponent<PointLightComponent>();
+
+                plc.Color = pointLightComponentJson["Color"];
+                plc.Intensity = pointLightComponentJson["Intensity"];
+                plc.Radius = pointLightComponentJson["Radius"];
+                plc.Falloff = pointLightComponentJson["Falloff"];
+            }
+
             auto modelComponentJson = entity["ModelComponent"];
             if (!modelComponentJson.is_null())
             {
-                auto &src = deserializedEntity.AddComponent<ModelComponent>();
+                auto &mc = deserializedEntity.AddComponent<ModelComponent>();
 
                 std::filesystem::path modelPath = modelComponentJson.value("ModelPath", "");
                 if (!modelPath.empty())
                 {
-                    src._Model = Model::Create(modelPath);
+                    mc._Model = Model::Create(modelPath);
                 }
             }
 

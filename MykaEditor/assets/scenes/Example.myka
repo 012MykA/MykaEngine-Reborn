@@ -3,7 +3,7 @@
         {
             "Entity": 8953396614245471191,
             "ModelComponent": {
-                "ModelPath": "assets\\models\\DamagedHelmet.glb"
+                "ModelPath": "assets\\models\\glb-demos\\DamagedHelmet.glb"
             },
             "TagComponent": {
                 "Tag": "Damaged Helmet"

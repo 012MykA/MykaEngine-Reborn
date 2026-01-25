@@ -56,6 +56,22 @@ namespace Myka
         }
     };
 
+    struct PointLightComponent
+    {
+        glm::vec3 Color = {1.0f, 1.0f, 1.0f};
+        float Intensity = 1.0f;
+        float Radius = 10.0f;
+        float Falloff = 1.0f;
+
+        PointLightComponent() = default;
+        PointLightComponent(const PointLightComponent &) = default;
+        PointLightComponent(const glm::vec3 &color) : Color(color) {}
+    };
+
+    struct DirectionalLight
+    {
+    };
+
     struct ModelComponent
     {
         Ref<Model> _Model;
@@ -191,6 +207,7 @@ namespace Myka
     };
 
     using AllComponents = ComponentGroup<TransformComponent,
+                                         PointLightComponent,
                                          MeshComponent, MaterialComponent, ModelComponent,
                                          SpriteRendererComponent, CircleRendererComponent,
                                          CameraComponent,
