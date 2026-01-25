@@ -9,8 +9,11 @@ namespace Myka
 {
     struct Renderer3DData
     {
-        static constexpr uint32_t MaxTextureSlots = 32;
-        static constexpr uint32_t MaxLightsCount = 10;
+        static constexpr uint32_t MaxTextureSlots = 32ui32;
+        static constexpr uint32_t MaxLights = 10ui32;
+        static constexpr uint32_t MaxPointLights = MaxLights;
+        static constexpr uint32_t MaxDirectionalLights = MaxLights;
+        static constexpr uint32_t MaxSpotLights = MaxLights;
 
         Ref<Texture2D> WhiteTexture;
         std::array<Ref<Texture2D>, MaxTextureSlots> TextureSlots;
@@ -23,30 +26,29 @@ namespace Myka
             int AlbedoTexIndex;
             int MetRoughTexIndex;
             int EntityID;
-        };
-        EntityData EntityBuffer;
+        } EntityBuffer;
         Ref<UniformBuffer> EntityUniformBuffer;
 
         Ref<Shader> MaterialShader;
 
-        struct LightData
+        struct LightBufferData
         {
-            glm::vec3 Position;
-            float Intensity;
-            glm::vec3 Color;
-            float Radius;
-        };
-        LightData LightBuffer[MaxLightsCount];
+            Renderer3D::PointLight PointLights[MaxPointLights];
+            Renderer3D::DirectionalLight DirectionalLights[MaxDirectionalLights];
+            Renderer3D::SpotLight SpotLights[MaxSpotLights];
+            uint32_t PointCount = 0;
+            uint32_t DirectionalCount = 0;
+            uint32_t SpotCount = 0;
+        } LightBuffer;
         Ref<UniformBuffer> LightUniformBuffer;
-        
+
         struct CameraData
         {
             glm::mat4 ViewProjection;
             glm::vec3 Position;
-        };
-        CameraData CameraBuffer;
+        } CameraBuffer;
         Ref<UniformBuffer> CameraUniformBuffer;
-        
+
         Renderer3D::Statistics Stats;
     };
 
@@ -60,20 +62,36 @@ namespace Myka
 
         s_Data.TextureSlots[0] = s_Data.WhiteTexture;
 
-        s_Data.MaterialShader = Shader::Create("assets/shaders/Renderer3D_Material.glsl");
+        s_Data.MaterialShader = Shader::Create("assets/shaders/Renderer3D_PBR.glsl");
 
         s_Data.CameraUniformBuffer = UniformBuffer::Create(sizeof(Renderer3DData::CameraData), 0);
         s_Data.EntityUniformBuffer = UniformBuffer::Create(sizeof(Renderer3DData::EntityData), 1);
-        s_Data.LightUniformBuffer = UniformBuffer::Create(sizeof(Renderer3DData::LightData) * Renderer3DData::MaxLightsCount, 2);
+        s_Data.LightUniformBuffer = UniformBuffer::Create(sizeof(Renderer3DData::LightBuffer), 2);
     }
 
     void Renderer3D::Shutdown() {}
 
-    void Renderer3D::BeginScene(const EditorCamera &camera)
+    void Renderer3D::BeginScene(const EditorCamera &camera, const SceneLightData &lightData)
     {
         s_Data.CameraBuffer.ViewProjection = camera.GetViewProjection();
         s_Data.CameraBuffer.Position = camera.GetPosition();
         s_Data.CameraUniformBuffer->SetData(&s_Data.CameraBuffer, sizeof(Renderer3DData::CameraData));
+        
+        std::memset(&s_Data.LightBuffer, 0, sizeof(Renderer3DData::LightBuffer));
+
+        s_Data.LightBuffer.PointCount = std::min(static_cast<uint32_t>(lightData.PointLights.size()), Renderer3DData::MaxPointLights);
+        for (uint32_t i = 0; i < s_Data.LightBuffer.PointCount; ++i)
+            s_Data.LightBuffer.PointLights[i] = lightData.PointLights[i];
+
+        s_Data.LightBuffer.DirectionalCount = std::min(static_cast<uint32_t>(lightData.DirectionalLights.size()), Renderer3DData::MaxDirectionalLights);
+        for (uint32_t i = 0; i < s_Data.LightBuffer.DirectionalCount; ++i)
+            s_Data.LightBuffer.DirectionalLights[i] = lightData.DirectionalLights[i];
+
+        s_Data.LightBuffer.SpotCount = std::min(static_cast<uint32_t>(lightData.SpotLights.size()), Renderer3DData::MaxSpotLights);
+        for (uint32_t i = 0; i < s_Data.LightBuffer.SpotCount; ++i)
+            s_Data.LightBuffer.SpotLights[i] = lightData.SpotLights[i];
+
+        s_Data.LightUniformBuffer->SetData(&s_Data.LightBuffer, sizeof(Renderer3DData::LightBuffer));
     }
 
     void Renderer3D::EndScene()
