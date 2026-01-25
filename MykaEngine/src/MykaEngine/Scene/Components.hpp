@@ -71,7 +71,7 @@ namespace Myka
 
         MeshComponent() = default;
         MeshComponent(const MeshComponent &) = default;
-        MeshComponent(const Ref<Mesh> &mesh, MeshType type = MeshType::Custom) : _Mesh(mesh) {}
+        MeshComponent(const Ref<Mesh> &mesh) : _Mesh(mesh) {}
     };
 
     struct MaterialComponent

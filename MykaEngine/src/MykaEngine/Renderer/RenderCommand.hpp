@@ -42,6 +42,11 @@ namespace Myka
             s_RendererAPI->SetLineWidth(width);
         }
 
+        static void ShowTriangles(bool show)
+        {
+            s_RendererAPI->ShowTriangles(show);
+        }
+
     private:
         static Scope<RendererAPI> s_RendererAPI;
     };

@@ -66,6 +66,7 @@ namespace Myka
         int m_ImGuizmoType = -1;
         int m_ImGuizmoMode = 0;
         bool m_ShowPhysicsColliders = false;
+        bool m_ShowTriangles = false;
 
         ContentBrowserPanel m_ContentBrowserPanel;
         SceneHierarchyPanel m_SceneHierarchyPanel;

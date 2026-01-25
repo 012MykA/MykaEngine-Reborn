@@ -283,6 +283,10 @@ namespace Myka
 
         ImGui::Text("Hovered Entity: %s", name.c_str());
         ImGui::Checkbox("Show Physics Colliders", &m_ShowPhysicsColliders);
+        if (ImGui::Checkbox("Show Triangles", &m_ShowTriangles))
+        {
+            RenderCommand::ShowTriangles(m_ShowTriangles);
+        }
         ImGui::End();
 
         // --- Viewport ---

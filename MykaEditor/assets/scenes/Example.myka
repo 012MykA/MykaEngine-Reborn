@@ -1,56 +1,16 @@
 {
     "Entities": [
         {
-            "Entity": 12186960284341440916,
-            "SpriteRendererComponent": {
-                "Color": [
-                    1.0,
-                    1.0,
-                    1.0,
-                    1.0
-                ],
-                "TexturePath": "assets/textures/box-transp.png",
-                "TilingFactor": 1.0
+            "Entity": 8953396614245471191,
+            "ModelComponent": {
+                "ModelPath": "assets\\models\\DamagedHelmet.glb"
             },
             "TagComponent": {
-                "Tag": "Background"
+                "Tag": "Damaged Helmet"
             },
             "TransformComponent": {
                 "Position": [
                     0.0,
-                    0.0,
-                    2.5191280841827393
-                ],
-                "Rotation": [
-                    0.0,
-                    0.0,
-                    0.0
-                ],
-                "Scale": [
-                    1.0,
-                    1.0,
-                    1.0
-                ]
-            }
-        },
-        {
-            "Entity": 4754320973890548393,
-            "SpriteRendererComponent": {
-                "Color": [
-                    1.0,
-                    1.0,
-                    1.0,
-                    1.0
-                ],
-                "TexturePath": "",
-                "TilingFactor": 1.0
-            },
-            "TagComponent": {
-                "Tag": "Background right"
-            },
-            "TransformComponent": {
-                "Position": [
-                    1.0,
                     0.0,
                     0.0
                 ],
@@ -60,42 +20,9 @@
                     0.0
                 ],
                 "Scale": [
-                    2.0,
-                    4.0,
-                    2.0
-                ]
-            }
-        },
-        {
-            "Entity": 7051081471596463164,
-            "SpriteRendererComponent": {
-                "Color": [
                     1.0,
-                    0.20430105924606323,
-                    0.9743326902389526,
+                    0.9999999403953552,
                     1.0
-                ],
-                "TexturePath": "",
-                "TilingFactor": 1.0
-            },
-            "TagComponent": {
-                "Tag": "Background left"
-            },
-            "TransformComponent": {
-                "Position": [
-                    -1.0,
-                    2.9802322387695313e-08,
-                    0.0
-                ],
-                "Rotation": [
-                    0.0,
-                    0.0,
-                    0.0
-                ],
-                "Scale": [
-                    2.0,
-                    4.0,
-                    2.0
                 ]
             }
         }

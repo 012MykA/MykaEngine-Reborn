@@ -93,4 +93,18 @@ namespace Myka
         glLineWidth(width);
     }
 
+    void OpenGLRendererAPI::ShowTriangles(bool show)
+    {
+        if (show)
+        {
+            glEnable(GL_POLYGON_SMOOTH);
+            glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+        }
+        else
+        {
+            glDisable(GL_POLYGON_SMOOTH);
+            glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+        }
+    }
+
 } // namespace Myka
