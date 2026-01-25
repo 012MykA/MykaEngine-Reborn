@@ -14,29 +14,31 @@ namespace Myka
         struct PointLight
         {
             glm::vec3 Position;
-            glm::vec3 Color;
             float Intensity;
+            glm::vec3 Color;
             float Radius;
             float Falloff;
+            float _padding[3];
         };
 
         struct DirectionalLight
         {
             glm::vec3 Direction;
-            glm::vec3 Color;
             float Intensity;
+            glm::vec3 Color;
             int CastShadows;
         };
 
         struct SpotLight
         {
             glm::vec3 Position;
-            glm::vec3 Direction;
-            glm::vec3 Color;
             float Intensity;
+            glm::vec3 Direction;
             float Range;
+            glm::vec3 Color;
             float InnerCutoff;
             float OuterCutoff;
+            float _padding[3];
         };
 
         struct SceneLightData

@@ -376,23 +376,35 @@ namespace Myka
         DrawComponent<PointLightComponent>("Point Light", entity, [](auto &component)
                                            {
             ImGui::ColorEdit3("Color", glm::value_ptr(component.Color));
-            ImGui::DragFloat("Intensity", &component.Intensity);
-            ImGui::DragFloat("Radius", &component.Radius);
-            ImGui::DragFloat("Falloff", &component.Falloff); });
+            // Интенсивность не может быть отрицательной
+            ImGui::DragFloat("Intensity", &component.Intensity, 0.1f, 0.0f, 1000.0f);
+            // Радиус должен быть больше нуля
+            ImGui::DragFloat("Radius", &component.Radius, 0.1f, 0.01f, 100.0f);
+            ImGui::DragFloat("Falloff", &component.Falloff, 0.05f, 0.0f, 10.0f); });
 
         DrawComponent<DirectionalLightComponent>("Directional Light", entity, [](auto &component)
                                                  {
             ImGui::ColorEdit3("Color", glm::value_ptr(component.Color));
-            ImGui::DragFloat("Intensity", &component.Intensity);
+            ImGui::DragFloat("Intensity", &component.Intensity, 0.1f, 0.0f, 100.0f);
             ImGui::Checkbox("Cast Shadows", &component.CastShadows); });
 
         DrawComponent<SpotLightComponent>("Spot Light", entity, [](auto &component)
                                           {
             ImGui::ColorEdit3("Color", glm::value_ptr(component.Color));
-            ImGui::DragFloat("Intensity", &component.Intensity);
-            ImGui::DragFloat("Range", &component.Range);
-            ImGui::DragFloat("InnerCutoff", &component.InnerCutoff);
-            ImGui::DragFloat("OuterCutoff", &component.OuterCutoff); });
+            ImGui::DragFloat("Intensity", &component.Intensity, 0.1f, 0.0f, 1000.0f);
+            ImGui::DragFloat("Range", &component.Range, 0.1f, 0.01f, 500.0f);
+
+            if (ImGui::DragFloat("InnerCutoff", &component.InnerCutoff, 0.5f, 0.0f, component.OuterCutoff))
+            {
+                if (component.InnerCutoff > component.OuterCutoff)
+                    component.InnerCutoff = component.OuterCutoff;
+            }
+
+            if (ImGui::DragFloat("OuterCutoff", &component.OuterCutoff, 0.5f, component.InnerCutoff, 90.0f))
+            {
+                if (component.OuterCutoff < component.InnerCutoff)
+                    component.OuterCutoff = component.InnerCutoff;
+            } });
 
         DrawComponent<MeshComponent>("Mesh", entity, [](auto &component)
                                      {

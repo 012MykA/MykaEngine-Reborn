@@ -371,30 +371,38 @@ namespace Myka
         for (auto entity : pointView)
         {
             auto [tc, plc] = pointView.get<TransformComponent, PointLightComponent>(entity);
-            lightData.PointLights.push_back({tc.Position, plc.Color, plc.Intensity, plc.Radius, plc.Falloff});
+            lightData.PointLights.push_back({tc.Position, plc.Intensity, plc.Color, plc.Radius, plc.Falloff});
         }
 
         auto dirView = m_Registry.view<TransformComponent, DirectionalLightComponent>();
         for (auto entity : dirView)
         {
             auto [tc, dlc] = dirView.get<TransformComponent, DirectionalLightComponent>(entity);
-            glm::quat rotationQuat = glm::quat(glm::radians(tc.Rotation));
+            glm::vec3 rotationInRadians = glm::vec3(
+                glm::radians(tc.Rotation.x),
+                glm::radians(tc.Rotation.y),
+                glm::radians(tc.Rotation.z));
+            glm::quat rotationQuat = glm::quat(rotationInRadians);
             glm::vec3 direction = rotationQuat * glm::vec3(0.0f, 0.0f, -1.0f);
-            lightData.DirectionalLights.push_back({direction, dlc.Color, dlc.Intensity, dlc.CastShadows ? 1 : 0});
+            lightData.DirectionalLights.push_back({direction, dlc.Intensity, dlc.Color, dlc.CastShadows ? 1 : 0});
         }
 
         auto spotView = m_Registry.view<TransformComponent, SpotLightComponent>();
         for (auto entity : spotView)
         {
             auto [tc, slc] = spotView.get<TransformComponent, SpotLightComponent>(entity);
-            glm::quat rotationQuat = glm::quat(glm::radians(tc.Rotation));
+            glm::vec3 rotationInRadians = glm::vec3(
+                glm::radians(tc.Rotation.x),
+                glm::radians(tc.Rotation.y),
+                glm::radians(tc.Rotation.z));
+            glm::quat rotationQuat = glm::quat(rotationInRadians);
             glm::vec3 direction = rotationQuat * glm::vec3(0.0f, 0.0f, -1.0f);
             lightData.SpotLights.push_back({
                 tc.Position,
-                direction,
-                slc.Color,
                 slc.Intensity,
+                direction,
                 slc.Range,
+                slc.Color,
                 glm::cos(glm::radians(slc.InnerCutoff)),
                 glm::cos(glm::radians(slc.OuterCutoff)),
             });

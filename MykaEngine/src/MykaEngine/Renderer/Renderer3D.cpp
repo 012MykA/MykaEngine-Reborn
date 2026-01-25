@@ -26,6 +26,7 @@ namespace Myka
             int AlbedoTexIndex;
             int MetRoughTexIndex;
             int EntityID;
+            float _padding;
         } EntityBuffer;
         Ref<UniformBuffer> EntityUniformBuffer;
 
@@ -39,6 +40,7 @@ namespace Myka
             uint32_t PointCount = 0;
             uint32_t DirectionalCount = 0;
             uint32_t SpotCount = 0;
+            uint32_t _padding;
         } LightBuffer;
         Ref<UniformBuffer> LightUniformBuffer;
 
@@ -46,6 +48,7 @@ namespace Myka
         {
             glm::mat4 ViewProjection;
             glm::vec3 Position;
+            float _padding;
         } CameraBuffer;
         Ref<UniformBuffer> CameraUniformBuffer;
 

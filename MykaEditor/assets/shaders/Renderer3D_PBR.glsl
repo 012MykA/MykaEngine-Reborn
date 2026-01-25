@@ -71,23 +71,25 @@ struct PointLight {
     vec3 Color;
     float Radius;
     float Falloff;
+    float _pad;
 };
 
 struct DirectionalLight {
     vec3 Direction;
-    vec3 Color;
     float Intensity;
+    vec3 Color;
     int CastShadows;
 };
 
 struct SpotLight {
     vec3 Position;
-    vec3 Direction;
-    vec3 Color;
     float Intensity;
+    vec3 Direction;
     float Range;
+    vec3 Color;
     float InnerCutoff;
     float OuterCutoff;
+    float _pad;
 };
 
 layout(std140, binding = 2) uniform Lights {
@@ -102,8 +104,6 @@ layout(std140, binding = 2) uniform Lights {
 layout(binding = 0) uniform sampler2D u_Textures[32];
 
 const float PI = 3.14159265359;
-
-// --- PBR Функции ---
 
 float DistributionGGX(vec3 N, vec3 H, float roughness) {
     float a = roughness * roughness;
@@ -131,32 +131,29 @@ vec3 fresnelSchlick(float cosTheta, vec3 F0) {
 }
 
 void main() {
-    // Получение данных из текстур
     vec4 texColor = texture(u_Textures[u_AlbedoTexIndex], v_Input.TexCoord) * u_AlbedoColor;
-    vec4 arm = texture(u_Textures[u_MetRoughTexIndex], v_Input.TexCoord);
+    if(texColor.a < 0.1)
+        return;
 
-    float metallic = arm.b; // Обычно Metallic в синем канале
-    float roughness = arm.g; // Roughness в зеленом
+    vec4 arm = texture(u_Textures[u_MetRoughTexIndex], v_Input.TexCoord);
+    float roughness = clamp(arm.g, 0.05, 1.0);
+    float metallic = arm.b;
 
     vec3 N = normalize(v_Input.Normal);
     vec3 V = normalize(u_Position - v_Input.WorldPos);
-
-    // Базовое отражение для диэлектриков (0.04) и металлов (albedo)
-    vec3 F0 = vec3(0.04);
-    F0 = mix(F0, texColor.rgb, metallic);
+    vec3 F0 = mix(vec3(0.04), texColor.rgb, metallic);
 
     vec3 Lo = vec3(0.0);
 
-    // Расчет точечных источников
     for(int i = 0; i < int(u_PointCount); ++i) {
         vec3 L = normalize(u_PointLights[i].Position - v_Input.WorldPos);
         vec3 H = normalize(V + L);
 
-        float distance = length(u_PointLights[i].Position - v_Input.WorldPos);
-        float attenuation = u_PointLights[i].Intensity / (distance * distance);
-        vec3 radiance = u_PointLights[i].Color * attenuation;
+        float dist = length(u_PointLights[i].Position - v_Input.WorldPos);
+        float attenuation = u_PointLights[i].Intensity / (dist * dist + 1.0);
+        float distanceFade = smoothstep(u_PointLights[i].Radius, 0.0, dist);
+        vec3 radiance = u_PointLights[i].Color * attenuation * distanceFade;
 
-        // Cook-Torrance BRDF
         float NDF = DistributionGGX(N, H, roughness);
         float G = GeometrySmith(N, V, L, roughness);
         vec3 F = fresnelSchlick(max(dot(H, V), 0.0), F0);
@@ -165,19 +162,89 @@ void main() {
         float denominator = 4.0 * max(dot(N, V), 0.0) * max(dot(N, L), 0.0) + 0.0001;
         vec3 specular = numerator / denominator;
 
-        vec3 kS = F;
-        vec3 kD = vec3(1.0) - kS;
-        kD *= 1.0 - metallic;
-
-        float NdotL = max(dot(N, L), 0.0);
-        Lo += (kD * texColor.rgb / PI + specular) * radiance * NdotL;
+        vec3 kD = (vec3(1.0) - F) * (1.0 - metallic);
+        Lo += (kD * texColor.rgb / PI + specular) * radiance * max(dot(N, L), 0.0);
     }
 
-    // Очень простое фоновое освещение
+    for(int i = 0; i < int(u_DirCount); ++i) {
+        vec3 L = normalize(-u_DirLights[i].Direction);
+        vec3 H = normalize(V + L);
+        vec3 radiance = u_DirLights[i].Color * u_DirLights[i].Intensity;
+
+        float NDF = DistributionGGX(N, H, roughness);
+        float G = GeometrySmith(N, V, L, roughness);
+        vec3 F = fresnelSchlick(max(dot(H, V), 0.0), F0);
+
+        vec3 specular = (NDF * G * F) / (4.0 * max(dot(N, V), 0.0) * max(dot(N, L), 0.0) + 0.0001);
+        vec3 kD = (vec3(1.0) - F) * (1.0 - metallic);
+        Lo += (kD * texColor.rgb / PI + specular) * radiance * max(dot(N, L), 0.0);
+    }
+
+    for(int i = 0; i < int(u_SpotCount); ++i) {
+        vec3 L_vec = u_SpotLights[i].Position - v_Input.WorldPos;
+        float dist = length(L_vec);
+
+        if(dist > u_SpotLights[i].Range)
+            continue;
+
+        vec3 L = normalize(L_vec);
+        vec3 H = normalize(V + L);
+
+        float attenuation = u_SpotLights[i].Intensity / (dist * dist + 1.0);
+        float distanceFade = clamp(1.0 - dist / u_SpotLights[i].Range, 0.0, 1.0);
+
+        float theta = dot(L, normalize(-u_SpotLights[i].Direction));
+        float epsilon = u_SpotLights[i].InnerCutoff - u_SpotLights[i].OuterCutoff;
+        float spotIntensity = clamp((theta - u_SpotLights[i].OuterCutoff) / epsilon, 0.0, 1.0);
+
+        vec3 radiance = u_SpotLights[i].Color * attenuation * spotIntensity * distanceFade;
+
+        float NDF = DistributionGGX(N, H, roughness);
+        float G = GeometrySmith(N, V, L, roughness);
+        vec3 F = fresnelSchlick(max(dot(H, V), 0.0), F0);
+
+        vec3 numerator = NDF * G * F;
+        float denominator = 4.0 * max(dot(N, V), 0.0) * max(dot(N, L), 0.0) + 0.0001;
+        vec3 specular = numerator / denominator;
+
+        vec3 kD = (vec3(1.0) - F) * (1.0 - metallic);
+        Lo += (kD * texColor.rgb / PI + specular) * radiance * max(dot(N, L), 0.0);
+    }
+
+    for(int i = 0; i < int(u_SpotCount); ++i) {
+        vec3 L_vec = u_SpotLights[i].Position - v_Input.WorldPos;
+        float dist = length(L_vec);
+
+        if(dist > u_SpotLights[i].Range)
+            continue;
+
+        vec3 L = normalize(L_vec);
+        vec3 H = normalize(V + L);
+
+        float attenuation = u_SpotLights[i].Intensity / (dist * dist + 1.0);
+        float distanceFade = clamp(1.0 - dist / u_SpotLights[i].Range, 0.0, 1.0);
+
+        float theta = dot(L, normalize(-u_SpotLights[i].Direction));
+        float epsilon = u_SpotLights[i].InnerCutoff - u_SpotLights[i].OuterCutoff;
+        float spotIntensity = clamp((theta - u_SpotLights[i].OuterCutoff) / epsilon, 0.0, 1.0);
+
+        vec3 radiance = u_SpotLights[i].Color * attenuation * spotIntensity * distanceFade;
+
+        float NDF = DistributionGGX(N, H, roughness);
+        float G = GeometrySmith(N, V, L, roughness);
+        vec3 F = fresnelSchlick(max(dot(H, V), 0.0), F0);
+
+        vec3 numerator = NDF * G * F;
+        float denominator = 4.0 * max(dot(N, V), 0.0) * max(dot(N, L), 0.0) + 0.0001;
+        vec3 specular = numerator / denominator;
+
+        vec3 kD = (vec3(1.0) - F) * (1.0 - metallic);
+        Lo += (kD * texColor.rgb / PI + specular) * radiance * max(dot(N, L), 0.0);
+    }
+
     vec3 ambient = vec3(0.03) * texColor.rgb;
     vec3 color = ambient + Lo;
 
-    // HDR тональная компрессия и гамма-коррекция
     color = color / (color + vec3(1.0));
     color = pow(color, vec3(1.0 / 2.2));
 
