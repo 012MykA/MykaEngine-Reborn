@@ -165,6 +165,32 @@ namespace Myka
             e["PointLightComponent"] = componentData;
         }
 
+        if (entity.HasComponent<DirectionalLightComponent>())
+        {
+            const auto &dlc = entity.GetComponent<DirectionalLightComponent>();
+
+            json componentData;
+            componentData["Color"] = dlc.Color;
+            componentData["Intensity"] = dlc.Intensity;
+            componentData["CastShadows"] = dlc.CastShadows;
+
+            e["DirectionalLightComponent"] = componentData;
+        }
+
+        if (entity.HasComponent<SpotLightComponent>())
+        {
+            const auto &slc = entity.GetComponent<SpotLightComponent>();
+
+            json componentData;
+            componentData["Color"] = slc.Color;
+            componentData["Intensity"] = slc.Intensity;
+            componentData["Range"] = slc.Range;
+            componentData["InnerCutoff"] = slc.InnerCutoff;
+            componentData["OuterCutoff"] = slc.OuterCutoff;
+
+            e["SpotLightComponent"] = componentData;
+        }
+
         if (entity.HasComponent<ModelComponent>())
         {
             const auto &mc = entity.GetComponent<ModelComponent>();
@@ -347,6 +373,28 @@ namespace Myka
                 plc.Intensity = pointLightComponentJson["Intensity"];
                 plc.Radius = pointLightComponentJson["Radius"];
                 plc.Falloff = pointLightComponentJson["Falloff"];
+            }
+
+            auto directionalLightComponentJson = entity["DirectionalLightComponent"];
+            if (!directionalLightComponentJson.is_null())
+            {
+                auto &dlc = deserializedEntity.AddComponent<DirectionalLightComponent>();
+
+                dlc.Color = directionalLightComponentJson["Color"];
+                dlc.Intensity = directionalLightComponentJson["Intensity"];
+                dlc.CastShadows = directionalLightComponentJson["CastShadows"];
+            }
+
+            auto spotLightComponentJson = entity["SpotLightComponent"];
+            if (!spotLightComponentJson.is_null())
+            {
+                auto &slc = deserializedEntity.AddComponent<SpotLightComponent>();
+
+                slc.Color = spotLightComponentJson["Color"];
+                slc.Intensity = spotLightComponentJson["Intensity"];
+                slc.Range = spotLightComponentJson["Range"];
+                slc.InnerCutoff = spotLightComponentJson["InnerCutoff"];
+                slc.OuterCutoff = spotLightComponentJson["OuterCutoff"];
             }
 
             auto modelComponentJson = entity["ModelComponent"];

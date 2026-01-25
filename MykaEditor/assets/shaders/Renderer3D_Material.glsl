@@ -8,6 +8,7 @@ layout(location = 2) in vec2 a_TexCoord;
 layout(std140, binding = 0) uniform Camera
 {
     mat4 u_ViewProjection;
+    vec3 u_Position;
 };
 
 layout(std140, binding = 1) uniform Entity
@@ -60,6 +61,12 @@ struct VertexOutput
 layout(location = 0) in VertexOutput v_Input;
 layout(location = 4) in flat int v_EntityID;
 
+layout(std140, binding = 0) uniform Camera
+{
+    mat4 u_ViewProjection;
+    vec3 u_Position;
+};
+
 layout(std140, binding = 1) uniform Entity
 {
     mat4 u_Transform;
@@ -69,7 +76,22 @@ layout(std140, binding = 1) uniform Entity
     int u_EntityID;
 };
 
+struct Light
+{
+    vec3 Position;
+    float Intensity;
+    vec3 Color;
+    float Radius;
+};
+
+layout(std140, binding = 2) uniform Lights
+{
+    Light u_Lights[10];
+};
+
 layout(binding = 0) uniform sampler2D u_Textures[32];
+
+const float PI = 3.14159265359;
 
 void main()
 {

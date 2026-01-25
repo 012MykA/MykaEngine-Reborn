@@ -1,0 +1,208 @@
+{
+    "Entities": [
+        {
+            "Entity": 12853205352813976936,
+            "SpotLightComponent": {
+                "Color": [
+                    1.0,
+                    1.0,
+                    1.0
+                ],
+                "InnerCutoff": 12.5,
+                "Intensity": 1.0,
+                "OuterCutoff": 15.0,
+                "Range": 10.0
+            },
+            "TagComponent": {
+                "Tag": "Spot Light"
+            },
+            "TransformComponent": {
+                "Position": [
+                    5.0,
+                    5.0,
+                    0.0
+                ],
+                "Rotation": [
+                    0.0,
+                    0.0,
+                    0.0
+                ],
+                "Scale": [
+                    1.0,
+                    1.0,
+                    1.0
+                ]
+            }
+        },
+        {
+            "DirectionalLightComponent": {
+                "CastShadows": true,
+                "Color": [
+                    1.0,
+                    1.0,
+                    1.0
+                ],
+                "Intensity": 1.0
+            },
+            "Entity": 15967714663989329571,
+            "TagComponent": {
+                "Tag": "Directional Light"
+            },
+            "TransformComponent": {
+                "Position": [
+                    -10.0,
+                    5.0,
+                    -10.0
+                ],
+                "Rotation": [
+                    0.0,
+                    0.0,
+                    0.0
+                ],
+                "Scale": [
+                    1.0,
+                    1.0,
+                    1.0
+                ]
+            }
+        },
+        {
+            "Entity": 12501503956177060974,
+            "ModelComponent": {
+                "ModelPath": "assets\\models\\primitives\\Cube.glb"
+            },
+            "TagComponent": {
+                "Tag": "Cube"
+            },
+            "TransformComponent": {
+                "Position": [
+                    -5.0,
+                    0.0,
+                    0.0
+                ],
+                "Rotation": [
+                    0.0,
+                    0.0,
+                    0.0
+                ],
+                "Scale": [
+                    1.0,
+                    1.0,
+                    1.0
+                ]
+            }
+        },
+        {
+            "Entity": 3250943048492024152,
+            "ModelComponent": {
+                "ModelPath": "assets\\models\\primitives\\Cone.glb"
+            },
+            "TagComponent": {
+                "Tag": "Cone"
+            },
+            "TransformComponent": {
+                "Position": [
+                    5.0,
+                    0.0,
+                    0.0
+                ],
+                "Rotation": [
+                    0.0,
+                    0.0,
+                    0.0
+                ],
+                "Scale": [
+                    1.0,
+                    1.0,
+                    1.0
+                ]
+            }
+        },
+        {
+            "Entity": 12507921683949286907,
+            "ModelComponent": {
+                "ModelPath": "assets\\models\\primitives\\UVSphere.glb"
+            },
+            "TagComponent": {
+                "Tag": "UVSphere"
+            },
+            "TransformComponent": {
+                "Position": [
+                    0.0,
+                    0.0,
+                    0.0
+                ],
+                "Rotation": [
+                    0.0,
+                    0.0,
+                    0.0
+                ],
+                "Scale": [
+                    1.0,
+                    1.0,
+                    1.0
+                ]
+            }
+        },
+        {
+            "Entity": 9764966632173570747,
+            "PointLightComponent": {
+                "Color": [
+                    1.0,
+                    0.0,
+                    0.0
+                ],
+                "Falloff": 1.0,
+                "Intensity": 1.0,
+                "Radius": 10.0
+            },
+            "TagComponent": {
+                "Tag": "Point Light"
+            },
+            "TransformComponent": {
+                "Position": [
+                    0.0,
+                    5.0,
+                    0.0
+                ],
+                "Rotation": [
+                    0.0,
+                    0.0,
+                    0.0
+                ],
+                "Scale": [
+                    1.0,
+                    1.0,
+                    1.0
+                ]
+            }
+        },
+        {
+            "Entity": 443993739282486770,
+            "ModelComponent": {
+                "ModelPath": "assets\\models\\primitives\\Cube.glb"
+            },
+            "TagComponent": {
+                "Tag": "Platform"
+            },
+            "TransformComponent": {
+                "Position": [
+                    0.0,
+                    -5.0,
+                    0.0
+                ],
+                "Rotation": [
+                    0.0,
+                    0.0,
+                    0.0
+                ],
+                "Scale": [
+                    10.0,
+                    0.5,
+                    10.0
+                ]
+            }
+        }
+    ],
+    "Scene": "Untilted"
+}

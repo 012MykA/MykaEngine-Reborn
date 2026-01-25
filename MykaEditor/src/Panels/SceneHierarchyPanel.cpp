@@ -262,14 +262,19 @@ namespace Myka
                     }
                     if (ImGui::MenuItem("Directional Light"))
                     {
-                        // m_SelectionContext.AddComponent<>();
+                        m_SelectionContext.AddComponent<DirectionalLightComponent>();
+                        ImGui::CloseCurrentPopup();
+                    }
+                    if (ImGui::MenuItem("Spot Light"))
+                    {
+                        m_SelectionContext.AddComponent<SpotLightComponent>();
                         ImGui::CloseCurrentPopup();
                     }
 
                     ImGui::EndMenu();
                 }
             }
-            
+
             if (!m_SelectionContext.HasComponent<MeshComponent>())
             {
                 if (ImGui::MenuItem("Mesh"))
@@ -368,12 +373,26 @@ namespace Myka
 
                 DrawVec3Control("Scale", component.Scale, 1.0f); });
 
-        DrawComponent<PointLightComponent>("Mesh", entity, [](auto &component)
+        DrawComponent<PointLightComponent>("Point Light", entity, [](auto &component)
                                            {
             ImGui::ColorEdit3("Color", glm::value_ptr(component.Color));
             ImGui::DragFloat("Intensity", &component.Intensity);
             ImGui::DragFloat("Radius", &component.Radius);
             ImGui::DragFloat("Falloff", &component.Falloff); });
+
+        DrawComponent<DirectionalLightComponent>("Directional Light", entity, [](auto &component)
+                                                 {
+            ImGui::ColorEdit3("Color", glm::value_ptr(component.Color));
+            ImGui::DragFloat("Intensity", &component.Intensity);
+            ImGui::Checkbox("Cast Shadows", &component.CastShadows); });
+
+        DrawComponent<SpotLightComponent>("Spot Light", entity, [](auto &component)
+                                          {
+            ImGui::ColorEdit3("Color", glm::value_ptr(component.Color));
+            ImGui::DragFloat("Intensity", &component.Intensity);
+            ImGui::DragFloat("Range", &component.Range);
+            ImGui::DragFloat("InnerCutoff", &component.InnerCutoff);
+            ImGui::DragFloat("OuterCutoff", &component.OuterCutoff); });
 
         DrawComponent<MeshComponent>("Mesh", entity, [](auto &component)
                                      {
