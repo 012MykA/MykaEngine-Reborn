@@ -3,36 +3,10 @@
         {
             "Entity": 12977658510199323562,
             "ModelComponent": {
-                "ModelPath": "assets\\models\\primitives\\Torus.glb"
+                "ModelPath": "assets/models/primitives/Ultra\\Torus.glb"
             },
             "TagComponent": {
                 "Tag": "Torus"
-            },
-            "TransformComponent": {
-                "Position": [
-                    0.0,
-                    0.0,
-                    5.0
-                ],
-                "Rotation": [
-                    0.0,
-                    0.0,
-                    0.0
-                ],
-                "Scale": [
-                    1.0,
-                    1.0,
-                    1.0
-                ]
-            }
-        },
-        {
-            "Entity": 6669763957931761256,
-            "ModelComponent": {
-                "ModelPath": "assets\\models\\primitives\\IcoSphere.glb"
-            },
-            "TagComponent": {
-                "Tag": "IcoSphere"
             },
             "TransformComponent": {
                 "Position": [
@@ -81,10 +55,10 @@
         {
             "Entity": 12507921683949286907,
             "ModelComponent": {
-                "ModelPath": "assets\\models\\primitives\\UVSphere.glb"
+                "ModelPath": "assets/models/primitives/Ultra\\Sphere.glb"
             },
             "TagComponent": {
-                "Tag": "UVSphere"
+                "Tag": "Sphere"
             },
             "TransformComponent": {
                 "Position": [
@@ -133,7 +107,7 @@
         {
             "Entity": 10581535662344822571,
             "ModelComponent": {
-                "ModelPath": "assets\\models\\primitives\\Cylinder.glb"
+                "ModelPath": "assets/models/primitives/Ultra\\Cylinder.glb"
             },
             "TagComponent": {
                 "Tag": "Cylinder"
@@ -159,7 +133,7 @@
         {
             "Entity": 3250943048492024152,
             "ModelComponent": {
-                "ModelPath": "assets\\models\\primitives\\Cone.glb"
+                "ModelPath": "assets/models/primitives/Ultra\\Cone.glb"
             },
             "TagComponent": {
                 "Tag": "Cone"
@@ -179,6 +153,38 @@
                     1.0,
                     1.0,
                     1.0
+                ]
+            }
+        },
+        {
+            "DirectionalLightComponent": {
+                "CastShadows": true,
+                "Color": [
+                    1.0,
+                    1.0,
+                    1.0
+                ],
+                "Intensity": 5.0
+            },
+            "Entity": 5644977842137548231,
+            "TagComponent": {
+                "Tag": "Light"
+            },
+            "TransformComponent": {
+                "Position": [
+                    0.0,
+                    0.0,
+                    0.0
+                ],
+                "Rotation": [
+                    -0.34906187653541565,
+                    0.9889281392097473,
+                    1.084537899487259e-07
+                ],
+                "Scale": [
+                    0.9999983310699463,
+                    0.9999985098838806,
+                    0.9999984502792358
                 ]
             }
         }

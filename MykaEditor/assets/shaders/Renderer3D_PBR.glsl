@@ -135,14 +135,16 @@ void main() {
     if(texColor.a < 0.1)
         return;
 
-    vec4 arm = texture(u_Textures[u_MetRoughTexIndex], v_Input.TexCoord);
-    float roughness = clamp(arm.g, 0.05, 1.0);
-    float metallic = arm.b;
+    // Metallic & Roughness
+    vec4 mrTexture = texture(u_Textures[u_MetRoughTexIndex], v_Input.TexCoord);
+    float roughness = clamp(mrTexture.g, 0.05, 1.0);
+    float metallic = mrTexture.b;
 
     vec3 N = normalize(v_Input.Normal);
     vec3 V = normalize(u_Position - v_Input.WorldPos);
     vec3 F0 = mix(vec3(0.04), texColor.rgb, metallic);
 
+    // Result Color
     vec3 Lo = vec3(0.0);
 
     for(int i = 0; i < int(u_PointCount); ++i) {
@@ -211,41 +213,14 @@ void main() {
         Lo += (kD * texColor.rgb / PI + specular) * radiance * max(dot(N, L), 0.0);
     }
 
-    for(int i = 0; i < int(u_SpotCount); ++i) {
-        vec3 L_vec = u_SpotLights[i].Position - v_Input.WorldPos;
-        float dist = length(L_vec);
-
-        if(dist > u_SpotLights[i].Range)
-            continue;
-
-        vec3 L = normalize(L_vec);
-        vec3 H = normalize(V + L);
-
-        float attenuation = u_SpotLights[i].Intensity / (dist * dist + 1.0);
-        float distanceFade = clamp(1.0 - dist / u_SpotLights[i].Range, 0.0, 1.0);
-
-        float theta = dot(L, normalize(-u_SpotLights[i].Direction));
-        float epsilon = u_SpotLights[i].InnerCutoff - u_SpotLights[i].OuterCutoff;
-        float spotIntensity = clamp((theta - u_SpotLights[i].OuterCutoff) / epsilon, 0.0, 1.0);
-
-        vec3 radiance = u_SpotLights[i].Color * attenuation * spotIntensity * distanceFade;
-
-        float NDF = DistributionGGX(N, H, roughness);
-        float G = GeometrySmith(N, V, L, roughness);
-        vec3 F = fresnelSchlick(max(dot(H, V), 0.0), F0);
-
-        vec3 numerator = NDF * G * F;
-        float denominator = 4.0 * max(dot(N, V), 0.0) * max(dot(N, L), 0.0) + 0.0001;
-        vec3 specular = numerator / denominator;
-
-        vec3 kD = (vec3(1.0) - F) * (1.0 - metallic);
-        Lo += (kD * texColor.rgb / PI + specular) * radiance * max(dot(N, L), 0.0);
-    }
-
+    // Ambient
     vec3 ambient = vec3(0.03) * texColor.rgb;
     vec3 color = ambient + Lo;
 
+    // HDR
     color = color / (color + vec3(1.0));
+
+    // Gamma
     color = pow(color, vec3(1.0 / 2.2));
 
     o_Color = vec4(color, texColor.a);

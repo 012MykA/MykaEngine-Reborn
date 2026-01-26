@@ -1,0 +1,116 @@
+{
+    "Entities": [
+        {
+            "Entity": 3053164245461913293,
+            "ModelComponent": {
+                "ModelPath": "assets\\models\\primitives\\Cube.glb"
+            },
+            "TagComponent": {
+                "Tag": "Floor"
+            },
+            "TransformComponent": {
+                "Position": [
+                    0.0,
+                    -1.100000023841858,
+                    0.0
+                ],
+                "Rotation": [
+                    0.0,
+                    0.0,
+                    0.0
+                ],
+                "Scale": [
+                    2.5,
+                    0.10000000149011612,
+                    2.5
+                ]
+            }
+        },
+        {
+            "Entity": 281348820569904824,
+            "PointLightComponent": {
+                "Color": [
+                    1.0,
+                    1.0,
+                    1.0
+                ],
+                "Falloff": 1.0,
+                "Intensity": 10.0,
+                "Radius": 10.0
+            },
+            "TagComponent": {
+                "Tag": "Point Light"
+            },
+            "TransformComponent": {
+                "Position": [
+                    0.0,
+                    3.0,
+                    0.0
+                ],
+                "Rotation": [
+                    -1.5707958936691284,
+                    0.0,
+                    0.0
+                ],
+                "Scale": [
+                    1.0,
+                    0.9999940991401672,
+                    0.9999940991401672
+                ]
+            }
+        },
+        {
+            "Entity": 4553673682752616816,
+            "ModelComponent": {
+                "ModelPath": "assets/models\\primitives\\Ultra\\Sphere.glb"
+            },
+            "TagComponent": {
+                "Tag": "Object"
+            },
+            "TransformComponent": {
+                "Position": [
+                    0.0,
+                    0.0,
+                    0.0
+                ],
+                "Rotation": [
+                    0.0,
+                    0.0,
+                    0.0
+                ],
+                "Scale": [
+                    1.0,
+                    1.0,
+                    1.0
+                ]
+            }
+        },
+        {
+            "Entity": 16350225176944584428,
+            "ModelComponent": {
+                "ModelPath": "assets\\models\\primitives\\Cube.glb"
+            },
+            "TagComponent": {
+                "Tag": "Wall"
+            },
+            "TransformComponent": {
+                "Position": [
+                    0.0,
+                    1.5,
+                    -2.5999999046325684
+                ],
+                "Rotation": [
+                    1.571282982826233,
+                    0.0,
+                    0.0
+                ],
+                "Scale": [
+                    2.5,
+                    0.10000037401914597,
+                    2.5
+                ]
+            }
+        }
+    ],
+    "Scene": "Untilted"
+}

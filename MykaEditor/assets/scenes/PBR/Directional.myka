@@ -1,0 +1,89 @@
+{
+    "Entities": [
+        {
+            "Entity": 3053164245461913293,
+            "ModelComponent": {
+                "ModelPath": "assets\\models\\primitives\\Cube.glb"
+            },
+            "TagComponent": {
+                "Tag": "Floor"
+            },
+            "TransformComponent": {
+                "Position": [
+                    0.0,
+                    -1.100000023841858,
+                    0.0
+                ],
+                "Rotation": [
+                    0.0,
+                    0.0,
+                    0.0
+                ],
+                "Scale": [
+                    2.5,
+                    0.10000000149011612,
+                    2.5
+                ]
+            }
+        },
+        {
+            "Entity": 4553673682752616816,
+            "ModelComponent": {
+                "ModelPath": "assets/models/primitives/Ultra\\Sphere.glb"
+            },
+            "TagComponent": {
+                "Tag": "Object"
+            },
+            "TransformComponent": {
+                "Position": [
+                    0.0,
+                    0.0,
+                    0.0
+                ],
+                "Rotation": [
+                    0.0,
+                    0.0,
+                    0.0
+                ],
+                "Scale": [
+                    1.0,
+                    1.0,
+                    1.0
+                ]
+            }
+        },
+        {
+            "DirectionalLightComponent": {
+                "CastShadows": true,
+                "Color": [
+                    1.0,
+                    1.0,
+                    1.0
+                ],
+                "Intensity": 1.0
+            },
+            "Entity": 281348820569904824,
+            "TagComponent": {
+                "Tag": "Directional Light"
+            },
+            "TransformComponent": {
+                "Position": [
+                    0.0,
+                    3.0,
+                    0.0
+                ],
+                "Rotation": [
+                    -1.5707963705062866,
+                    0.0,
+                    0.0
+                ],
+                "Scale": [
+                    1.0,
+                    1.0,
+                    1.0
+                ]
+            }
+        }
+    ],
+    "Scene": "Untilted"
+}

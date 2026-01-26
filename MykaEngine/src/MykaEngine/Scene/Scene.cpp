@@ -6,6 +6,9 @@
 #include "Entity.hpp"
 
 #include <glm/glm.hpp>
+#include <glm/gtc/matrix_transform.hpp>
+#define GLM_ENABLE_EXPERIMENTAL
+#include <glm/gtx/quaternion.hpp>
 
 #include "box2d/box2d.h"
 #include "box2d/id.h"
@@ -378,12 +381,9 @@ namespace Myka
         for (auto entity : dirView)
         {
             auto [tc, dlc] = dirView.get<TransformComponent, DirectionalLightComponent>(entity);
-            glm::vec3 rotationInRadians = glm::vec3(
-                glm::radians(tc.Rotation.x),
-                glm::radians(tc.Rotation.y),
-                glm::radians(tc.Rotation.z));
-            glm::quat rotationQuat = glm::quat(rotationInRadians);
-            glm::vec3 direction = rotationQuat * glm::vec3(0.0f, 0.0f, -1.0f);
+
+            glm::vec3 direction = glm::normalize(glm::quat(tc.Rotation) * glm::vec3(0.0f, 0.0f, -1.0f));
+
             lightData.DirectionalLights.push_back({direction, dlc.Intensity, dlc.Color, dlc.CastShadows ? 1 : 0});
         }
 
@@ -391,12 +391,9 @@ namespace Myka
         for (auto entity : spotView)
         {
             auto [tc, slc] = spotView.get<TransformComponent, SpotLightComponent>(entity);
-            glm::vec3 rotationInRadians = glm::vec3(
-                glm::radians(tc.Rotation.x),
-                glm::radians(tc.Rotation.y),
-                glm::radians(tc.Rotation.z));
-            glm::quat rotationQuat = glm::quat(rotationInRadians);
-            glm::vec3 direction = rotationQuat * glm::vec3(0.0f, 0.0f, -1.0f);
+
+            glm::vec3 direction = glm::normalize(glm::quat(tc.Rotation) * glm::vec3(0.0f, 0.0f, -1.0f));
+
             lightData.SpotLights.push_back({
                 tc.Position,
                 slc.Intensity,
