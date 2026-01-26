@@ -141,7 +141,7 @@ void main() {
 
     // Metallic & Roughness
     vec4 mrTexture = texture(u_Textures[u_MetRoughTexIndex], v_Input.TexCoord);
-    float roughness = clamp(mrTexture.g * u_Metallic, 0.05, 1.0);
+    float roughness = clamp(mrTexture.g * u_Roughness, 0.05, 1.0);
     float metallic = clamp(mrTexture.b * u_Metallic, 0.0, 1.0);
 
     vec3 N = normalize(v_Input.Normal);
