@@ -1,28 +1,34 @@
 {
     "Entities": [
         {
-            "Entity": 3053164245461913293,
-            "ModelComponent": {
-                "ModelPath": "assets\\models\\primitives\\Cube.glb"
+            "DirectionalLightComponent": {
+                "CastShadows": true,
+                "Color": [
+                    1.0,
+                    1.0,
+                    1.0
+                ],
+                "Intensity": 1.0
             },
+            "Entity": 281348820569904824,
             "TagComponent": {
-                "Tag": "Floor"
+                "Tag": "Directional Light"
             },
             "TransformComponent": {
                 "Position": [
                     0.0,
-                    -1.100000023841858,
+                    3.0,
                     0.0
                 ],
                 "Rotation": [
-                    0.0,
-                    0.0,
+                    -0.7853981852531433,
+                    1.0471975803375244,
                     0.0
                 ],
                 "Scale": [
-                    2.5,
-                    0.10000000149011612,
-                    2.5
+                    1.0,
+                    1.0,
+                    1.0
                 ]
             }
         },
@@ -53,34 +59,28 @@
             }
         },
         {
-            "DirectionalLightComponent": {
-                "CastShadows": true,
-                "Color": [
-                    1.0,
-                    1.0,
-                    1.0
-                ],
-                "Intensity": 1.0
+            "Entity": 3053164245461913293,
+            "ModelComponent": {
+                "ModelPath": "assets\\models\\primitives\\Cube.glb"
             },
-            "Entity": 281348820569904824,
             "TagComponent": {
-                "Tag": "Directional Light"
+                "Tag": "Floor"
             },
             "TransformComponent": {
                 "Position": [
                     0.0,
-                    3.0,
+                    -1.100000023841858,
                     0.0
                 ],
                 "Rotation": [
-                    -1.5707963705062866,
+                    0.0,
                     0.0,
                     0.0
                 ],
                 "Scale": [
-                    1.0,
-                    1.0,
-                    1.0
+                    2.5,
+                    0.10000000149011612,
+                    2.5
                 ]
             }
         }

@@ -126,8 +126,8 @@ namespace Myka
             ImGui::ColorEdit4("Color", glm::value_ptr(material->AlbedoColor));
             // TODO: AlbedoColorTexture DragDrop
 
-            ImGui::DragFloat("Metallic", &material->Metallic, 0.1f, 0.0f, 1.0f);
-            ImGui::DragFloat("Roughness", &material->Roughness, 0.1f, 0.0f, 1.0f);
+            ImGui::DragFloat("Metallic", &material->Metallic, 0.01f, 0.0f, 1.0f);
+            ImGui::DragFloat("Roughness", &material->Roughness, 0.01f, 0.0f, 1.0f);
             // TODO: MetallicRoughnessTexture DragDrop
 
             ImGui::Text("Child Node Count: %d", node.Children.size());
@@ -421,8 +421,8 @@ namespace Myka
                 ImGui::ColorEdit4("Color", glm::value_ptr(material->AlbedoColor));
                 // TODO: AlbedoColorTexture DragDrop
     
-                ImGui::DragFloat("Metallic", &material->Metallic, 0.1f, 0.0f, 1.0f);
-                ImGui::DragFloat("Roughness", &material->Roughness, 0.1f, 0.0f, 1.0f);
+                ImGui::DragFloat("Metallic", &material->Metallic, 0.01f, 0.0f, 1.0f);
+                ImGui::DragFloat("Roughness", &material->Roughness, 0.01f, 0.0f, 1.0f);
                 // TODO: MetallicRoughnessTexture DragDrop
             } });
 

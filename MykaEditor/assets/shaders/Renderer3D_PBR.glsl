@@ -15,6 +15,8 @@ layout(std140, binding = 1) uniform Entity {
     vec4 u_AlbedoColor;
     int u_AlbedoTexIndex;
     int u_MetRoughTexIndex;
+    float u_Metallic;
+    float u_Roughness;
     int u_EntityID;
 };
 
@@ -62,6 +64,8 @@ layout(std140, binding = 1) uniform Entity {
     vec4 u_AlbedoColor;
     int u_AlbedoTexIndex;
     int u_MetRoughTexIndex;
+    float u_Metallic;
+    float u_Roughness;
     int u_EntityID;
 };
 
@@ -137,8 +141,8 @@ void main() {
 
     // Metallic & Roughness
     vec4 mrTexture = texture(u_Textures[u_MetRoughTexIndex], v_Input.TexCoord);
-    float roughness = clamp(mrTexture.g, 0.05, 1.0);
-    float metallic = mrTexture.b;
+    float roughness = clamp(mrTexture.g * u_Metallic, 0.05, 1.0);
+    float metallic = clamp(mrTexture.b * u_Metallic, 0.0, 1.0);
 
     vec3 N = normalize(v_Input.Normal);
     vec3 V = normalize(u_Position - v_Input.WorldPos);

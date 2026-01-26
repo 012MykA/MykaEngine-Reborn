@@ -16,6 +16,7 @@ namespace Myka
         static constexpr uint32_t MaxSpotLights = MaxLights;
 
         Ref<Texture2D> WhiteTexture;
+        Ref<Texture2D> DefaultPBRTexture;
         std::array<Ref<Texture2D>, MaxTextureSlots> TextureSlots;
         uint32_t TextureSlotIndex = 1; // 0 = white texture
 
@@ -25,8 +26,10 @@ namespace Myka
             glm::vec4 AlbedoColor;
             int AlbedoTexIndex;
             int MetRoughTexIndex;
+            float Metallic;
+            float Roughness;
             int EntityID;
-            float _padding;
+            float _padding[3];
         } EntityBuffer;
         Ref<UniformBuffer> EntityUniformBuffer;
 
@@ -63,7 +66,12 @@ namespace Myka
         const uint32_t whiteTextureData = 0xFFFFFFFF;
         s_Data.WhiteTexture->SetData(&whiteTextureData, sizeof(uint32_t));
 
+        s_Data.DefaultPBRTexture = Texture2D::Create(TextureSpecification());
+        uint32_t pbrData = 0xFFFFFFFF;
+        s_Data.DefaultPBRTexture->SetData(&pbrData, sizeof(uint32_t));
+
         s_Data.TextureSlots[0] = s_Data.WhiteTexture;
+        s_Data.TextureSlots[1] = s_Data.DefaultPBRTexture;
 
         s_Data.MaterialShader = Shader::Create("assets/shaders/Renderer3D_PBR.glsl");
 
@@ -79,7 +87,7 @@ namespace Myka
         s_Data.CameraBuffer.ViewProjection = camera.GetViewProjection();
         s_Data.CameraBuffer.Position = camera.GetPosition();
         s_Data.CameraUniformBuffer->SetData(&s_Data.CameraBuffer, sizeof(Renderer3DData::CameraData));
-        
+
         std::memset(&s_Data.LightBuffer, 0, sizeof(Renderer3DData::LightBuffer));
 
         s_Data.LightBuffer.PointCount = std::min(static_cast<uint32_t>(lightData.PointLights.size()), Renderer3DData::MaxPointLights);
@@ -104,11 +112,11 @@ namespace Myka
     void Renderer3D::DrawMesh(const Ref<Mesh> &mesh, const Ref<Material> &material, const glm::mat4 &transform, int entityID)
     {
         int albedoSlot = 0;
-        int metRoughSlot = 0;
+        int metRoughSlot = 1;
 
         if (material->AlbedoColorTexture)
         {
-            albedoSlot = 1;
+            albedoSlot = 2;
             material->AlbedoColorTexture->Bind(albedoSlot);
         }
         else
@@ -118,18 +126,20 @@ namespace Myka
 
         if (material->MetallicRoughnessTexture)
         {
-            metRoughSlot = 2;
+            metRoughSlot = 3;
             material->MetallicRoughnessTexture->Bind(metRoughSlot);
         }
         else
         {
-            s_Data.WhiteTexture->Bind(0);
+            s_Data.DefaultPBRTexture->Bind(metRoughSlot);
         }
 
         s_Data.EntityBuffer.Transform = transform;
         s_Data.EntityBuffer.AlbedoColor = material->AlbedoColor;
         s_Data.EntityBuffer.AlbedoTexIndex = albedoSlot;
         s_Data.EntityBuffer.MetRoughTexIndex = metRoughSlot;
+        s_Data.EntityBuffer.Metallic = material->Metallic;
+        s_Data.EntityBuffer.Roughness = material->Roughness;
         s_Data.EntityBuffer.EntityID = entityID;
 
         s_Data.EntityUniformBuffer->SetData(&s_Data.EntityBuffer, sizeof(Renderer3DData::EntityData));

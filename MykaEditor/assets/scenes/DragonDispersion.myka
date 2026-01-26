@@ -1,6 +1,39 @@
 {
     "Entities": [
         {
+            "Entity": 17823868932357936651,
+            "PointLightComponent": {
+                "Color": [
+                    1.0,
+                    1.0,
+                    1.0
+                ],
+                "Falloff": 1.0,
+                "Intensity": 10.0,
+                "Radius": 10.0
+            },
+            "TagComponent": {
+                "Tag": "Light"
+            },
+            "TransformComponent": {
+                "Position": [
+                    0.11082346737384796,
+                    0.7415845394134521,
+                    1.7118433713912964
+                ],
+                "Rotation": [
+                    0.0,
+                    0.0,
+                    0.0
+                ],
+                "Scale": [
+                    1.0,
+                    1.0,
+                    1.0
+                ]
+            }
+        },
+        {
             "Entity": 13340601839224160069,
             "ModelComponent": {
                 "ModelPath": "assets\\models\\glb-demos\\DragonDispersion.glb"
