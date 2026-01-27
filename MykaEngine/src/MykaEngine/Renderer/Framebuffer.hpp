@@ -27,10 +27,10 @@ namespace Myka
         FramebufferTextureFormat TextureFormat = FramebufferTextureFormat::None;
     };
 
-    struct FramebufferAttachmeentSpecification
+    struct FramebufferAttachmentSpecification
     {
-        FramebufferAttachmeentSpecification() = default;
-        FramebufferAttachmeentSpecification(std::initializer_list<FramebufferTextureSpecification> attachments)
+        FramebufferAttachmentSpecification() = default;
+        FramebufferAttachmentSpecification(std::initializer_list<FramebufferTextureSpecification> attachments)
             : Attachments(attachments) {}
 
         std::vector<FramebufferTextureSpecification> Attachments;
@@ -39,7 +39,7 @@ namespace Myka
     struct FramebufferSpecification
     {
         uint32_t Width = 0, Height = 0;
-        FramebufferAttachmeentSpecification Attachments;
+        FramebufferAttachmentSpecification Attachments;
         uint32_t Samples = 1;
 
         bool SwapChainTarget = false;

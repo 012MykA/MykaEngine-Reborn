@@ -407,6 +407,18 @@ namespace Myka
 
         Renderer3D::BeginScene(camera, lightData);
 
+        // Skybox
+        {
+            auto view = m_Registry.view<SkyLightComponent>();
+            for (auto entity : view)
+            {
+                auto &slc = view.get<SkyLightComponent>(entity);
+
+                if (slc.EnvironmentMap && slc.EnvironmentMap->GetRendererID() != 0)
+                    Renderer3D::DrawSkybox(slc.EnvironmentMap, slc.Intensity);
+            }
+        }
+
         // Draw models
         {
             auto view = m_Registry.view<TransformComponent, ModelComponent>();

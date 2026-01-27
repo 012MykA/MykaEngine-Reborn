@@ -94,11 +94,12 @@ namespace Myka
 
     struct SkyLightComponent
     {
-        // Ref<TextureCube> EnvironmentMap;
         float Intensity = 1.0f;
+        std::filesystem::path SourcePath;
 
-        // Ref<TextureCube> IrradianceMap;
-        // Ref<TextureCube> PrefilterMap;
+        Ref<CubeTexture> EnvironmentMap;
+        Ref<CubeTexture> IrradianceMap;
+        Ref<CubeTexture> PrefilterMap;
 
         SkyLightComponent() = default;
         SkyLightComponent(const SkyLightComponent &) = default;
@@ -239,6 +240,7 @@ namespace Myka
     };
 
     using AllComponents = ComponentGroup<TransformComponent,
+                                         SkyLightComponent,
                                          PointLightComponent, DirectionalLightComponent, SpotLightComponent,
                                          MeshComponent, MaterialComponent, ModelComponent,
                                          SpriteRendererComponent, CircleRendererComponent,

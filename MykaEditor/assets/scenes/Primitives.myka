@@ -1,6 +1,33 @@
 {
     "Entities": [
         {
+            "Entity": 1027725575646675743,
+            "SkyLightComponent": {
+                "Intensity": 1.0,
+                "SourcePath": "assets\\skyboxes\\ocean\\skybox.hdr"
+            },
+            "TagComponent": {
+                "Tag": "Skybox"
+            },
+            "TransformComponent": {
+                "Position": [
+                    0.0,
+                    0.0,
+                    0.0
+                ],
+                "Rotation": [
+                    0.0,
+                    0.0,
+                    0.0
+                ],
+                "Scale": [
+                    1.0,
+                    1.0,
+                    1.0
+                ]
+            }
+        },
+        {
             "Entity": 12977658510199323562,
             "ModelComponent": {
                 "ModelPath": "assets/models/primitives/Ultra\\Torus.glb"

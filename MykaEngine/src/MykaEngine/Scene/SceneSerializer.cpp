@@ -1,6 +1,7 @@
 #include "mykapch.hpp"
 #include "SceneSerializer.hpp"
 #include "Components.hpp"
+#include "MykaEngine/Renderer/IBLBaker.hpp"
 
 #include <nlohmann/json.hpp>
 
@@ -9,12 +10,12 @@ namespace glm
     // Arbitrary types in nlohmann/json library: https://json.nlohmann.me/features/arbitrary_types
 
     // Vec2
-    inline void to_json(nlohmann::json &j, const glm::vec2 &v)
+    inline void to_json(nlohmann::json &j, const vec2 &v)
     {
         j = nlohmann::json::array({v.x, v.y});
     }
 
-    inline void from_json(const nlohmann::json &j, glm::vec2 &v)
+    inline void from_json(const nlohmann::json &j, vec2 &v)
     {
         if (!j.is_array() || j.size() != 2)
         {
@@ -26,12 +27,12 @@ namespace glm
     }
 
     // Vec3
-    inline void to_json(nlohmann::json &j, const glm::vec3 &v)
+    inline void to_json(nlohmann::json &j, const vec3 &v)
     {
         j = nlohmann::json::array({v.x, v.y, v.z});
     }
 
-    inline void from_json(const nlohmann::json &j, glm::vec3 &v)
+    inline void from_json(const nlohmann::json &j, vec3 &v)
     {
         if (!j.is_array() || j.size() != 3)
         {
@@ -44,12 +45,12 @@ namespace glm
     }
 
     // Vec4
-    inline void to_json(nlohmann::json &j, const glm::vec4 &v)
+    inline void to_json(nlohmann::json &j, const vec4 &v)
     {
         j = nlohmann::json::array({v.x, v.y, v.z, v.w});
     }
 
-    inline void from_json(const nlohmann::json &j, glm::vec4 &v)
+    inline void from_json(const nlohmann::json &j, vec4 &v)
     {
         if (!j.is_array() || j.size() != 4)
         {
@@ -191,6 +192,17 @@ namespace Myka
             e["SpotLightComponent"] = componentData;
         }
 
+        if (entity.HasComponent<SkyLightComponent>())
+        {
+            const auto &slc = entity.GetComponent<SkyLightComponent>();
+
+            json componentData;
+            componentData["Intensity"] = slc.Intensity;
+            componentData["SourcePath"] = slc.SourcePath;
+
+            e["SkyLightComponent"] = componentData;
+        }
+
         if (entity.HasComponent<ModelComponent>())
         {
             const auto &mc = entity.GetComponent<ModelComponent>();
@@ -209,7 +221,7 @@ namespace Myka
             const auto &src = entity.GetComponent<SpriteRendererComponent>();
             json componentData;
             if (src.Texture)
-                componentData["TexturePath"] = src.Texture->GetPath().generic_string();
+                componentData["TexturePath"] = src.Texture->GetPath();
             else
                 componentData["TexturePath"] = "";
 
@@ -317,7 +329,7 @@ namespace Myka
 
         if (!data.contains("Scene") || data["Scene"].is_null())
         {
-            MYKA_CORE_ERROR("Cannot DeserializeJSON: {0}", filepath.string());
+            MYKA_CORE_ERROR("Cannot DeserializeJSON: {0}", filepath.generic_string());
             return false;
         }
 
@@ -395,6 +407,29 @@ namespace Myka
                 slc.Range = spotLightComponentJson["Range"];
                 slc.InnerCutoff = spotLightComponentJson["InnerCutoff"];
                 slc.OuterCutoff = spotLightComponentJson["OuterCutoff"];
+            }
+
+            auto skyLightComponentJson = entity["SkyLightComponent"];
+            if (!skyLightComponentJson.is_null())
+            {
+                auto &slc = deserializedEntity.AddComponent<SkyLightComponent>();
+                slc.Intensity = skyLightComponentJson.value("Intensity", 1.0f);
+                slc.SourcePath = skyLightComponentJson.value("SourcePath", "");
+
+                if (!slc.SourcePath.empty())
+                {
+                    auto panorama = Texture2D::Create(slc.SourcePath);
+
+                    TextureSpecification spec;
+                    spec.Width = 1024;
+                    spec.Height = 1024;
+                    spec.Format = ImageFormat::RGBA32F;
+                    spec.GenerateMips = true;
+                    slc.EnvironmentMap = CubeTexture::Create(spec);
+
+                    IBLBaker::ConvertPanoramaToCubemap(panorama, slc.EnvironmentMap);
+                    // IBLBaker::CreateIrradianceMap(slc.EnvironmentMap, slc.IrradianceMap);
+                }
             }
 
             auto modelComponentJson = entity["ModelComponent"];

@@ -25,6 +25,66 @@
                     1.0
                 ]
             }
+        },
+        {
+            "Entity": 6640980264787853885,
+            "PointLightComponent": {
+                "Color": [
+                    1.0,
+                    1.0,
+                    1.0
+                ],
+                "Falloff": 1.0,
+                "Intensity": 10.0,
+                "Radius": 10.0
+            },
+            "TagComponent": {
+                "Tag": "Light"
+            },
+            "TransformComponent": {
+                "Position": [
+                    2.0,
+                    1.0,
+                    2.0
+                ],
+                "Rotation": [
+                    0.0,
+                    0.0,
+                    0.0
+                ],
+                "Scale": [
+                    1.0,
+                    1.0,
+                    1.0
+                ]
+            }
+        },
+        {
+            "Entity": 4954953100254645567,
+            "SkyLightComponent": {
+                "Intensity": 2.0999999046325684,
+                "SourcePath": "assets\\skyboxes\\ocean\\skybox.hdr"
+            },
+            "TagComponent": {
+                "Tag": "Skybox"
+            },
+            "TransformComponent": {
+                "Position": [
+                    0.0,
+                    0.0,
+                    0.0
+                ],
+                "Rotation": [
+                    0.0,
+                    0.0,
+                    0.0
+                ],
+                "Scale": [
+                    1.0,
+                    1.0,
+                    1.0
+                ]
+            }
         }
     ],
     "Scene": "Untilted"

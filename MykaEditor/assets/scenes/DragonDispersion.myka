@@ -9,7 +9,7 @@
                     1.0
                 ],
                 "Falloff": 1.0,
-                "Intensity": 10.0,
+                "Intensity": 0.0,
                 "Radius": 10.0
             },
             "TagComponent": {
@@ -46,6 +46,33 @@
                     0.0,
                     0.0,
                     -0.3280819058418274
+                ],
+                "Rotation": [
+                    0.0,
+                    0.0,
+                    0.0
+                ],
+                "Scale": [
+                    1.0,
+                    1.0,
+                    1.0
+                ]
+            }
+        },
+        {
+            "Entity": 14591733965049842375,
+            "SkyLightComponent": {
+                "Intensity": 1.0,
+                "SourcePath": "assets\\skyboxes\\ocean\\skybox.hdr"
+            },
+            "TagComponent": {
+                "Tag": "Skybox"
+            },
+            "TransformComponent": {
+                "Position": [
+                    0.0,
+                    0.0,
+                    0.0
                 ],
                 "Rotation": [
                     0.0,

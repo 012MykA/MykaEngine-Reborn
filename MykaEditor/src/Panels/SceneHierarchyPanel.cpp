@@ -5,6 +5,8 @@
 #include <imgui_internal.h>
 #include <glm/gtc/type_ptr.hpp>
 
+#include "MykaEngine/Renderer/IBLBaker.hpp"
+
 namespace Myka
 {
     template <typename T, typename UIFunction>
@@ -461,25 +463,27 @@ namespace Myka
                     component.OuterCutoff = component.InnerCutoff;
             } });
 
-        // DrawComponent<SkyLightComponent>("Skybox", entity, [](auto &component)
-        //                                  {
-        //     ImGui::DragFloat("Intensity", &component.Intensity, 0.1f, 0.0f, 10.0f);
+        DrawComponent<SkyLightComponent>("Skybox", entity, [](auto &component)
+                                         {
+            ImGui::DragFloat("Intensity", &component.Intensity, 0.1f, 0.0f, 10.0f);
 
-        //     DrawDragDropResource("HDR Panorama", component.EnvironmentMap, { ".hdr" }, 
-        //     [](const std::filesystem::path& path)
-        //     {
-        //         auto panorama = Texture2D::Create(path);
+            DrawDragDropResource("HDR Panorama", component.EnvironmentMap, { ".hdr" }, 
+            [&component](const std::filesystem::path& path)
+            {
+                auto panorama = Texture2D::Create(path);
                 
-        //         TextureSpecification spec;
-        //         spec.Width = 1024; spec.Height = 1024;
-        //         spec.Format = ImageFormat::RGBA32F;
-        //         spec.GenerateMips = true;
-        //         auto envMap = CubeTexture::Create(spec);
+                TextureSpecification spec;
+                spec.Width = 1024; spec.Height = 1024;
+                spec.Format = ImageFormat::RGBA32F;
+                spec.GenerateMips = true;
+                auto envMap = CubeTexture::Create(spec);
 
-        //         // IBLBaker::ConvertPanoramaToCubemap(panorama, envMap);
+                IBLBaker::ConvertPanoramaToCubemap(panorama, envMap);
+
+                component.SourcePath = path;
                 
-        //         return envMap;
-        //     }); });
+                return envMap;
+            }); });
 
         DrawComponent<MeshComponent>("Mesh", entity, [](auto &component)
                                      {

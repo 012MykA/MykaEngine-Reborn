@@ -21,7 +21,7 @@ namespace Myka
         uint32_t Width = 1;
         uint32_t Height = 1;
         ImageFormat Format = ImageFormat::RGBA8;
-        bool GenerateMips = true;
+        bool GenerateMips = false;
     };
 
     class Texture
@@ -35,8 +35,6 @@ namespace Myka
         virtual uint32_t GetHeight() const = 0;
         virtual uint32_t GetRendererID() const = 0;
 
-        virtual const std::filesystem::path &GetPath() const = 0;
-
         virtual void SetData(const void *data, uint32_t size) = 0;
 
         virtual void Bind(uint32_t slot = 0) const = 0;
@@ -49,5 +47,19 @@ namespace Myka
     public:
         static Ref<Texture2D> Create(const TextureSpecification &specification);
         static Ref<Texture2D> Create(const std::filesystem::path &path);
+
+        virtual const std::filesystem::path &GetPath() const = 0;
     };
+
+    class CubeTexture : public Texture
+    {
+    public:
+        static Ref<CubeTexture> Create(const TextureSpecification &specification);
+        static Ref<CubeTexture> Create(const std::vector<std::filesystem::path> &paths);
+
+        virtual const std::vector<std::filesystem::path> &GetPaths() const = 0;
+
+        virtual void GenerateMipmaps() = 0;
+    };
+
 } // namespace Myka

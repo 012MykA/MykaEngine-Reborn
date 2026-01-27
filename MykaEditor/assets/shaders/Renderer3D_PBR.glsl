@@ -6,7 +6,8 @@ layout(location = 1) in vec3 a_Normal;
 layout(location = 2) in vec2 a_TexCoord;
 
 layout(std140, binding = 0) uniform Camera {
-    mat4 u_ViewProjection;
+    mat4 u_View;
+    mat4 u_Projection;
     vec3 u_Position;
 };
 
@@ -36,7 +37,7 @@ void main() {
     v_Output.TexCoord = a_TexCoord;
     v_EntityID = u_EntityID;
 
-    gl_Position = u_ViewProjection * worldPos;
+    gl_Position = u_Projection * u_View * worldPos;
 }
 
 #type fragment
@@ -55,7 +56,8 @@ layout(location = 0) in VertexOutput v_Input;
 layout(location = 3) in flat int v_EntityID;
 
 layout(std140, binding = 0) uniform Camera {
-    mat4 u_ViewProjection;
+    mat4 u_View;
+    mat4 u_Projection;
     vec3 u_Position;
 };
 

@@ -15,6 +15,8 @@ namespace Myka
                 return GL_RGB;
             case ImageFormat::RGBA8:
                 return GL_RGBA;
+            case ImageFormat::RGBA32F:
+                return GL_RGBA;
             }
 
             MYKA_CORE_ASSERT(false);
@@ -29,6 +31,8 @@ namespace Myka
                 return GL_RGB8;
             case ImageFormat::RGBA8:
                 return GL_RGBA8;
+            case ImageFormat::RGBA32F:
+                return GL_RGBA32F;
             }
 
             MYKA_CORE_ASSERT(false);
@@ -56,50 +60,39 @@ namespace Myka
 
     OpenGLTexture2D::OpenGLTexture2D(const std::filesystem::path &path) : m_Path(path)
     {
-        MYKA_PROFILE_FUNCTION();
-
         int width, height, channels;
         stbi_set_flip_vertically_on_load(1);
-        stbi_uc *data = nullptr;
+
+        bool isHDR = stbi_is_hdr(path.string().c_str());
+        void *data = nullptr;
+
+        if (isHDR)
         {
-            MYKA_PROFILE_SCOPE("stbi_load - OpenGLTexture2D::OpenGLTexture2D(const std::string&)");
-            data = stbi_load(path.string().c_str(), &width, &height, &channels, 0);
+            data = stbi_loadf(path.string().c_str(), &width, &height, &channels, 4);
+            m_InternalFormat = GL_RGBA32F;
+            m_DataFormat = GL_RGBA;
         }
+        else
+        {
+            data = stbi_load(path.string().c_str(), &width, &height, &channels, 4);
+            m_InternalFormat = GL_RGBA8;
+            m_DataFormat = GL_RGBA;
+        }
+
         MYKA_CORE_ASSERT(data, "Failed to load image!");
         m_Specification.Width = width;
         m_Specification.Height = height;
 
-        GLenum internalFormat = 0, dataFormat = 0;
-        if (channels == 4)
-        {
-            internalFormat = GL_RGBA8;
-            dataFormat = GL_RGBA;
-        }
-        else if (channels == 3)
-        {
-            internalFormat = GL_RGB8;
-            dataFormat = GL_RGB;
-        }
-        else
-        {
-            MYKA_CORE_WARN("Texture has {0} channels, expected 4 (RGBA) for transparency", channels);
-        }
-
-        m_InternalFormat = internalFormat;
-        m_DataFormat = dataFormat;
-
-        MYKA_CORE_ASSERT(internalFormat && dataFormat, "Format not supported for image: {0}", path);
-
         glCreateTextures(GL_TEXTURE_2D, 1, &m_RendererID);
-        glTextureStorage2D(m_RendererID, 1, internalFormat, m_Specification.Width, m_Specification.Height);
+        glTextureStorage2D(m_RendererID, 1, m_InternalFormat, width, height);
 
         glTextureParameteri(m_RendererID, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
         glTextureParameteri(m_RendererID, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+        glTextureParameteri(m_RendererID, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+        glTextureParameteri(m_RendererID, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
 
-        glTextureParameteri(m_RendererID, GL_TEXTURE_WRAP_S, GL_REPEAT);
-        glTextureParameteri(m_RendererID, GL_TEXTURE_WRAP_T, GL_REPEAT);
-
-        glTextureSubImage2D(m_RendererID, 0, 0, 0, m_Specification.Width, m_Specification.Height, dataFormat, GL_UNSIGNED_BYTE, data);
+        GLenum type = isHDR ? GL_FLOAT : GL_UNSIGNED_BYTE;
+        glTextureSubImage2D(m_RendererID, 0, 0, 0, width, height, m_DataFormat, type, data);
 
         stbi_image_free(data);
     }
@@ -115,9 +108,11 @@ namespace Myka
     {
         MYKA_PROFILE_FUNCTION();
 
-        uint32_t bpc = m_DataFormat == GL_RGBA ? 4 : 3;
-        MYKA_CORE_ASSERT(size == m_Width * m_Height * bpc, "Data must be entire texture!");
-        glTextureSubImage2D(m_RendererID, 0, 0, 0, m_Specification.Width, m_Specification.Height, m_DataFormat, GL_UNSIGNED_BYTE, data);
+        uint32_t bytesPerChannel = (m_InternalFormat == GL_RGBA32F) ? 4 : 1;
+        MYKA_CORE_ASSERT(size == m_Specification.Width * m_Specification.Height * channels * bytesPerChannel, "Data must be entire texture!");
+
+        GLenum type = (m_InternalFormat == GL_RGBA32F) ? GL_FLOAT : GL_UNSIGNED_BYTE;
+        glTextureSubImage2D(m_RendererID, 0, 0, 0, m_Specification.Width, m_Specification.Height, m_DataFormat, type, data);
     }
 
     void OpenGLTexture2D::Bind(uint32_t slot) const

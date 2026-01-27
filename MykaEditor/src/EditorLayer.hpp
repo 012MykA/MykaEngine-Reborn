@@ -48,8 +48,13 @@ namespace Myka
         void UI_ToolBar();
 
     private:
-        Ref<Mesh> m_CubeMesh;     // TODO: remove
-        Ref<Material> m_Material; // TODO: remove
+        // TODO: remove
+        Ref<CubeTexture> m_EnvironmentMap;
+        Ref<CubeTexture> m_IrradianceMap;
+        Ref<CubeTexture> m_PrefilterMap;
+        Ref<Mesh> m_CubeMesh;     
+        Ref<Material> m_Material;
+        // TODO: remove
 
         Ref<Texture2D> m_IconPlay, m_IconSimulate, m_IconStop;
         Ref<Framebuffer> m_Framebuffer;

@@ -2,6 +2,8 @@
 
 #include "EditorCamera.hpp"
 #include "MykaEngine/Scene/Components.hpp"
+#include "UniformBuffer.hpp"
+#include "Shader.hpp"
 #include "Mesh.hpp"
 #include "Material.hpp"
 #include "Model.hpp"
@@ -56,8 +58,12 @@ namespace Myka
         static void EndScene();
 
         static void DrawMesh(const Ref<Mesh> &mesh, const Ref<Material> &material, const glm::mat4 &transform, int entityID = -1);
-
+        static void DrawSkybox(const Ref<CubeTexture> &skybox, float intensity);
         static void DrawModel(const Ref<Model> &model, const glm::mat4 &transform, int entityID = -1);
+
+        static Ref<UniformBuffer> GetCameraUniformBuffer();
+        static Ref<Shader> GetEquirectToCubeShader();
+        static void DrawCubeMesh();
 
         struct Statistics
         {

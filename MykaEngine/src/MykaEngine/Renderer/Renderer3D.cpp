@@ -20,6 +20,13 @@ namespace Myka
         std::array<Ref<Texture2D>, MaxTextureSlots> TextureSlots;
         uint32_t TextureSlotIndex = 1; // 0 = white texture
 
+        struct SkyboxSettings
+        {
+            float Intensity = 1.0f;
+            float _padding[3];
+        } SkyboxBuffer;
+        Ref<UniformBuffer> SkyboxUniformBuffer;
+
         struct EntityData
         {
             glm::mat4 Transform;
@@ -33,7 +40,11 @@ namespace Myka
         } EntityBuffer;
         Ref<UniformBuffer> EntityUniformBuffer;
 
-        Ref<Shader> MaterialShader;
+        Ref<Shader> PBRShader;
+        Ref<Shader> SkyboxShader;
+        Ref<Shader> EquirectToCubeShader;
+
+        Ref<Mesh> SkyboxMesh; // TODO: remove
 
         struct LightBufferData
         {
@@ -49,7 +60,8 @@ namespace Myka
 
         struct CameraData
         {
-            glm::mat4 ViewProjection;
+            glm::mat4 View;
+            glm::mat4 Projection;
             glm::vec3 Position;
             float _padding;
         } CameraBuffer;
@@ -70,21 +82,67 @@ namespace Myka
         uint32_t pbrData = 0xFFFFFFFF;
         s_Data.DefaultPBRTexture->SetData(&pbrData, sizeof(uint32_t));
 
+        std::vector<Vertex> cubeVertices = {
+            {{-0.5f, -0.5f, 0.5f}, {0.0f, 0.0f, 1.0f}, {0.0f, 0.0f}},
+            {{0.5f, -0.5f, 0.5f}, {0.0f, 0.0f, 1.0f}, {1.0f, 0.0f}},
+            {{0.5f, 0.5f, 0.5f}, {0.0f, 0.0f, 1.0f}, {1.0f, 1.0f}},
+            {{-0.5f, 0.5f, 0.5f}, {0.0f, 0.0f, 1.0f}, {0.0f, 1.0f}},
+
+            {{-0.5f, -0.5f, -0.5f}, {0.0f, 0.0f, -1.0f}, {1.0f, 0.0f}},
+            {{-0.5f, 0.5f, -0.5f}, {0.0f, 0.0f, -1.0f}, {1.0f, 1.0f}},
+            {{0.5f, 0.5f, -0.5f}, {0.0f, 0.0f, -1.0f}, {0.0f, 1.0f}},
+            {{0.5f, -0.5f, -0.5f}, {0.0f, 0.0f, -1.0f}, {0.0f, 0.0f}},
+
+            {{-0.5f, 0.5f, -0.5f}, {0.0f, 1.0f, 0.0f}, {0.0f, 1.0f}},
+            {{-0.5f, 0.5f, 0.5f}, {0.0f, 1.0f, 0.0f}, {0.0f, 0.0f}},
+            {{0.5f, 0.5f, 0.5f}, {0.0f, 1.0f, 0.0f}, {1.0f, 0.0f}},
+            {{0.5f, 0.5f, -0.5f}, {0.0f, 1.0f, 0.0f}, {1.0f, 1.0f}},
+
+            {{-0.5f, -0.5f, -0.5f}, {0.0f, -1.0f, 0.0f}, {1.0f, 1.0f}},
+            {{0.5f, -0.5f, -0.5f}, {0.0f, -1.0f, 0.0f}, {0.0f, 1.0f}},
+            {{0.5f, -0.5f, 0.5f}, {0.0f, -1.0f, 0.0f}, {0.0f, 0.0f}},
+            {{-0.5f, -0.5f, 0.5f}, {0.0f, -1.0f, 0.0f}, {1.0f, 0.0f}},
+
+            {{0.5f, -0.5f, -0.5f}, {1.0f, 0.0f, 0.0f}, {1.0f, 0.0f}},
+            {{0.5f, 0.5f, -0.5f}, {1.0f, 0.0f, 0.0f}, {1.0f, 1.0f}},
+            {{0.5f, 0.5f, 0.5f}, {1.0f, 0.0f, 0.0f}, {0.0f, 1.0f}},
+            {{0.5f, -0.5f, 0.5f}, {1.0f, 0.0f, 0.0f}, {0.0f, 0.0f}},
+
+            {{-0.5f, -0.5f, -0.5f}, {-1.0f, 0.0f, 0.0f}, {0.0f, 0.0f}},
+            {{-0.5f, -0.5f, 0.5f}, {-1.0f, 0.0f, 0.0f}, {1.0f, 0.0f}},
+            {{-0.5f, 0.5f, 0.5f}, {-1.0f, 0.0f, 0.0f}, {1.0f, 1.0f}},
+            {{-0.5f, 0.5f, -0.5f}, {-1.0f, 0.0f, 0.0f}, {0.0f, 1.0f}},
+        };
+
+        std::vector<uint32_t> cubeIndices = {
+            0, 1, 2, 2, 3, 0,
+            4, 5, 6, 6, 7, 4,
+            8, 9, 10, 10, 11, 8,
+            12, 13, 14, 14, 15, 12,
+            16, 17, 18, 18, 19, 16,
+            20, 21, 22, 22, 23, 20};
+
+        s_Data.SkyboxMesh = CreateRef<Mesh>(cubeVertices, cubeIndices);
+
         s_Data.TextureSlots[0] = s_Data.WhiteTexture;
         s_Data.TextureSlots[1] = s_Data.DefaultPBRTexture;
 
-        s_Data.MaterialShader = Shader::Create("assets/shaders/Renderer3D_PBR.glsl");
+        s_Data.PBRShader = Shader::Create("assets/shaders/Renderer3D_PBR.glsl");
+        s_Data.SkyboxShader = Shader::Create("assets/shaders/Renderer3D_Skybox.glsl");
+        s_Data.EquirectToCubeShader = Shader::Create("assets/shaders/IBLBaker_EquirectToCube.glsl");
 
         s_Data.CameraUniformBuffer = UniformBuffer::Create(sizeof(Renderer3DData::CameraData), 0);
         s_Data.EntityUniformBuffer = UniformBuffer::Create(sizeof(Renderer3DData::EntityData), 1);
-        s_Data.LightUniformBuffer = UniformBuffer::Create(sizeof(Renderer3DData::LightBuffer), 2);
+        s_Data.LightUniformBuffer = UniformBuffer::Create(sizeof(Renderer3DData::LightBufferData), 2);
+        s_Data.SkyboxUniformBuffer = UniformBuffer::Create(sizeof(Renderer3DData::SkyboxSettings), 3);
     }
 
     void Renderer3D::Shutdown() {}
 
     void Renderer3D::BeginScene(const EditorCamera &camera, const SceneLightData &lightData)
     {
-        s_Data.CameraBuffer.ViewProjection = camera.GetViewProjection();
+        s_Data.CameraBuffer.View = camera.GetViewMatrix();
+        s_Data.CameraBuffer.Projection = camera.GetProjection();
         s_Data.CameraBuffer.Position = camera.GetPosition();
         s_Data.CameraUniformBuffer->SetData(&s_Data.CameraBuffer, sizeof(Renderer3DData::CameraData));
 
@@ -107,6 +165,28 @@ namespace Myka
 
     void Renderer3D::EndScene()
     {
+    }
+
+#include <glad/glad.h> // TODO: remove
+    void Renderer3D::DrawSkybox(const Ref<CubeTexture> &skybox, float intensity)
+    {
+        if (!skybox)
+            return;
+
+        glDisable(GL_CULL_FACE);
+
+        glDepthFunc(GL_LEQUAL);
+
+        s_Data.SkyboxShader->Bind();
+        s_Data.SkyboxBuffer.Intensity = intensity;
+        s_Data.SkyboxUniformBuffer->SetData(&s_Data.SkyboxBuffer, sizeof(Renderer3DData::SkyboxSettings));
+
+        skybox->Bind(31);
+
+        Renderer3D::DrawCubeMesh();
+
+        glDepthFunc(GL_LESS);
+        glEnable(GL_CULL_FACE);
     }
 
     void Renderer3D::DrawMesh(const Ref<Mesh> &mesh, const Ref<Material> &material, const glm::mat4 &transform, int entityID)
@@ -144,7 +224,7 @@ namespace Myka
 
         s_Data.EntityUniformBuffer->SetData(&s_Data.EntityBuffer, sizeof(Renderer3DData::EntityData));
 
-        s_Data.MaterialShader->Bind();
+        s_Data.PBRShader->Bind();
         RenderCommand::DrawIndexed(mesh->GetVertexArray(), mesh->GetIndexCount());
 
         s_Data.Stats.DrawCalls++;
@@ -162,6 +242,23 @@ namespace Myka
         }
 
         s_Data.Stats.ModelsCount++;
+    }
+
+    void Renderer3D::DrawCubeMesh()
+    {
+        RenderCommand::DrawIndexed(s_Data.SkyboxMesh->GetVertexArray(), s_Data.SkyboxMesh->GetIndexCount());
+
+        s_Data.Stats.DrawCalls++;
+    }
+
+    Ref<UniformBuffer> Renderer3D::GetCameraUniformBuffer()
+    {
+        return s_Data.CameraUniformBuffer;
+    }
+
+    Ref<Shader> Renderer3D::GetEquirectToCubeShader()
+    {
+        return s_Data.EquirectToCubeShader;
     }
 
     void Renderer3D::ResetStats()
