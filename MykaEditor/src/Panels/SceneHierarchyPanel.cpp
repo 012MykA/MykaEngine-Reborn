@@ -50,6 +50,48 @@ namespace Myka
         }
     }
 
+    template <typename T, typename F>
+    static void DrawDragDropResource(const std::string &name,
+                                     T &componentField,
+                                     std::initializer_list<std::string> validExtensions,
+                                     F &&createFunc)
+    {
+        ImGui::Button(name.c_str(), ImVec2(100.0f, 0.0f));
+        if (ImGui::BeginDragDropTarget())
+        {
+            if (const ImGuiPayload *payload = ImGui::AcceptDragDropPayload("CONTENT_BROWSER_ITEM"))
+            {
+                const wchar_t *path = static_cast<const wchar_t *>(payload->Data);
+                std::filesystem::path resourcePath(path);
+                std::string ext = resourcePath.extension().string();
+
+                bool isValid = false;
+                for (const auto &validExt : validExtensions)
+                {
+                    if (ext == validExt)
+                    {
+                        isValid = true;
+                        break;
+                    }
+                }
+
+                if (isValid)
+                {
+                    auto newResource = createFunc(resourcePath);
+                    componentField = newResource;
+                }
+                else
+                {
+                    std::string expected;
+                    for (auto v : validExtensions)
+                        expected += v + " ";
+                    MYKA_CORE_WARN("Invalid format: {0}. Expected: {1}", ext, expected);
+                }
+            }
+            ImGui::EndDragDropTarget();
+        }
+    }
+
     static void DrawVec3Control(const std::string &label, glm::vec3 &values, float resetValue = 0.0f, float columnWidth = 100.0f)
     {
         ImGuiIO &io = ImGui::GetIO();
@@ -251,7 +293,9 @@ namespace Myka
 
         if (ImGui::BeginPopup("Add Component"))
         {
-            if (!m_SelectionContext.HasComponent<PointLightComponent>())
+            if (!m_SelectionContext.HasComponent<PointLightComponent>() &&
+                !m_SelectionContext.HasComponent<DirectionalLightComponent>() &&
+                !m_SelectionContext.HasComponent<SpotLightComponent>())
             {
                 if (ImGui::BeginMenu("Light"))
                 {
@@ -274,6 +318,17 @@ namespace Myka
                     ImGui::EndMenu();
                 }
             }
+
+            if (!m_SelectionContext.HasComponent<SkyLightComponent>())
+            {
+                if (ImGui::MenuItem("Skybox"))
+                {
+                    m_SelectionContext.AddComponent<SkyLightComponent>();
+                    ImGui::CloseCurrentPopup();
+                }
+            }
+
+            ImGui::Separator();
 
             if (!m_SelectionContext.HasComponent<MeshComponent>())
             {
@@ -406,6 +461,26 @@ namespace Myka
                     component.OuterCutoff = component.InnerCutoff;
             } });
 
+        // DrawComponent<SkyLightComponent>("Skybox", entity, [](auto &component)
+        //                                  {
+        //     ImGui::DragFloat("Intensity", &component.Intensity, 0.1f, 0.0f, 10.0f);
+
+        //     DrawDragDropResource("HDR Panorama", component.EnvironmentMap, { ".hdr" }, 
+        //     [](const std::filesystem::path& path)
+        //     {
+        //         auto panorama = Texture2D::Create(path);
+                
+        //         TextureSpecification spec;
+        //         spec.Width = 1024; spec.Height = 1024;
+        //         spec.Format = ImageFormat::RGBA32F;
+        //         spec.GenerateMips = true;
+        //         auto envMap = CubeTexture::Create(spec);
+
+        //         // IBLBaker::ConvertPanoramaToCubemap(panorama, envMap);
+                
+        //         return envMap;
+        //     }); });
+
         DrawComponent<MeshComponent>("Mesh", entity, [](auto &component)
                                      {
             if (component._Mesh)
@@ -428,22 +503,7 @@ namespace Myka
 
         DrawComponent<ModelComponent>("Model", entity, [](auto &component)
                                       {
-            ImGui::Button("Model", ImVec2(100.0f, 0.0f));
-            if (ImGui::BeginDragDropTarget())
-            {
-                if (const ImGuiPayload *payload = ImGui::AcceptDragDropPayload("CONTENT_BROWSER_ITEM"))
-                {
-                    const wchar_t *path = (const wchar_t *)payload->Data;
-                    std::filesystem::path modelPath(path);
-                    if (modelPath.extension().string() != ".gltf" && modelPath.extension().string() != ".glb")
-                    {
-                        MYKA_CORE_WARN("Could not load model: {0}. Supported formats: .gltf, .glb", modelPath.filename().string());
-                        return;
-                    }
-                    component._Model = Model::Create(modelPath);
-                }
-                ImGui::EndDragDropTarget();
-            }
+            DrawDragDropResource("Model", component._Model, {".gltf", ".glb"}, [](auto p){ return Model::Create(p); });
 
             if (component._Model)
             {
@@ -465,20 +525,9 @@ namespace Myka
 
         DrawComponent<SpriteRendererComponent>("Sprite Renderer", entity, [](auto &component)
                                                {
-            ImGui::Button("Texture", ImVec2(100.0f, 0.0f));
-            if (ImGui::BeginDragDropTarget())
-            {
-                if (const ImGuiPayload *payload = ImGui::AcceptDragDropPayload("CONTENT_BROWSER_ITEM"))
-                {
-                    const wchar_t *path = (const wchar_t *)payload->Data;
-                    std::filesystem::path texturePath(path);
-                    component.Texture = Texture2D::Create(texturePath.string());
-                }
+            DrawDragDropResource("Texture", component.Texture, {".hdr", ".png", ".jpg", "jpeg"}, [](auto p){ return Texture2D::Create(p); });
 
-                ImGui::EndDragDropTarget();
-            }
-
-            ImGui::ColorEdit4("Color", glm::value_ptr(component.Color));            
+            ImGui::ColorEdit4("Color", glm::value_ptr(component.Color));
 
             ImGui::DragFloat("Tiling Factor", &component.TilingFactor, 0.1f, 1.0f, 100.0f); });
 
