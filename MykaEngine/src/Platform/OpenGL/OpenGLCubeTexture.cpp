@@ -137,10 +137,12 @@ namespace Myka
 
         MYKA_CORE_ASSERT(size == faceSize * 6, "OpenGLCubeTexture::SetData: data must contain 6 faces!")
 
+        GLenum dataType = (m_InternalFormat == GL_RGBA32F || m_InternalFormat == GL_RGB32F) ? GL_FLOAT : GL_UNSIGNED_BYTE;
+
         for (uint32_t i = 0; i < 6; ++i)
         {
             const unsigned char *faceData = static_cast<const unsigned char *>(data) + (i * faceSize);
-            glTextureSubImage3D(m_RendererID, 0, 0, 0, i, m_Specification.Width, m_Specification.Height, 1, m_DataFormat, GL_UNSIGNED_BYTE, faceData);
+            glTextureSubImage3D(m_RendererID, 0, 0, 0, i, m_Specification.Width, m_Specification.Height, 1, m_DataFormat, dataType, faceData);
         }
     }
 
