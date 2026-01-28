@@ -27,30 +27,22 @@ namespace Myka
             glm::lookAt(glm::vec3(0.0f), glm::vec3(0.0f, 0.0f, -1.0f), glm::vec3(0.0f, -1.0f, 0.0f)),
         };
 
-        // Настройка Framebuffer (нужно убедиться, что ваша реализация FB поддерживает привязку Cubemap)
         FramebufferSpecification fbSpec;
         fbSpec.Width = size;
         fbSpec.Height = size;
-        fbSpec.Attachments = {FramebufferTextureFormat::RGBA8}; // или RGBA32F для HDR
+        fbSpec.Attachments = {FramebufferTextureFormat::RGBA32F};
         Ref<Framebuffer> fb = Framebuffer::Create(fbSpec);
 
         shader->Bind();
         pano->Bind(0);
-
-        RenderCommand::SetViewport(0, 0, size, size);
         fb->Bind();
 
         for (uint32_t i = 0; i < 6; ++i)
         {
-            // Если в Framebuffer этого нет, используйте glFramebufferTexture2D напрямую:
-            glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0,
-                                   GL_TEXTURE_CUBE_MAP_POSITIVE_X + i, cube->GetRendererID(), 0);
+            fb->BindColorAttachmentToTexture(0, cube->GetRendererID(), i);
 
             RenderCommand::Clear();
-
-            // Обновляем CameraUniformBuffer (UBO) для шейдера
             Renderer3D::SetCameraMatrices(captureProjection, captureViews[i]);
-
             Renderer3D::DrawCubeMesh();
         }
 

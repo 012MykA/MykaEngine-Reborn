@@ -144,6 +144,12 @@ namespace Myka
                 case FramebufferTextureFormat::RGBA8:
                     Utils::AttachColorTexture(m_ColorAttachments[i], m_Specification.Samples, GL_RGBA8, GL_RGBA, m_Specification.Width, m_Specification.Height, i);
                     break;
+                case FramebufferTextureFormat::RGBA16F:
+                    Utils::AttachColorTexture(m_ColorAttachments[i], m_Specification.Samples, GL_RGBA16F, GL_RGBA, m_Specification.Width, m_Specification.Height, i);
+                    break;
+                case FramebufferTextureFormat::RGBA32F:
+                    Utils::AttachColorTexture(m_ColorAttachments[i], m_Specification.Samples, GL_RGBA32F, GL_RGBA, m_Specification.Width, m_Specification.Height, i);
+                    break;
                 case FramebufferTextureFormat::RED_INTEGER:
                     Utils::AttachColorTexture(m_ColorAttachments[i], m_Specification.Samples, GL_R32I, GL_RED_INTEGER, m_Specification.Width, m_Specification.Height, i);
                     break;
@@ -213,6 +219,14 @@ namespace Myka
         int pixelData;
         glReadPixels(x, y, 1, 1, GL_RED_INTEGER, GL_INT, &pixelData);
         return pixelData;
+    }
+
+    void OpenGLFramebuffer::BindColorAttachmentToTexture(uint32_t attachmentIndex, uint32_t textureID, uint32_t faceIndex)
+    {
+        glFramebufferTexture2D(GL_FRAMEBUFFER,
+                               GL_COLOR_ATTACHMENT0 + attachmentIndex,
+                               GL_TEXTURE_CUBE_MAP_POSITIVE_X + faceIndex,
+                               textureID, 0);
     }
 
     void OpenGLFramebuffer::ClearAttachment(uint32_t attachmentIndex, int value)

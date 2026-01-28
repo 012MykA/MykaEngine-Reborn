@@ -17,6 +17,7 @@ namespace Myka
 
         virtual void Resize(uint32_t width, uint32_t height) override;
         virtual int ReadPixel(uint32_t attachmentIndex, int x, int y) override;
+        virtual void BindColorAttachmentToTexture(uint32_t attachmentIndex, uint32_t textureID, uint32_t faceIndex = 0) override;
 
         virtual void ClearAttachment(uint32_t attachmentIndex, int value) override;
 
