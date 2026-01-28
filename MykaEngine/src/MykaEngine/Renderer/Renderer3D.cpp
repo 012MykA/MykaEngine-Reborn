@@ -5,8 +5,11 @@
 #include "UniformBuffer.hpp"
 #include "RenderCommand.hpp"
 
+#define GLM_ENABLE_EXPERIMENTAL
+#include <glm/gtx/matrix_decompose.hpp>
+
 namespace Myka
-{
+{    
     struct Renderer3DData
     {
         static constexpr uint32_t MaxTextureSlots = 32ui32;
@@ -44,7 +47,7 @@ namespace Myka
         Ref<Shader> SkyboxShader;
         Ref<Shader> EquirectToCubeShader;
 
-        Ref<Mesh> SkyboxMesh; // TODO: remove
+        Ref<Mesh> SkyboxMesh;
 
         struct LightBufferData
         {
@@ -71,6 +74,25 @@ namespace Myka
     };
 
     static Renderer3DData s_Data;
+
+    inline static void SetLightUniformBuffer(const Renderer3D::SceneLightData &lightData)
+    {
+        std::memset(&s_Data.LightBuffer, 0, sizeof(Renderer3DData::LightBuffer));
+
+        s_Data.LightBuffer.PointCount = std::min(static_cast<uint32_t>(lightData.PointLights.size()), Renderer3DData::MaxPointLights);
+        for (uint32_t i = 0; i < s_Data.LightBuffer.PointCount; ++i)
+            s_Data.LightBuffer.PointLights[i] = lightData.PointLights[i];
+
+        s_Data.LightBuffer.DirectionalCount = std::min(static_cast<uint32_t>(lightData.DirectionalLights.size()), Renderer3DData::MaxDirectionalLights);
+        for (uint32_t i = 0; i < s_Data.LightBuffer.DirectionalCount; ++i)
+            s_Data.LightBuffer.DirectionalLights[i] = lightData.DirectionalLights[i];
+
+        s_Data.LightBuffer.SpotCount = std::min(static_cast<uint32_t>(lightData.SpotLights.size()), Renderer3DData::MaxSpotLights);
+        for (uint32_t i = 0; i < s_Data.LightBuffer.SpotCount; ++i)
+            s_Data.LightBuffer.SpotLights[i] = lightData.SpotLights[i];
+
+        s_Data.LightUniformBuffer->SetData(&s_Data.LightBuffer, sizeof(Renderer3DData::LightBuffer));
+    }
 
     void Renderer3D::Init()
     {
@@ -145,22 +167,16 @@ namespace Myka
         s_Data.CameraBuffer.Projection = camera.GetProjection();
         s_Data.CameraBuffer.Position = camera.GetPosition();
         s_Data.CameraUniformBuffer->SetData(&s_Data.CameraBuffer, sizeof(Renderer3DData::CameraData));
+        SetLightUniformBuffer(lightData);
+    }
 
-        std::memset(&s_Data.LightBuffer, 0, sizeof(Renderer3DData::LightBuffer));
-
-        s_Data.LightBuffer.PointCount = std::min(static_cast<uint32_t>(lightData.PointLights.size()), Renderer3DData::MaxPointLights);
-        for (uint32_t i = 0; i < s_Data.LightBuffer.PointCount; ++i)
-            s_Data.LightBuffer.PointLights[i] = lightData.PointLights[i];
-
-        s_Data.LightBuffer.DirectionalCount = std::min(static_cast<uint32_t>(lightData.DirectionalLights.size()), Renderer3DData::MaxDirectionalLights);
-        for (uint32_t i = 0; i < s_Data.LightBuffer.DirectionalCount; ++i)
-            s_Data.LightBuffer.DirectionalLights[i] = lightData.DirectionalLights[i];
-
-        s_Data.LightBuffer.SpotCount = std::min(static_cast<uint32_t>(lightData.SpotLights.size()), Renderer3DData::MaxSpotLights);
-        for (uint32_t i = 0; i < s_Data.LightBuffer.SpotCount; ++i)
-            s_Data.LightBuffer.SpotLights[i] = lightData.SpotLights[i];
-
-        s_Data.LightUniformBuffer->SetData(&s_Data.LightBuffer, sizeof(Renderer3DData::LightBuffer));
+    void Renderer3D::BeginScene(const Camera &camera, const glm::mat4 &transform, const SceneLightData &lightData)
+    {
+        s_Data.CameraBuffer.View = glm::inverse(transform);
+        s_Data.CameraBuffer.Projection = camera.GetProjection();
+        s_Data.CameraBuffer.Position = glm::vec3(transform[3]);
+        s_Data.CameraUniformBuffer->SetData(&s_Data.CameraBuffer, sizeof(Renderer3DData::CameraData));
+        SetLightUniformBuffer(lightData);
     }
 
     void Renderer3D::EndScene()

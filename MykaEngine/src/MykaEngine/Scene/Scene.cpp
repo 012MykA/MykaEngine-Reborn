@@ -156,7 +156,7 @@ namespace Myka
             }
         }
 
-        // Render 2D
+        // Rendering
         Camera *mainCamera = nullptr;
         glm::mat4 cameraTransform;
 
@@ -175,34 +175,111 @@ namespace Myka
 
         if (mainCamera)
         {
-            Renderer2D::BeginScene(mainCamera->GetProjection(), cameraTransform);
+            Renderer3D::SceneLightData lightData;
 
-            // Draw sprites
+            auto pointView = m_Registry.view<TransformComponent, PointLightComponent>();
+            for (auto entity : pointView)
             {
-                auto view = m_Registry.view<TransformComponent, SpriteRendererComponent>();
+                auto [tc, plc] = pointView.get<TransformComponent, PointLightComponent>(entity);
+                lightData.PointLights.push_back({tc.Position, plc.Intensity, plc.Color, plc.Radius, plc.Falloff});
+            }
+
+            auto dirView = m_Registry.view<TransformComponent, DirectionalLightComponent>();
+            for (auto entity : dirView)
+            {
+                auto [tc, dlc] = dirView.get<TransformComponent, DirectionalLightComponent>(entity);
+
+                glm::vec3 direction = glm::normalize(glm::quat(tc.Rotation) * glm::vec3(0.0f, 0.0f, -1.0f));
+
+                lightData.DirectionalLights.push_back({direction, dlc.Intensity, dlc.Color, dlc.CastShadows ? 1 : 0});
+            }
+
+            auto spotView = m_Registry.view<TransformComponent, SpotLightComponent>();
+            for (auto entity : spotView)
+            {
+                auto [tc, slc] = spotView.get<TransformComponent, SpotLightComponent>(entity);
+
+                glm::vec3 direction = glm::normalize(glm::quat(tc.Rotation) * glm::vec3(0.0f, 0.0f, -1.0f));
+
+                lightData.SpotLights.push_back({
+                    tc.Position,
+                    slc.Intensity,
+                    direction,
+                    slc.Range,
+                    slc.Color,
+                    glm::cos(glm::radians(slc.InnerCutoff)),
+                    glm::cos(glm::radians(slc.OuterCutoff)),
+                });
+            }
+
+            // Renderer3D
+            Renderer3D::BeginScene(mainCamera->GetProjection(), cameraTransform, lightData);
+
+            {   // Skybox
+                auto view = m_Registry.view<SkyLightComponent>();
                 for (auto entity : view)
                 {
-                    auto &transform = view.get<TransformComponent>(entity);
-                    auto &sprite = view.get<SpriteRendererComponent>(entity);
+                    auto &slc = view.get<SkyLightComponent>(entity);
 
-                    Renderer2D::DrawSprite(transform.GetTransform(), sprite, static_cast<int>(entity));
+                    if (slc.EnvironmentMap && slc.EnvironmentMap->GetRendererID() != 0)
+                        Renderer3D::DrawSkybox(slc.EnvironmentMap, slc.Intensity);
                 }
             }
 
-            // Draw circles
-            {
-                auto view = m_Registry.view<TransformComponent, CircleRendererComponent>();
+            {   // Draw models
+                auto view = m_Registry.view<TransformComponent, ModelComponent>();
                 for (auto entity : view)
                 {
-                    auto &transform = view.get<TransformComponent>(entity);
-                    auto &circle = view.get<CircleRendererComponent>(entity);
+                    auto &tc = view.get<TransformComponent>(entity);
+                    auto &model = view.get<ModelComponent>(entity);
 
-                    Renderer2D::DrawCircle(transform.GetTransform(), circle.Color, circle.Thickness, circle.Fade, static_cast<int>(entity));
+                    if (model._Model)
+                        Renderer3D::DrawModel(model._Model, tc.GetTransform(), static_cast<int>(entity));
                 }
             }
 
-            Renderer2D::EndScene();
+            {   // Draw meshes
+                auto view = m_Registry.view<TransformComponent, MeshComponent, MaterialComponent>();
+                for (auto entity : view)
+                {
+                    auto &tc = view.get<TransformComponent>(entity);
+                    auto &mesh = view.get<MeshComponent>(entity)._Mesh;
+                    auto &material = view.get<MaterialComponent>(entity)._Material;
+
+                    if (mesh && material)
+                        Renderer3D::DrawMesh(mesh, material, tc.GetTransform(), static_cast<int>(entity));
+                }
+            }
+
+            Renderer3D::EndScene();
         }
+
+        // Renderer2D
+        Renderer2D::BeginScene(mainCamera->GetProjection(), cameraTransform);
+
+        {   // Draw sprites
+            auto view = m_Registry.view<TransformComponent, SpriteRendererComponent>();
+            for (auto entity : view)
+            {
+                auto &transform = view.get<TransformComponent>(entity);
+                auto &sprite = view.get<SpriteRendererComponent>(entity);
+
+                Renderer2D::DrawSprite(transform.GetTransform(), sprite, static_cast<int>(entity));
+            }
+        }
+
+        {   // Draw circles
+            auto view = m_Registry.view<TransformComponent, CircleRendererComponent>();
+            for (auto entity : view)
+            {
+                auto &transform = view.get<TransformComponent>(entity);
+                auto &circle = view.get<CircleRendererComponent>(entity);
+
+                Renderer2D::DrawCircle(transform.GetTransform(), circle.Color, circle.Thickness, circle.Fade, static_cast<int>(entity));
+            }
+        }
+
+        Renderer2D::EndScene();
     }
 
     void Scene::OnSimulationStart()

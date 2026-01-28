@@ -55,13 +55,14 @@ namespace Myka
         static void Shutdown();
 
         static void BeginScene(const EditorCamera &camera, const SceneLightData &lightData);
+        static void BeginScene(const Camera &camera, const glm::mat4 &transform, const SceneLightData &lightData);
         static void EndScene();
 
         static void DrawMesh(const Ref<Mesh> &mesh, const Ref<Material> &material, const glm::mat4 &transform, int entityID = -1);
         static void DrawSkybox(const Ref<CubeTexture> &skybox, float intensity);
         static void DrawModel(const Ref<Model> &model, const glm::mat4 &transform, int entityID = -1);
 
-        static void SetCameraMatrices(const glm::mat4& proj, const glm::mat4& view);
+        static void SetCameraMatrices(const glm::mat4 &proj, const glm::mat4 &view);
         static Ref<Shader> GetEquirectToCubeShader();
         static void DrawCubeMesh();
 

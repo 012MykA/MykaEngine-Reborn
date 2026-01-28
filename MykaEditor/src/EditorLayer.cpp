@@ -26,6 +26,7 @@ namespace Myka
         fbSpec.Width = 1280;
         fbSpec.Height = 720;
         m_Framebuffer = Framebuffer::Create(fbSpec);
+        // RenderCommand::SetClearColor({0.1f, 0.1f, 0.1f, 1.0f});
 
         m_EditorScene = CreateRef<Scene>();
         m_ActiveScene = m_EditorScene;
@@ -107,7 +108,6 @@ namespace Myka
         if (!m_ActiveScene)
         {
             m_Framebuffer->Bind();
-            RenderCommand::SetClearColor({0.1f, 0.1f, 0.1f, 1.0f});
             RenderCommand::Clear();
             m_Framebuffer->Unbind();
             return;
@@ -117,7 +117,6 @@ namespace Myka
         Renderer2D::ResetStats();
         Renderer3D::ResetStats();
         m_Framebuffer->Bind();
-        RenderCommand::SetClearColor({0.1f, 0.1f, 0.1f, 1.0f});
         RenderCommand::Clear();
 
         m_Framebuffer->ClearAttachment(1, -1);
@@ -127,14 +126,12 @@ namespace Myka
         case SceneState::Edit:
         {
             m_EditorCamera.OnUpdate(ts);
-
             m_ActiveScene->OnUpdateEditor(ts, m_EditorCamera);
             break;
         }
         case SceneState::Simulate:
         {
             m_EditorCamera.OnUpdate(ts);
-
             m_ActiveScene->OnUpdateSimulation(ts, m_EditorCamera);
             break;
         }
