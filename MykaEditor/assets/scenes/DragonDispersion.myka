@@ -1,28 +1,51 @@
 {
     "Entities": [
         {
-            "CameraComponent": {
-                "Camera": {
-                    "OrthographicFar": 1.0,
-                    "OrthographicNear": -1.0,
-                    "OrthographicSize": 10.0,
-                    "PerspectiveFOV": 0.7853981852531433,
-                    "PerspectiveFar": 1000.0,
-                    "PerspectiveNear": 0.009999999776482582,
-                    "ProjectionType": 0
-                },
-                "FixedAspectRatio": false,
-                "Primary": true
+            "Entity": 17823868932357936651,
+            "PointLightComponent": {
+                "Color": [
+                    1.0,
+                    1.0,
+                    1.0
+                ],
+                "Falloff": 1.0,
+                "Intensity": 20.0,
+                "Radius": 10.0
             },
-            "Entity": 3109926998377858897,
             "TagComponent": {
-                "Tag": "Camera"
+                "Tag": "Light"
+            },
+            "TransformComponent": {
+                "Position": [
+                    -0.2753587067127228,
+                    0.9691141843795776,
+                    1.5355168581008911
+                ],
+                "Rotation": [
+                    0.0,
+                    0.0,
+                    0.0
+                ],
+                "Scale": [
+                    1.0,
+                    1.0,
+                    1.0
+                ]
+            }
+        },
+        {
+            "Entity": 13340601839224160069,
+            "ModelComponent": {
+                "ModelPath": "assets\\models\\glb-demos\\DragonDispersion.glb"
+            },
+            "TagComponent": {
+                "Tag": "Dragon Disparation"
             },
             "TransformComponent": {
                 "Position": [
                     0.0,
-                    0.1526240110397339,
-                    7.600604057312012
+                    0.0,
+                    -0.3280819058418274
                 ],
                 "Rotation": [
                     0.0,
@@ -64,51 +87,28 @@
             }
         },
         {
-            "Entity": 13340601839224160069,
-            "ModelComponent": {
-                "ModelPath": "assets\\models\\glb-demos\\DragonDispersion.glb"
+            "CameraComponent": {
+                "Camera": {
+                    "OrthographicFar": 1.0,
+                    "OrthographicNear": -1.0,
+                    "OrthographicSize": 10.0,
+                    "PerspectiveFOV": 0.7853981852531433,
+                    "PerspectiveFar": 1000.0,
+                    "PerspectiveNear": 0.009999999776482582,
+                    "ProjectionType": 0
+                },
+                "FixedAspectRatio": false,
+                "Primary": true
             },
+            "Entity": 3109926998377858897,
             "TagComponent": {
-                "Tag": "Dragon Disparation"
+                "Tag": "Camera"
             },
             "TransformComponent": {
                 "Position": [
                     0.0,
-                    0.0,
-                    -0.3280819058418274
-                ],
-                "Rotation": [
-                    0.0,
-                    0.0,
-                    0.0
-                ],
-                "Scale": [
-                    1.0,
-                    1.0,
-                    1.0
-                ]
-            }
-        },
-        {
-            "Entity": 17823868932357936651,
-            "PointLightComponent": {
-                "Color": [
-                    1.0,
-                    1.0,
-                    1.0
-                ],
-                "Falloff": 1.0,
-                "Intensity": 20.0,
-                "Radius": 10.0
-            },
-            "TagComponent": {
-                "Tag": "Light"
-            },
-            "TransformComponent": {
-                "Position": [
-                    0.11082346737384796,
-                    0.7415845394134521,
-                    1.7118433713912964
+                    0.1526240110397339,
+                    7.600604057312012
                 ],
                 "Rotation": [
                     0.0,

@@ -70,22 +70,42 @@ namespace Myka
 
         for (uint32_t i = 0; i < m_Paths.size(); i++)
         {
-            stbi_uc *data = stbi_load(m_Paths[i].string().c_str(), &width, &height, &channels, 0);
+            bool isHDR = stbi_is_hdr(paths[i].string().c_str());
 
-            if (data)
+            void *data = nullptr;
+            if (isHDR)
             {
-                if (i == 0)
+                data = stbi_loadf(paths[i].string().c_str(), &width, &height, &channels, 0);
+                if (data)
                 {
-                    m_Specification.Width = width;
-                    m_Specification.Height = height;
-                    m_InternalFormat = (channels == 4) ? GL_RGBA8 : GL_RGB8;
-                    m_DataFormat = (channels == 4) ? GL_RGBA : GL_RGB;
+                    if (i == 0)
+                    {
+                        m_InternalFormat = (channels == 4) ? GL_RGBA32F : GL_RGB32F;
+                        m_DataFormat = (channels == 4) ? GL_RGBA : GL_RGB;
+                        glTextureStorage2D(m_RendererID, 1, m_InternalFormat, width, height);
+                    }
 
-                    glTextureStorage2D(m_RendererID, 1, m_InternalFormat, width, height);
+                    glTextureSubImage3D(m_RendererID, 0, 0, 0, i, width, height, 1, m_DataFormat, GL_FLOAT, data);
                 }
+            }
+            else
+            {
+                data = stbi_load(m_Paths[i].string().c_str(), &width, &height, &channels, 0);
+                if (data)
+                {
+                    if (i == 0)
+                    {
+                        m_Specification.Width = width;
+                        m_Specification.Height = height;
+                        m_InternalFormat = (channels == 4) ? GL_RGBA8 : GL_RGB8;
+                        m_DataFormat = (channels == 4) ? GL_RGBA : GL_RGB;
 
-                glTextureSubImage3D(m_RendererID, 0, 0, 0, i, width, height, 1, m_DataFormat, GL_UNSIGNED_BYTE, data);
-                stbi_image_free(data);
+                        glTextureStorage2D(m_RendererID, 1, m_InternalFormat, width, height);
+                    }
+
+                    glTextureSubImage3D(m_RendererID, 0, 0, 0, i, width, height, 1, m_DataFormat, GL_UNSIGNED_BYTE, data);
+                    stbi_image_free(data);
+                }
             }
         }
 
