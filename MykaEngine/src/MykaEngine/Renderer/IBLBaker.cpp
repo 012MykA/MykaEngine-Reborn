@@ -5,6 +5,8 @@
 #include <glm/gtc/matrix_transform.hpp>
 
 #include "Renderer3D.hpp"
+#include "RenderCommand.hpp"
+#include "Framebuffer.hpp"
 
 #include <glad/glad.h> // TODO: refactor
 
@@ -13,43 +15,46 @@ namespace Myka
     void IBLBaker::ConvertPanoramaToCubemap(const Ref<Texture2D> &pano, const Ref<CubeTexture> &cube)
     {
         auto shader = Renderer3D::GetEquirectToCubeShader();
-        shader->Bind();
-        pano->Bind(0);
+        uint32_t size = cube->GetWidth();
 
         glm::mat4 captureProjection = glm::perspective(glm::radians(90.0f), 1.0f, 0.1f, 10.0f);
         glm::mat4 captureViews[] = {
-            glm::lookAt(glm::vec3(0.0f), glm::vec3(1.0f, 0.0f, 0.0f), glm::vec3(0.0f, -1.0f, 0.0f)),  // +X
-            glm::lookAt(glm::vec3(0.0f), glm::vec3(-1.0f, 0.0f, 0.0f), glm::vec3(0.0f, -1.0f, 0.0f)), // -X
-            glm::lookAt(glm::vec3(0.0f), glm::vec3(0.0f, 1.0f, 0.0f), glm::vec3(0.0f, 0.0f, 1.0f)),   // +Y
-            glm::lookAt(glm::vec3(0.0f), glm::vec3(0.0f, -1.0f, 0.0f), glm::vec3(0.0f, 0.0f, -1.0f)), // -Y
-            glm::lookAt(glm::vec3(0.0f), glm::vec3(0.0f, 0.0f, 1.0f), glm::vec3(0.0f, -1.0f, 0.0f)),  // +Z
-            glm::lookAt(glm::vec3(0.0f), glm::vec3(0.0f, 0.0f, -1.0f), glm::vec3(0.0f, -1.0f, 0.0f))  // -Z
+            glm::lookAt(glm::vec3(0.0f), glm::vec3(1.0f, 0.0f, 0.0f), glm::vec3(0.0f, -1.0f, 0.0f)),
+            glm::lookAt(glm::vec3(0.0f), glm::vec3(-1.0f, 0.0f, 0.0f), glm::vec3(0.0f, -1.0f, 0.0f)),
+            glm::lookAt(glm::vec3(0.0f), glm::vec3(0.0f, 1.0f, 0.0f), glm::vec3(0.0f, 0.0f, 1.0f)),
+            glm::lookAt(glm::vec3(0.0f), glm::vec3(0.0f, -1.0f, 0.0f), glm::vec3(0.0f, 0.0f, -1.0f)),
+            glm::lookAt(glm::vec3(0.0f), glm::vec3(0.0f, 0.0f, 1.0f), glm::vec3(0.0f, -1.0f, 0.0f)),
+            glm::lookAt(glm::vec3(0.0f), glm::vec3(0.0f, 0.0f, -1.0f), glm::vec3(0.0f, -1.0f, 0.0f)),
         };
 
-        uint32_t captureFBO;
-        glCreateFramebuffers(1, &captureFBO);
-        glBindFramebuffer(GL_FRAMEBUFFER, captureFBO);
+        // Настройка Framebuffer (нужно убедиться, что ваша реализация FB поддерживает привязку Cubemap)
+        FramebufferSpecification fbSpec;
+        fbSpec.Width = size;
+        fbSpec.Height = size;
+        fbSpec.Attachments = {FramebufferTextureFormat::RGBA8}; // или RGBA32F для HDR
+        Ref<Framebuffer> fb = Framebuffer::Create(fbSpec);
 
-        int oldViewport[4];
-        glGetIntegerv(GL_VIEWPORT, oldViewport);
+        shader->Bind();
+        pano->Bind(0);
 
-        glViewport(0, 0, cube->GetWidth(), cube->GetHeight());
+        RenderCommand::SetViewport(0, 0, size, size);
+        fb->Bind();
 
-        for (uint32_t i = 0; i < 6; i++)
+        for (uint32_t i = 0; i < 6; ++i)
         {
-            glm::mat4 viewProj = captureProjection * captureViews[i];
-            Renderer3D::GetCameraUniformBuffer()->SetData(&viewProj, sizeof(glm::mat4));
+            // Если в Framebuffer этого нет, используйте glFramebufferTexture2D напрямую:
+            glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0,
+                                   GL_TEXTURE_CUBE_MAP_POSITIVE_X + i, cube->GetRendererID(), 0);
 
-            glFramebufferTextureLayer(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, cube->GetRendererID(), 0, i);
-            glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+            RenderCommand::Clear();
+
+            // Обновляем CameraUniformBuffer (UBO) для шейдера
+            Renderer3D::SetCameraMatrices(captureProjection, captureViews[i]);
 
             Renderer3D::DrawCubeMesh();
         }
 
-        glBindFramebuffer(GL_FRAMEBUFFER, 0);
-        glDeleteFramebuffers(1, &captureFBO);
-
-        glViewport(oldViewport[0], oldViewport[1], oldViewport[2], oldViewport[3]);
+        fb->Unbind();
         cube->GenerateMipmaps();
     }
 

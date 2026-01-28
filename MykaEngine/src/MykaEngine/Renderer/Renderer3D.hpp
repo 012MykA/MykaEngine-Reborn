@@ -61,7 +61,7 @@ namespace Myka
         static void DrawSkybox(const Ref<CubeTexture> &skybox, float intensity);
         static void DrawModel(const Ref<Model> &model, const glm::mat4 &transform, int entityID = -1);
 
-        static Ref<UniformBuffer> GetCameraUniformBuffer();
+        static void SetCameraMatrices(const glm::mat4& proj, const glm::mat4& view);
         static Ref<Shader> GetEquirectToCubeShader();
         static void DrawCubeMesh();
 

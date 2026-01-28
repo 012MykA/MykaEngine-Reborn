@@ -1,25 +1,55 @@
 {
     "Entities": [
         {
-            "Entity": 17823868932357936651,
-            "PointLightComponent": {
-                "Color": [
-                    1.0,
-                    1.0,
-                    1.0
-                ],
-                "Falloff": 1.0,
-                "Intensity": 0.0,
-                "Radius": 10.0
+            "CameraComponent": {
+                "Camera": {
+                    "OrthographicFar": 1.0,
+                    "OrthographicNear": -1.0,
+                    "OrthographicSize": 10.0,
+                    "PerspectiveFOV": 0.7853981852531433,
+                    "PerspectiveFar": 1000.0,
+                    "PerspectiveNear": 0.009999999776482582,
+                    "ProjectionType": 0
+                },
+                "FixedAspectRatio": false,
+                "Primary": true
             },
+            "Entity": 3109926998377858897,
             "TagComponent": {
-                "Tag": "Light"
+                "Tag": "Camera"
             },
             "TransformComponent": {
                 "Position": [
-                    0.11082346737384796,
-                    0.7415845394134521,
-                    1.7118433713912964
+                    0.0,
+                    0.1526240110397339,
+                    7.600604057312012
+                ],
+                "Rotation": [
+                    0.0,
+                    0.0,
+                    0.0
+                ],
+                "Scale": [
+                    1.0,
+                    1.0,
+                    1.0
+                ]
+            }
+        },
+        {
+            "Entity": 14591733965049842375,
+            "SkyLightComponent": {
+                "Intensity": 1.0,
+                "SourcePath": "assets\\skyboxes\\ocean\\skybox.hdr"
+            },
+            "TagComponent": {
+                "Tag": "Skybox"
+            },
+            "TransformComponent": {
+                "Position": [
+                    0.0,
+                    0.0,
+                    0.0
                 ],
                 "Rotation": [
                     0.0,
@@ -60,19 +90,25 @@
             }
         },
         {
-            "Entity": 14591733965049842375,
-            "SkyLightComponent": {
-                "Intensity": 1.0,
-                "SourcePath": "assets\\skyboxes\\ocean\\skybox.hdr"
+            "Entity": 17823868932357936651,
+            "PointLightComponent": {
+                "Color": [
+                    1.0,
+                    1.0,
+                    1.0
+                ],
+                "Falloff": 1.0,
+                "Intensity": 20.0,
+                "Radius": 10.0
             },
             "TagComponent": {
-                "Tag": "Skybox"
+                "Tag": "Light"
             },
             "TransformComponent": {
                 "Position": [
-                    0.0,
-                    0.0,
-                    0.0
+                    0.11082346737384796,
+                    0.7415845394134521,
+                    1.7118433713912964
                 ],
                 "Rotation": [
                     0.0,

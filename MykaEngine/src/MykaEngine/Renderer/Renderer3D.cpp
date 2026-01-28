@@ -173,20 +173,16 @@ namespace Myka
         if (!skybox)
             return;
 
-        glDisable(GL_CULL_FACE);
-
-        glDepthFunc(GL_LEQUAL);
-
         s_Data.SkyboxShader->Bind();
+
         s_Data.SkyboxBuffer.Intensity = intensity;
         s_Data.SkyboxUniformBuffer->SetData(&s_Data.SkyboxBuffer, sizeof(Renderer3DData::SkyboxSettings));
 
         skybox->Bind(31);
 
-        Renderer3D::DrawCubeMesh();
-
+        glDepthFunc(GL_LEQUAL);
+        RenderCommand::DrawIndexed(s_Data.SkyboxMesh->GetVertexArray(), s_Data.SkyboxMesh->GetIndexCount());
         glDepthFunc(GL_LESS);
-        glEnable(GL_CULL_FACE);
     }
 
     void Renderer3D::DrawMesh(const Ref<Mesh> &mesh, const Ref<Material> &material, const glm::mat4 &transform, int entityID)
@@ -251,9 +247,11 @@ namespace Myka
         s_Data.Stats.DrawCalls++;
     }
 
-    Ref<UniformBuffer> Renderer3D::GetCameraUniformBuffer()
+    void Renderer3D::SetCameraMatrices(const glm::mat4 &proj, const glm::mat4 &view)
     {
-        return s_Data.CameraUniformBuffer;
+        s_Data.CameraBuffer.Projection = proj;
+        s_Data.CameraBuffer.View = view;
+        s_Data.CameraUniformBuffer->SetData(&s_Data.CameraBuffer, 2 * sizeof(glm::mat4));
     }
 
     Ref<Shader> Renderer3D::GetEquirectToCubeShader()
