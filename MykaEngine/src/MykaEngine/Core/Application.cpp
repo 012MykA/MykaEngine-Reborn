@@ -8,8 +8,7 @@
 #include "MykaEngine/Renderer/Renderer.hpp"
 
 #include "MykaEngine/Core/Input.hpp"
-
-#include <GLFW/glfw3.h> // TODO: remove
+#include "MykaEngine/Utils/PlatformUtils.hpp"
 
 namespace Myka
 {
@@ -93,7 +92,7 @@ namespace Myka
 		{
 			MYKA_PROFILE_SCOPE("RunLoop");
 
-			float time = (float)glfwGetTime();
+			float time = Time::GetTime();
 			Timestep timestep = time - m_LastFrameTime;
 			m_LastFrameTime = time;
 

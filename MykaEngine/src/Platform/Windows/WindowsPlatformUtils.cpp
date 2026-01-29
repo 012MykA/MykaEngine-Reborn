@@ -9,6 +9,11 @@
 
 namespace Myka
 {
+    float Time::GetTime()
+    {
+        return glfwGetTime();
+    }
+
     std::optional<std::filesystem::path> FileDialogs::OpenFile(const char *filter)
     {
         OPENFILENAME ofn;

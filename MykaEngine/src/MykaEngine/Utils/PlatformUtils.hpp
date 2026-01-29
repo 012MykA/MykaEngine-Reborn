@@ -11,4 +11,11 @@ namespace Myka
         static std::optional<std::filesystem::path> OpenFile(const char *filter);
         static std::optional<std::filesystem::path> SaveFile(const char *filter);
     };
+
+    class Time
+    {
+    public:
+        static float GetTime();
+    };
+    
 } // namespace Myka
