@@ -108,6 +108,7 @@ namespace Myka
     {
         MYKA_PROFILE_FUNCTION();
 
+        uint32_t channels = (m_DataFormat == GL_RGBA) ? 4 : 3;
         uint32_t bytesPerChannel = (m_InternalFormat == GL_RGBA32F) ? 4 : 1;
         MYKA_CORE_ASSERT(size == m_Specification.Width * m_Specification.Height * channels * bytesPerChannel, "Data must be entire texture!");
 

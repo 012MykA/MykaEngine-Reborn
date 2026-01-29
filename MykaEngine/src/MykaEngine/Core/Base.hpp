@@ -1,68 +1,32 @@
 #pragma once
 
+#include "MykaEngine/Core/PlatformDetection.hpp"
+
 #include <memory>
 
-// Platform detection
-#ifdef _WIN32
-
-    #ifdef _WIN64
-        #define MYKA_PLATFORM_WINDOWS
-    #else
-        #error "Windows x86 is not supported!"
-    #endif
-
-#elif defined(__linux__)
-    #define MYKA_PLATFORM_LINUX
-    #error "Linux platform is not supported!"
-
-#elif defined(__APPLE__) || defined(__MACH__)
-    #define MYKA_PLATFORM_APPLE
-    #error "Apple platform is not supported!"
-
-#elif defined(__ANDROID__)
-    #define MYKA_PLATFORM_ANDROID
-    #error "Android platform is not supported!"
-
+// Debugbreak support
+#if defined(MYKA_PLATFORM_WINDOWS)
+    #define MYKA_DEBUGBREAK() __debugbreak()
+#elif defined(MYKA_PLATFORM_LINUX)
+    #include <signal.h>
+    #define MYKA_DEBUGBREAK() raise(SIGTRAP)
 #else
-    #error "Unknown platform!"
-
-#endif // End Platform detection
-
-// DLL support
-#ifdef MYKA_DYNAMIC_LINK
-    #error "Dynamic linking is not supported! Use static link instead."
-#endif // End DLL support
+    #error "Platform doesn't support debugbreak yet!"
+#endif // Debugbreak support
 
 // Debug
 #ifdef MYKA_DEBUG
-	#ifdef MYKA_PLATFORM_WINDOWS
-		#define MYKA_DEBUGBREAK() __debugbreak()
-	#elif defined(MYKA_PLATFORM_LINUX)
-		#include <signal.h>
-		#define MYKA_DEBUGBREAK() raise(SIGTRAP)
-	#else
-		#error "Platform doesn't support debugbreak yet!"
-	#endif
-
 	#define MYKA_ENABLE_ASSERTS
-#else
-	#define MYKA_DEBUGBREAK()
 #endif // End Debug
 
-// Asserts
-#ifdef MYKA_ENABLE_ASSERTS
-    #define MYKA_ASSERT(x, ...) { if(!(x)) { MYKA_ERROR("Assertion Failed: {0}", __VA_ARGS__); MYKA_DEBUGBREAK(); } }
-    #define MYKA_CORE_ASSERT(x, ...) { if(!(x)) { MYKA_CORE_ERROR("Assertion Failed: {0}", __VA_ARGS__); MYKA_DEBUGBREAK(); } }
-#else
-    #define MYKA_ASSERT(x, ...)
-    #define MYKA_CORE_ASSERT(x, ...)
-#endif // End Asserts
-
+// Dist
+#ifndef MYKA_DIST
+	#define MYKA_ENABLE_VERIFY
+#endif // End Dist
 
 #define BIT(x) (1 << x)
 
 #define MYKA_BIND_EVENT_FN(fn) [this](auto&&... args) -> decltype(auto) { return this->fn(std::forward<decltype(args)>(args)...); }
-
 
 namespace Myka
 {
@@ -82,3 +46,6 @@ namespace Myka
         return std::make_shared<T>(std::forward<Args>(args)...);
     }
 } // namespace Myka
+
+#include "MykaEngine/Core/Log.hpp"
+#include "MykaEngine/Core/Assert.hpp"

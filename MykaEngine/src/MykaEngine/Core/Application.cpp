@@ -1,7 +1,8 @@
 #include "mykapch.hpp"
 #include "Application.hpp"
 
-#include "MykaEngine/Core/Log.hpp"
+#include "MykaEngine/Core/Base.hpp"
+
 #include "MykaEngine/Core/Timestep.hpp"
 
 #include "MykaEngine/Renderer/Renderer.hpp"

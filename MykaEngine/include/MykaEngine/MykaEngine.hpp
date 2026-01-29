@@ -4,6 +4,7 @@
 #include "MykaEngine/Core/Application.hpp"
 #include "MykaEngine/Core/Layer.hpp"
 #include "MykaEngine/Core/Log.hpp"
+#include "MykaEngine/Core/Assert.hpp"
 
 #include "MykaEngine/Core/Timestep.hpp"
 // ----------------------------------------------

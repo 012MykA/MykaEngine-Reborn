@@ -305,7 +305,7 @@ namespace Myka
                 shaderc::SpvCompilationResult module = compiler.CompileGlslToSpv(source, Utils::GLShaderStageToShaderC(stage), m_FilePath.string().c_str());
                 if (module.GetCompilationStatus() != shaderc_compilation_status_success)
                 {
-                    MYKA_CORE_ASSERT(false, module.GetErrorMessage());
+                    MYKA_CORE_ASSERT(false, module.GetErrorMessage().c_str());
                 }
 
                 shaderData[stage] = std::vector<uint32_t>(module.cbegin(), module.cend());

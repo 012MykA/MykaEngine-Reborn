@@ -9,17 +9,17 @@ file(GLOB_RECURSE SANDBOX_SOURCES
     src/*.hpp
 )
 
-add_executable(Sandbox ${SANDBOX_SOURCES})
+add_executable(${PROJECT_NAME} ${SANDBOX_SOURCES})
 
-target_link_libraries(Sandbox
+target_link_libraries(${PROJECT_NAME}
     PRIVATE
         MykaEngine
 )
 
 if (MSVC)
-    target_compile_options(Sandbox PRIVATE /W4 /utf-8)
+    target_compile_options(${PROJECT_NAME} PRIVATE /W4 /utf-8)
 endif()
 
-set_target_properties(Sandbox PROPERTIES
+set_target_properties(${PROJECT_NAME} PROPERTIES
     RUNTIME_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/bin"
 )

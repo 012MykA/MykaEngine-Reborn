@@ -9,22 +9,17 @@ file(GLOB_RECURSE MYKA_EDITOR_SOURCES
     src/*.hpp
 )
 
-add_executable(MykaEditor ${MYKA_EDITOR_SOURCES})
+add_executable(${PROJECT_NAME} ${MYKA_EDITOR_SOURCES})
 
-target_link_libraries(MykaEditor
+target_link_libraries(${PROJECT_NAME}
     PRIVATE
         MykaEngine
 )
 
-target_compile_definitions(MykaEditor
-    PRIVATE
-        MYKA_DEBUG
-)
-
 if (MSVC)
-    target_compile_options(MykaEditor PRIVATE /W4 /utf-8)
+    target_compile_options(${PROJECT_NAME} PRIVATE /W4 /utf-8)
 endif()
 
-set_target_properties(MykaEditor PROPERTIES
+set_target_properties(${PROJECT_NAME} PROPERTIES
     RUNTIME_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/bin"
 )

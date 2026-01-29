@@ -81,15 +81,15 @@ file(GLOB_RECURSE ENGINE_SOURCES
     src/*.hpp
 )
 
-add_library(MykaEngine STATIC
+add_library(${PROJECT_NAME} STATIC
     ${ENGINE_SOURCES}
 )
 
-target_include_directories(MykaEngine
+target_include_directories(${PROJECT_NAME}
     PUBLIC
         ${Vulkan_INCLUDE_DIRS}
 
-        ${CMAKE_CURRENT_SOURCE_DIR}/include/MykaEngine
+        ${CMAKE_CURRENT_SOURCE_DIR}/include/${PROJECT_NAME}
         ${CMAKE_CURRENT_SOURCE_DIR}/src
         ${CMAKE_CURRENT_SOURCE_DIR}/vendor/imgui
         ${CMAKE_CURRENT_SOURCE_DIR}/vendor/imgui/backends
@@ -105,7 +105,7 @@ else()
     set(VULKAN_LIB_DIR "$ENV{VULKAN_SDK}/lib")
 endif()
 
-target_link_libraries(MykaEngine
+target_link_libraries(${PROJECT_NAME}
     PUBLIC
         OpenGL::GL
         Vulkan::Vulkan
@@ -127,15 +127,17 @@ target_link_libraries(MykaEngine
         glfw
 )
 
-target_precompile_headers(MykaEngine
+target_compile_definitions(${PROJECT_NAME} PRIVATE $<$<CONFIG:Debug>:MYKA_DEBUG>)
+
+target_precompile_headers(${PROJECT_NAME}
     PRIVATE
         src/mykapch.hpp
 )
 
 if (MSVC)
-    target_compile_options(MykaEngine PRIVATE /W4 /utf-8)
+    target_compile_options(${PROJECT_NAME} PRIVATE /W4 /utf-8)
 endif()
 
-set_target_properties(MykaEngine PROPERTIES
+set_target_properties(${PROJECT_NAME} PROPERTIES
     ARCHIVE_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/bin"
 )

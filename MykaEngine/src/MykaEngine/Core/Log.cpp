@@ -1,10 +1,12 @@
 #include "mykapch.hpp"
 #include "Log.hpp"
 
+#include "spdlog/sinks/stdout_color_sinks.h"
+
 namespace Myka
 {
-	std::shared_ptr<spdlog::logger> Log::m_CoreLogger;
-	std::shared_ptr<spdlog::logger> Log::m_ClientLogger;
+	Ref<spdlog::logger> Log::m_CoreLogger;
+	Ref<spdlog::logger> Log::m_ClientLogger;
 
 	void Log::Init()
 	{
