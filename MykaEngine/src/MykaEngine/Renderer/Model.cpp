@@ -41,7 +41,7 @@ namespace Myka
             {
                 for (int j = 0; j < 4; ++j)
                 {
-                    localTransform[i][j] = (float)node.matrix[i * 4 + j];
+                    localTransform[i][j] = static_cast<float>(node.matrix[i * 4 + j]);
                 }
             }
         }
@@ -49,21 +49,29 @@ namespace Myka
         {
             if (node.translation.size() == 3)
             {
-                glm::vec3 translation = {(float)node.translation[0], (float)node.translation[1], (float)node.translation[2]};
+                glm::vec3 translation = {
+                    static_cast<float>(node.translation[0]),
+                    static_cast<float>(node.translation[1]),
+                    static_cast<float>(node.translation[2]),
+                };
                 localTransform = glm::translate(localTransform, translation);
             }
             if (node.rotation.size() == 4)
             {
                 glm::quat q;
-                q.x = (float)node.rotation[0];
-                q.y = (float)node.rotation[1];
-                q.z = (float)node.rotation[2];
-                q.w = (float)node.rotation[3];
+                q.x = static_cast<float>(node.rotation[0]);
+                q.y = static_cast<float>(node.rotation[1]);
+                q.z = static_cast<float>(node.rotation[2]);
+                q.w = static_cast<float>(node.rotation[3]);
                 localTransform *= glm::toMat4(q);
             }
             if (node.scale.size() == 3)
             {
-                glm::vec3 scale = {(float)node.scale[0], (float)node.scale[1], (float)node.scale[2]};
+                glm::vec3 scale = {
+                    static_cast<float>(node.scale[0]),
+                    static_cast<float>(node.scale[1]),
+                    static_cast<float>(node.scale[2]),
+                };
                 localTransform = glm::scale(localTransform, scale);
             }
         }
@@ -159,8 +167,8 @@ namespace Myka
                         albedoColorTexture = LoadGLTFTexture(pbr.baseColorTexture.index);
                     }
 
-                    metallic = (float)pbr.metallicFactor;
-                    roughness = (float)pbr.roughnessFactor;
+                    metallic = static_cast<float>(pbr.metallicFactor);
+                    roughness = static_cast<float>(pbr.roughnessFactor);
                     if (pbr.metallicRoughnessTexture.index >= 0)
                     {
                         metallicRoughnessTexture = LoadGLTFTexture(pbr.metallicRoughnessTexture.index);

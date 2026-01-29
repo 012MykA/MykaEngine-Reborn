@@ -73,7 +73,7 @@ namespace Myka
     {
         MYKA_PROFILE_FUNCTION();
 
-        OnResize((float)e.GetWidth(), (float)e.GetHeight());
+        OnResize(static_cast<float>(e.GetWidth()), static_cast<float>(e.GetHeight()));
 
         return false;
     }

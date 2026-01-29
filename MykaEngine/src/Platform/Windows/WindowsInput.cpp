@@ -26,7 +26,7 @@ namespace Myka
         double xPos, yPos;
         glfwGetCursorPos(window, &xPos, &yPos);
 
-        return {(float)xPos, (float)yPos};
+        return {static_cast<float>(xPos), static_cast<float>(yPos)};
     }
 
     float Input::GetMouseX()

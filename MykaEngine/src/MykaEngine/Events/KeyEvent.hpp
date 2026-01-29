@@ -48,7 +48,7 @@ namespace Myka
 		std::string ToString() const override
 		{
 			std::stringstream ss;
-			ss << "KeyReleasedEvent: " << (int)m_KeyCode;
+			ss << "KeyReleasedEvent: " << static_cast<int>(m_KeyCode);
 			return ss.str();
 		}
 

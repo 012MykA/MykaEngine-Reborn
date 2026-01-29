@@ -32,7 +32,7 @@ namespace Myka
     void SceneCamera::SetViewportSize(uint32_t width, uint32_t height)
     {
         MYKA_CORE_ASSERT((width > 0) && (height > 0));
-        m_AspectRatio = (float)width / (float)height;
+        m_AspectRatio = static_cast<float>(width) / static_cast<float>(height);
         RecalculateProjection();
     }
 

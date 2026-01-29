@@ -8,8 +8,6 @@
 #include "RenderCommand.hpp"
 #include "Framebuffer.hpp"
 
-#include <glad/glad.h> // TODO: refactor
-
 namespace Myka
 {
     void IBLBaker::ConvertPanoramaToCubemap(const Ref<Texture2D> &pano, const Ref<CubeTexture> &cube)
