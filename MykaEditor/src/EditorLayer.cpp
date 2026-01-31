@@ -26,10 +26,22 @@ namespace Myka
         fbSpec.Width = 1280;
         fbSpec.Height = 720;
         m_Framebuffer = Framebuffer::Create(fbSpec);
-        // RenderCommand::SetClearColor({0.1f, 0.1f, 0.1f, 1.0f});
 
         m_EditorScene = CreateRef<Scene>();
         m_ActiveScene = m_EditorScene;
+
+        // TODO: projects
+        // auto commandLineArgs = Application::Get().GetSpecification().CommandLineArgs;
+        // if (commandLineArgs.Count > 1)
+        // {
+        //     auto projectFilepath = commandLineArgs[1];
+        //     OpenProject(projectFilepath);
+        // }
+        // else
+        // {
+        //     if (!OpenProject())
+        //         Application::Get().Close();
+        // }
 
         m_SceneHierarchyPanel.SetContext(m_ActiveScene);
 
