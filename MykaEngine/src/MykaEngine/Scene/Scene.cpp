@@ -215,7 +215,7 @@ namespace Myka
             // Renderer3D
             Renderer3D::BeginScene(mainCamera->GetProjection(), cameraTransform, lightData);
 
-            {   // Skybox
+            { // Skybox
                 auto view = m_Registry.view<SkyLightComponent>();
                 for (auto entity : view)
                 {
@@ -226,7 +226,7 @@ namespace Myka
                 }
             }
 
-            {   // Draw models
+            { // Draw models
                 auto view = m_Registry.view<TransformComponent, ModelComponent>();
                 for (auto entity : view)
                 {
@@ -238,7 +238,7 @@ namespace Myka
                 }
             }
 
-            {   // Draw meshes
+            { // Draw meshes
                 auto view = m_Registry.view<TransformComponent, MeshComponent, MaterialComponent>();
                 for (auto entity : view)
                 {
@@ -252,34 +252,34 @@ namespace Myka
             }
 
             Renderer3D::EndScene();
-        }
 
-        // Renderer2D
-        Renderer2D::BeginScene(mainCamera->GetProjection(), cameraTransform);
+            // Renderer2D
+            Renderer2D::BeginScene(mainCamera->GetProjection(), cameraTransform);
 
-        {   // Draw sprites
-            auto view = m_Registry.view<TransformComponent, SpriteRendererComponent>();
-            for (auto entity : view)
-            {
-                auto &transform = view.get<TransformComponent>(entity);
-                auto &sprite = view.get<SpriteRendererComponent>(entity);
+            { // Draw sprites
+                auto view = m_Registry.view<TransformComponent, SpriteRendererComponent>();
+                for (auto entity : view)
+                {
+                    auto &transform = view.get<TransformComponent>(entity);
+                    auto &sprite = view.get<SpriteRendererComponent>(entity);
 
-                Renderer2D::DrawSprite(transform.GetTransform(), sprite, static_cast<int>(entity));
+                    Renderer2D::DrawSprite(transform.GetTransform(), sprite, static_cast<int>(entity));
+                }
             }
-        }
 
-        {   // Draw circles
-            auto view = m_Registry.view<TransformComponent, CircleRendererComponent>();
-            for (auto entity : view)
-            {
-                auto &transform = view.get<TransformComponent>(entity);
-                auto &circle = view.get<CircleRendererComponent>(entity);
+            { // Draw circles
+                auto view = m_Registry.view<TransformComponent, CircleRendererComponent>();
+                for (auto entity : view)
+                {
+                    auto &transform = view.get<TransformComponent>(entity);
+                    auto &circle = view.get<CircleRendererComponent>(entity);
 
-                Renderer2D::DrawCircle(transform.GetTransform(), circle.Color, circle.Thickness, circle.Fade, static_cast<int>(entity));
+                    Renderer2D::DrawCircle(transform.GetTransform(), circle.Color, circle.Thickness, circle.Fade, static_cast<int>(entity));
+                }
             }
-        }
 
-        Renderer2D::EndScene();
+            Renderer2D::EndScene();
+        }
     }
 
     void Scene::OnSimulationStart()
