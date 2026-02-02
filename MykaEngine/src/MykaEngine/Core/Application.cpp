@@ -21,9 +21,16 @@ namespace Myka
 		MYKA_CORE_ASSERT(!s_Instance, "Application already exists!");
 		s_Instance = this;
 
-		// Set working directory here
-		if (!m_Specification.WorkingDirectory.empty())
-			std::filesystem::current_path(m_Specification.WorkingDirectory);
+		// Set working directory
+		std::filesystem::path workingDir(m_Specification.WorkingDirectory);
+		if (std::filesystem::exists(workingDir))
+		{
+			std::filesystem::current_path(workingDir);
+		}
+		else
+		{
+			MYKA_CORE_ERROR("Working directory does not exist: {0}", workingDir.string());
+		}
 
 		m_Window = Window::Create(WindowProps(m_Specification.Name));
 		m_Window->SetEventCallback(MYKA_BIND_EVENT_FN(OnEvent));

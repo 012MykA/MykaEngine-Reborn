@@ -8,7 +8,7 @@ namespace Myka
 	class MykaEditor : public Myka::Application
 	{
 	public:
-		MykaEditor(const Myka::ApplicationSpecification& specification) : Application(specification)
+		MykaEditor(const Myka::ApplicationSpecification &specification) : Application(specification)
 		{
 			PushLayer(new EditorLayer());
 		}
@@ -20,9 +20,9 @@ namespace Myka
 	{
 		ApplicationSpecification spec;
 		spec.Name = "MykaEditor";
-		spec.WorkingDirectory = "../../MykaEditor";
+		spec.WorkingDirectory = "MykaEditor";
 		spec.CommandLineArgs = args;
-		
+
 		return new MykaEditor(spec);
 	}
 } // namespace Myka
