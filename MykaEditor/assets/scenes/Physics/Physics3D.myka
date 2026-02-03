@@ -1,23 +1,58 @@
 {
     "Entities": [
         {
-            "BoxCollider3DComponent": {
-                "Temp": 0
+            "DirectionalLightComponent": {
+                "CastShadows": true,
+                "Color": [
+                    1.0,
+                    1.0,
+                    1.0
+                ],
+                "Intensity": 1.0
             },
-            "Entity": 18416465587740819921,
+            "Entity": 14519332384780644000,
+            "TagComponent": {
+                "Tag": "Directional Light"
+            },
+            "TransformComponent": {
+                "Position": [
+                    0.0,
+                    1.7641003131866455,
+                    0.0
+                ],
+                "Rotation": [
+                    -0.5235987901687622,
+                    0.3490658402442932,
+                    0.0
+                ],
+                "Scale": [
+                    0.9999964237213135,
+                    0.9999924302101135,
+                    0.9999944567680359
+                ]
+            }
+        },
+        {
+            "Entity": 5106705893459426000,
             "ModelComponent": {
                 "ModelPath": "assets\\models\\primitives\\Cube.glb"
             },
             "Rigidbody3DComponent": {
-                "Temp": 0
+                "BodyType": "Kinematic",
+                "InitialVelocity": [
+                    0.0,
+                    0.0,
+                    0.0
+                ],
+                "Mass": 1.0
             },
             "TagComponent": {
-                "Tag": "Body 2"
+                "Tag": "Floor"
             },
             "TransformComponent": {
                 "Position": [
-                    5.0,
-                    5.0,
+                    0.0,
+                    0.0,
                     0.0
                 ],
                 "Rotation": [
@@ -26,30 +61,25 @@
                     0.0
                 ],
                 "Scale": [
-                    1.0,
-                    1.0,
-                    1.0
+                    10.0,
+                    0.20000000298023224,
+                    10.0
                 ]
             }
         },
         {
-            "BoxCollider3DComponent": {
-                "Temp": 0
-            },
-            "Entity": 10318778234636901859,
-            "ModelComponent": {
-                "ModelPath": "assets\\models\\primitives\\Cube.glb"
-            },
-            "Rigidbody3DComponent": {
-                "Temp": 0
+            "Entity": 721880589704711200,
+            "SkyLightComponent": {
+                "Intensity": 1.0,
+                "SourcePath": "assets\\skyboxes\\ocean\\skybox.hdr"
             },
             "TagComponent": {
-                "Tag": "Body 1"
+                "Tag": "Skybox"
             },
             "TransformComponent": {
                 "Position": [
-                    -5.0,
-                    5.0,
+                    0.0,
+                    0.0,
                     0.0
                 ],
                 "Rotation": [
@@ -78,7 +108,7 @@
                 "FixedAspectRatio": false,
                 "Primary": true
             },
-            "Entity": 3171310426583555680,
+            "Entity": 3171310426583555600,
             "TagComponent": {
                 "Tag": "Camera"
             },
@@ -101,50 +131,26 @@
             }
         },
         {
-            "Entity": 721880589704711142,
-            "SkyLightComponent": {
-                "Intensity": 1.0,
-                "SourcePath": "assets\\skyboxes\\ocean\\skybox.hdr"
-            },
-            "TagComponent": {
-                "Tag": "Skybox"
-            },
-            "TransformComponent": {
-                "Position": [
-                    0.0,
-                    0.0,
-                    0.0
-                ],
-                "Rotation": [
-                    0.0,
-                    0.0,
-                    0.0
-                ],
-                "Scale": [
-                    1.0,
-                    1.0,
-                    1.0
-                ]
-            }
-        },
-        {
-            "BoxCollider3DComponent": {
-                "Temp": 0
-            },
-            "Entity": 5106705893459426716,
+            "Entity": 10318778234636902000,
             "ModelComponent": {
                 "ModelPath": "assets\\models\\primitives\\Cube.glb"
             },
             "Rigidbody3DComponent": {
-                "Temp": 0
+                "BodyType": "Dynamic",
+                "InitialVelocity": [
+                    0.0,
+                    0.0,
+                    0.0
+                ],
+                "Mass": 2.0
             },
             "TagComponent": {
-                "Tag": "Floor"
+                "Tag": "Body 1"
             },
             "TransformComponent": {
                 "Position": [
-                    0.0,
-                    0.0,
+                    -5.0,
+                    5.0,
                     0.0
                 ],
                 "Rotation": [
@@ -153,41 +159,44 @@
                     0.0
                 ],
                 "Scale": [
-                    10.0,
-                    0.20000000298023224,
-                    10.0
+                    1.0,
+                    1.0,
+                    1.0
                 ]
             }
         },
         {
-            "DirectionalLightComponent": {
-                "CastShadows": true,
-                "Color": [
-                    1.0,
-                    1.0,
-                    1.0
-                ],
-                "Intensity": 1.0
+            "Entity": 18416465587740820000,
+            "ModelComponent": {
+                "ModelPath": "assets\\models\\primitives\\Cube.glb"
             },
-            "Entity": 14519332384780643916,
+            "Rigidbody3DComponent": {
+                "BodyType": "Dynamic",
+                "InitialVelocity": [
+                    0.0,
+                    0.0,
+                    0.0
+                ],
+                "Mass": 1.0
+            },
             "TagComponent": {
-                "Tag": "Directional Light"
+                "Tag": "Body 2"
             },
             "TransformComponent": {
                 "Position": [
-                    0.0,
-                    1.7641003131866455,
+                    5.0,
+                    5.0,
                     0.0
                 ],
                 "Rotation": [
-                    -0.5235987901687622,
-                    0.3490658402442932,
+                    0.0,
+                    0.0,
                     0.0
                 ],
                 "Scale": [
-                    0.9999964237213135,
-                    0.9999924302101135,
-                    0.9999944567680359
+                    1.0,
+                    1.0,
+                    1.0
                 ]
             }
         }

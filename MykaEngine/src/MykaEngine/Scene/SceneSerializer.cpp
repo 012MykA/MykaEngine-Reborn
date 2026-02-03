@@ -280,8 +280,10 @@ namespace Myka
             const auto &rb3d = entity.GetComponent<Rigidbody3DComponent>();
 
             json componentData;
-            componentData["Temp"] = 0;
-            
+            componentData["BodyType"] = Utils::Rigidbody3DBodyTypeToString(rb3d.Type);
+            componentData["Mass"] = rb3d.Mass;
+            componentData["InitialVelocity"] = rb3d.InitialVelocity;
+
             e["Rigidbody3DComponent"] = componentData;
         }
 
@@ -290,7 +292,11 @@ namespace Myka
             const auto &bc3d = entity.GetComponent<BoxCollider3DComponent>();
 
             json componentData;
-            componentData["Temp"] = 0;
+            componentData["Size"] = bc3d.Size;
+            componentData["Offset"] = bc3d.Offset;
+
+            componentData["Friction"] = bc3d.Friction;
+            componentData["Restitution"] = bc3d.Restitution;
 
             e["BoxCollider3DComponent"] = componentData;
         }
@@ -300,8 +306,12 @@ namespace Myka
             const auto &sc3d = entity.GetComponent<SphereCollider3DComponent>();
 
             json componentData;
-            componentData["Temp"] = 0;
-            
+            componentData["Radius"] = sc3d.Radius;
+            componentData["Offset"] = sc3d.Offset;
+
+            componentData["Friction"] = sc3d.Friction;
+            componentData["Restitution"] = sc3d.Restitution;
+
             e["SphereCollider3DComponent"] = componentData;
         }
 
@@ -322,8 +332,8 @@ namespace Myka
             const auto &bc2d = entity.GetComponent<BoxCollider2DComponent>();
 
             json componentData;
-            componentData["Offset"] = bc2d.Offset;
             componentData["Size"] = bc2d.Size;
+            componentData["Offset"] = bc2d.Offset;
 
             componentData["Density"] = bc2d.Density;
             componentData["Friction"] = bc2d.Friction;
@@ -337,8 +347,8 @@ namespace Myka
             const auto &cc2d = entity.GetComponent<CircleCollider2DComponent>();
 
             json componentData;
-            componentData["Offset"] = cc2d.Offset;
             componentData["Radius"] = cc2d.Radius;
+            componentData["Offset"] = cc2d.Offset;
 
             componentData["Density"] = cc2d.Density;
             componentData["Friction"] = cc2d.Friction;
@@ -531,41 +541,55 @@ namespace Myka
                 crc.Fade = circleRendererComponentJson["Fade"];
             }
 
-            auto rigidbody3DComponentComponentJson = entity["Rigidbody3DComponent"];
-            if (!rigidbody3DComponentComponentJson.is_null())
+            auto rigidbody3DComponentJson = entity["Rigidbody3DComponent"];
+            if (!rigidbody3DComponentJson.is_null())
             {
                 auto &rd3d = deserializedEntity.AddComponent<Rigidbody3DComponent>();
+
+                rd3d.Type = Utils::Rigidbody3DBodyTypeFromString(rigidbody3DComponentJson["BodyType"]);
+                rd3d.Mass = rigidbody3DComponentJson["Mass"];
+                rd3d.InitialVelocity = rigidbody3DComponentJson["InitialVelocity"];
             }
 
-            auto boxCollider3DComponentComponentJson = entity["BoxCollider3DComponent"];
-            if (!boxCollider3DComponentComponentJson.is_null())
+            auto boxCollider3DComponentJson = entity["BoxCollider3DComponent"];
+            if (!boxCollider3DComponentJson.is_null())
             {
                 auto &bc3d = deserializedEntity.AddComponent<BoxCollider3DComponent>();
+
+                bc3d.Size = boxCollider3DComponentJson["Size"];
+                bc3d.Offset = boxCollider3DComponentJson["Offset"];
+                bc3d.Friction = boxCollider3DComponentJson["Friction"];
+                bc3d.Restitution = boxCollider3DComponentJson["Restitution"];
             }
 
             auto sphereCollider3DComponentJson = entity["SphereCollider3DComponent"];
             if (!sphereCollider3DComponentJson.is_null())
             {
                 auto &sc3d = deserializedEntity.AddComponent<SphereCollider3DComponent>();
+
+                sc3d.Radius = sphereCollider3DComponentJson["Radius"];
+                sc3d.Offset = sphereCollider3DComponentJson["Offset"];
+                sc3d.Friction = sphereCollider3DComponentJson["Friction"];
+                sc3d.Restitution = sphereCollider3DComponentJson["Restitution"];
             }
 
-            auto rigidbody2DComponentComponentJson = entity["Rigidbody2DComponent"];
-            if (!rigidbody2DComponentComponentJson.is_null())
+            auto rigidbody2DComponentJson = entity["Rigidbody2DComponent"];
+            if (!rigidbody2DComponentJson.is_null())
             {
                 auto &rb2d = deserializedEntity.AddComponent<Rigidbody2DComponent>();
-                rb2d.Type = Utils::Rigidbody2DBodyTypeFromString(rigidbody2DComponentComponentJson["BodyType"]);
-                rb2d.FixedRotation = rigidbody2DComponentComponentJson["FixedRotation"];
+                rb2d.Type = Utils::Rigidbody2DBodyTypeFromString(rigidbody2DComponentJson["BodyType"]);
+                rb2d.FixedRotation = rigidbody2DComponentJson["FixedRotation"];
             }
 
-            auto boxCollider2DComponentComponentJson = entity["BoxCollider2DComponent"];
-            if (!boxCollider2DComponentComponentJson.is_null())
+            auto boxCollider2DComponentJson = entity["BoxCollider2DComponent"];
+            if (!boxCollider2DComponentJson.is_null())
             {
                 auto &bc2d = deserializedEntity.AddComponent<BoxCollider2DComponent>();
-                bc2d.Offset = boxCollider2DComponentComponentJson["Offset"];
-                bc2d.Size = boxCollider2DComponentComponentJson["Size"];
-                bc2d.Density = boxCollider2DComponentComponentJson["Density"];
-                bc2d.Friction = boxCollider2DComponentComponentJson["Friction"];
-                bc2d.Restitution = boxCollider2DComponentComponentJson["Restitution"];
+                bc2d.Offset = boxCollider2DComponentJson["Offset"];
+                bc2d.Size = boxCollider2DComponentJson["Size"];
+                bc2d.Density = boxCollider2DComponentJson["Density"];
+                bc2d.Friction = boxCollider2DComponentJson["Friction"];
+                bc2d.Restitution = boxCollider2DComponentJson["Restitution"];
             }
 
             auto circleCollider2DComponentJson = entity["CircleCollider2DComponent"];

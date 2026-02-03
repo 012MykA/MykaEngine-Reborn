@@ -196,6 +196,7 @@ namespace Myka
         BodyType Type = BodyType::Static;
 
         float Mass = 1.0f;
+        glm::vec3 InitialVelocity{0.0f};
 
         Physics3D::Body RuntimeBody;
 
@@ -246,8 +247,8 @@ namespace Myka
 
     struct BoxCollider2DComponent
     {
-        glm::vec2 Offset = {0.0f, 0.0f};
         glm::vec2 Size = {0.5f, 0.5f};
+        glm::vec2 Offset = {0.0f, 0.0f};
 
         // TODO: move into Physics Matrial;
         float Density = 1.0f;
@@ -262,8 +263,8 @@ namespace Myka
 
     struct CircleCollider2DComponent
     {
-        glm::vec2 Offset = {0.0f, 0.0f};
         float Radius = 0.5f;
+        glm::vec2 Offset = {0.0f, 0.0f};
 
         // TODO: move into Physics Matrial;
         float Density = 1.0f;

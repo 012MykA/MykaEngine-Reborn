@@ -339,7 +339,7 @@ namespace Myka
             rb3d.RuntimeBody.SetMass(rb3d.Mass);
             rb3d.RuntimeBody.SetType((Physics3D::BodyType)rb3d.Type);
             rb3d.RuntimeBody.Position = transform.Position;
-            rb3d.RuntimeBody.Velocity = glm::vec3(0.0f);
+            rb3d.RuntimeBody.Velocity = rb3d.InitialVelocity;
 
             if (entity.HasComponent<BoxCollider3DComponent>())
             {

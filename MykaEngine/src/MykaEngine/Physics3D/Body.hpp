@@ -12,15 +12,15 @@ namespace Myka
             Kinematic,
             Dynamic
         };
-        
+
         struct Body
-        {        
+        {
             BodyType Type = BodyType::Static;
 
             glm::vec3 Position{0.0f};
             glm::vec3 Velocity{0.0f};
             glm::vec3 Force{0.0f};
-            float Mass = 1.0;
+            float Mass = 1.0f;
             float InverseMass = 1.0f;
 
             float Restitution = 0.5f;
@@ -41,14 +41,14 @@ namespace Myka
 
             void SetMass(float mass)
             {
-                if (mass > 0.0f)
-                {
-                    Mass = mass;
-                    InverseMass = (Type == BodyType::Dynamic) ? (1.0f / Mass) : 0.0f;
-                }
+                Mass = (mass <= 0.0f) ? 0.0001f : mass;
+                if (Type == BodyType::Dynamic)
+                    InverseMass = 1.0f / Mass;
+                else
+                    InverseMass = 0.0f;
             }
         };
-        
+
     } // namespace Physics3D
 
 } // namespace Myka
