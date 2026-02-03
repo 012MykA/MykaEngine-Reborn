@@ -195,6 +195,10 @@ namespace Myka
         };
         BodyType Type = BodyType::Static;
 
+        float Mass = 1.0f;
+
+        Physics3D::Body RuntimeBody;
+
         Rigidbody3DComponent() = default;
         Rigidbody3DComponent(const Rigidbody3DComponent &) = default;
     };

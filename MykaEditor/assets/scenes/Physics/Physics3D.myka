@@ -1,42 +1,10 @@
 {
     "Entities": [
         {
-            "DirectionalLightComponent": {
-                "CastShadows": true,
-                "Color": [
-                    1.0,
-                    1.0,
-                    1.0
-                ],
-                "Intensity": 1.0
-            },
-            "Entity": 14519332384780643916,
-            "TagComponent": {
-                "Tag": "Directional Light"
-            },
-            "TransformComponent": {
-                "Position": [
-                    0.0,
-                    1.7641003131866455,
-                    0.0
-                ],
-                "Rotation": [
-                    -0.5235987901687622,
-                    0.3490658402442932,
-                    0.0
-                ],
-                "Scale": [
-                    0.9999964237213135,
-                    0.9999924302101135,
-                    0.9999944567680359
-                ]
-            }
-        },
-        {
             "BoxCollider3DComponent": {
                 "Temp": 0
             },
-            "Entity": 5106705893459426716,
+            "Entity": 18416465587740819921,
             "ModelComponent": {
                 "ModelPath": "assets\\models\\primitives\\Cube.glb"
             },
@@ -44,76 +12,13 @@
                 "Temp": 0
             },
             "TagComponent": {
-                "Tag": "Floor"
+                "Tag": "Body 2"
             },
             "TransformComponent": {
                 "Position": [
-                    0.0,
-                    0.0,
+                    5.0,
+                    5.0,
                     0.0
-                ],
-                "Rotation": [
-                    0.0,
-                    0.0,
-                    0.0
-                ],
-                "Scale": [
-                    10.0,
-                    0.20000000298023224,
-                    10.0
-                ]
-            }
-        },
-        {
-            "Entity": 721880589704711142,
-            "SkyLightComponent": {
-                "Intensity": 1.0,
-                "SourcePath": "assets\\skyboxes\\ocean\\skybox.hdr"
-            },
-            "TagComponent": {
-                "Tag": "Skybox"
-            },
-            "TransformComponent": {
-                "Position": [
-                    0.0,
-                    0.0,
-                    0.0
-                ],
-                "Rotation": [
-                    0.0,
-                    0.0,
-                    0.0
-                ],
-                "Scale": [
-                    1.0,
-                    1.0,
-                    1.0
-                ]
-            }
-        },
-        {
-            "CameraComponent": {
-                "Camera": {
-                    "OrthographicFar": 1.0,
-                    "OrthographicNear": -1.0,
-                    "OrthographicSize": 10.0,
-                    "PerspectiveFOV": 0.7853981852531433,
-                    "PerspectiveFar": 1000.0,
-                    "PerspectiveNear": 0.009999999776482582,
-                    "ProjectionType": 0
-                },
-                "FixedAspectRatio": false,
-                "Primary": true
-            },
-            "Entity": 3171310426583555680,
-            "TagComponent": {
-                "Tag": "Camera"
-            },
-            "TransformComponent": {
-                "Position": [
-                    2.0,
-                    4.5,
-                    31.700000762939453
                 ],
                 "Rotation": [
                     0.0,
@@ -160,23 +65,54 @@
             }
         },
         {
-            "BoxCollider3DComponent": {
-                "Temp": 0
+            "CameraComponent": {
+                "Camera": {
+                    "OrthographicFar": 1.0,
+                    "OrthographicNear": -1.0,
+                    "OrthographicSize": 10.0,
+                    "PerspectiveFOV": 0.7853981852531433,
+                    "PerspectiveFar": 1000.0,
+                    "PerspectiveNear": 0.009999999776482582,
+                    "ProjectionType": 0
+                },
+                "FixedAspectRatio": false,
+                "Primary": true
             },
-            "Entity": 18416465587740819921,
-            "ModelComponent": {
-                "ModelPath": "assets\\models\\primitives\\Cube.glb"
-            },
-            "Rigidbody3DComponent": {
-                "Temp": 0
-            },
+            "Entity": 3171310426583555680,
             "TagComponent": {
-                "Tag": "Body 2"
+                "Tag": "Camera"
             },
             "TransformComponent": {
                 "Position": [
-                    5.0,
-                    5.0,
+                    0.0,
+                    2.5,
+                    15.0
+                ],
+                "Rotation": [
+                    0.0,
+                    0.0,
+                    0.0
+                ],
+                "Scale": [
+                    1.0,
+                    1.0,
+                    1.0
+                ]
+            }
+        },
+        {
+            "Entity": 721880589704711142,
+            "SkyLightComponent": {
+                "Intensity": 1.0,
+                "SourcePath": "assets\\skyboxes\\ocean\\skybox.hdr"
+            },
+            "TagComponent": {
+                "Tag": "Skybox"
+            },
+            "TransformComponent": {
+                "Position": [
+                    0.0,
+                    0.0,
                     0.0
                 ],
                 "Rotation": [
@@ -188,6 +124,70 @@
                     1.0,
                     1.0,
                     1.0
+                ]
+            }
+        },
+        {
+            "BoxCollider3DComponent": {
+                "Temp": 0
+            },
+            "Entity": 5106705893459426716,
+            "ModelComponent": {
+                "ModelPath": "assets\\models\\primitives\\Cube.glb"
+            },
+            "Rigidbody3DComponent": {
+                "Temp": 0
+            },
+            "TagComponent": {
+                "Tag": "Floor"
+            },
+            "TransformComponent": {
+                "Position": [
+                    0.0,
+                    0.0,
+                    0.0
+                ],
+                "Rotation": [
+                    0.0,
+                    0.0,
+                    0.0
+                ],
+                "Scale": [
+                    10.0,
+                    0.20000000298023224,
+                    10.0
+                ]
+            }
+        },
+        {
+            "DirectionalLightComponent": {
+                "CastShadows": true,
+                "Color": [
+                    1.0,
+                    1.0,
+                    1.0
+                ],
+                "Intensity": 1.0
+            },
+            "Entity": 14519332384780643916,
+            "TagComponent": {
+                "Tag": "Directional Light"
+            },
+            "TransformComponent": {
+                "Position": [
+                    0.0,
+                    1.7641003131866455,
+                    0.0
+                ],
+                "Rotation": [
+                    -0.5235987901687622,
+                    0.3490658402442932,
+                    0.0
+                ],
+                "Scale": [
+                    0.9999964237213135,
+                    0.9999924302101135,
+                    0.9999944567680359
                 ]
             }
         }

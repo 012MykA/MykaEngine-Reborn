@@ -105,11 +105,13 @@ namespace Myka
 
     void Scene::OnRuntimeStart()
     {
+        OnPhysics3DStart();
         OnPhysics2DStart();
     }
 
     void Scene::OnRuntimeStop()
     {
+        OnPhysics3DStop();
         OnPhysics2DStop();
     }
 
@@ -136,25 +138,8 @@ namespace Myka
         }
 
         // Physics
-        {
-            b2World_Step(m_PhysicsWorldID, ts, 4);
-
-            auto view = m_Registry.view<Rigidbody2DComponent, TransformComponent>();
-            for (auto e : view)
-            {
-                Entity entity = {e, this};
-                auto &transform = entity.GetComponent<TransformComponent>();
-                auto &rb2d = entity.GetComponent<Rigidbody2DComponent>();
-
-                b2BodyId bodyID = rb2d.RuntimeBody;
-                const b2Vec2 &position = b2Body_GetPosition(bodyID);
-                const b2Rot &rotation = b2Body_GetRotation(bodyID);
-
-                transform.Position.x = position.x;
-                transform.Position.y = position.y;
-                transform.Rotation.z = b2Rot_GetAngle(rotation);
-            }
-        }
+        OnPhysics3DUpdate(ts);
+        OnPhysics2DUpdate(ts);
 
         // Rendering
         Camera *mainCamera = nullptr;
@@ -284,36 +269,21 @@ namespace Myka
 
     void Scene::OnSimulationStart()
     {
+        OnPhysics3DStart();
         OnPhysics2DStart();
     }
 
     void Scene::OnSimulationStop()
     {
+        OnPhysics3DStop();
         OnPhysics2DStop();
     }
 
     void Scene::OnUpdateSimulation(Timestep ts, EditorCamera &camera)
     {
         // Physics
-        {
-            b2World_Step(m_PhysicsWorldID, ts, 4);
-
-            auto view = m_Registry.view<Rigidbody2DComponent, TransformComponent>();
-            for (auto e : view)
-            {
-                Entity entity = {e, this};
-                auto &transform = entity.GetComponent<TransformComponent>();
-                auto &rb2d = entity.GetComponent<Rigidbody2DComponent>();
-
-                b2BodyId bodyID = rb2d.RuntimeBody;
-                const b2Vec2 &position = b2Body_GetPosition(bodyID);
-                const b2Rot &rotation = b2Body_GetRotation(bodyID);
-
-                transform.Position.x = position.x;
-                transform.Position.y = position.y;
-                transform.Rotation.z = b2Rot_GetAngle(rotation);
-            }
-        }
+        OnPhysics3DUpdate(ts);
+        OnPhysics2DUpdate(ts);
 
         // Render
         RenderScene(camera);
@@ -353,6 +323,59 @@ namespace Myka
         return {};
     }
 
+    void Scene::OnPhysics3DStart()
+    {
+        // Creating World
+        m_Physics3DWorld = new Physics3D::World();
+        m_Physics3DWorld->SetGravity({0.0f, -9.81f, 0.0f});
+
+        auto view = m_Registry.view<Rigidbody3DComponent>();
+        for (auto e : view)
+        {
+            Entity entity = {e, this};
+            auto &transform = entity.GetComponent<TransformComponent>();
+            auto &rb3d = entity.GetComponent<Rigidbody3DComponent>();
+
+            rb3d.RuntimeBody.SetMass(rb3d.Mass);
+            rb3d.RuntimeBody.SetType((Physics3D::BodyType)rb3d.Type);
+            rb3d.RuntimeBody.Position = transform.Position;
+            rb3d.RuntimeBody.Velocity = glm::vec3(0.0f);
+
+            if (entity.HasComponent<BoxCollider3DComponent>())
+            {
+                auto &bc3d = entity.GetComponent<BoxCollider3DComponent>();
+                rb3d.RuntimeBody.Restitution = bc3d.Restitution;
+                rb3d.RuntimeBody.Friction = bc3d.Friction;
+            }
+
+            m_Physics3DWorld->AddBody(&rb3d.RuntimeBody);
+        }
+    }
+
+    void Scene::OnPhysics3DUpdate(Timestep ts)
+    {
+        m_Physics3DWorld->Step(ts);
+
+        auto view = m_Registry.view<Rigidbody3DComponent>();
+        for (auto e : view)
+        {
+            Entity entity = {e, this};
+            auto& rb3d = entity.GetComponent<Rigidbody3DComponent>();
+            auto& transform = entity.GetComponent<TransformComponent>();
+
+            if (rb3d.Type == Rigidbody3DComponent::BodyType::Dynamic)
+            {
+                transform.Position = rb3d.RuntimeBody.Position;
+            }
+        }
+    }
+
+    void Scene::OnPhysics3DStop()
+    {
+        delete m_Physics3DWorld;
+        m_Physics3DWorld = nullptr;
+    }
+
     void Scene::OnPhysics2DStart()
     {
         // Creating World
@@ -360,7 +383,7 @@ namespace Myka
         physicsWorldDef.gravity = {0.0f, -9.81f};
         physicsWorldDef.restitutionThreshold = 0.5f;
 
-        m_PhysicsWorldID = b2CreateWorld(&physicsWorldDef);
+        m_Physics2DWorldID = b2CreateWorld(&physicsWorldDef);
 
         auto view = m_Registry.view<Rigidbody2DComponent>();
         for (auto e : view)
@@ -375,7 +398,7 @@ namespace Myka
             bodyDef.rotation = b2MakeRot(transform.Rotation.z);
             bodyDef.motionLocks.angularZ = rb2d.FixedRotation;
 
-            b2BodyId bodyID = b2CreateBody(m_PhysicsWorldID, &bodyDef);
+            b2BodyId bodyID = b2CreateBody(m_Physics2DWorldID, &bodyDef);
             rb2d.RuntimeBody = bodyID;
 
             if (entity.HasComponent<BoxCollider2DComponent>())
@@ -414,6 +437,27 @@ namespace Myka
         }
     }
 
+    void Scene::OnPhysics2DUpdate(Timestep ts)
+    {
+        b2World_Step(m_Physics2DWorldID, ts, 4);
+
+        auto view = m_Registry.view<Rigidbody2DComponent, TransformComponent>();
+        for (auto e : view)
+        {
+            Entity entity = {e, this};
+            auto &transform = entity.GetComponent<TransformComponent>();
+            auto &rb2d = entity.GetComponent<Rigidbody2DComponent>();
+
+            b2BodyId bodyID = rb2d.RuntimeBody;
+            const b2Vec2 &position = b2Body_GetPosition(bodyID);
+            const b2Rot &rotation = b2Body_GetRotation(bodyID);
+
+            transform.Position.x = position.x;
+            transform.Position.y = position.y;
+            transform.Rotation.z = b2Rot_GetAngle(rotation);
+        }
+    }
+
     void Scene::OnPhysics2DStop()
     {
         // Cleanup
@@ -436,10 +480,10 @@ namespace Myka
             }
         }
 
-        if (b2World_IsValid(m_PhysicsWorldID))
+        if (b2World_IsValid(m_Physics2DWorldID))
         {
-            b2DestroyWorld(m_PhysicsWorldID);
-            m_PhysicsWorldID = b2_nullWorldId;
+            b2DestroyWorld(m_Physics2DWorldID);
+            m_Physics2DWorldID = b2_nullWorldId;
         }
     }
 

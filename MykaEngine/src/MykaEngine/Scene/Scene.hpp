@@ -5,6 +5,7 @@
 #include "MykaEngine/Core/Timestep.hpp"
 #include "MykaEngine/Renderer/EditorCamera.hpp"
 #include "MykaEngine/Core/UUID.hpp"
+#include "MykaEngine/Physics3D/World.hpp"
 
 #include "box2d/id.h"
 
@@ -52,7 +53,12 @@ namespace Myka
         template <typename T>
         void OnComponentAdded(Entity entity, T &component);
 
+        void OnPhysics3DStart();
+        void OnPhysics3DUpdate(Timestep ts);
+        void OnPhysics3DStop();
+        
         void OnPhysics2DStart();
+        void OnPhysics2DUpdate(Timestep ts);
         void OnPhysics2DStop();
 
         void RenderScene(EditorCamera &camera);
@@ -61,6 +67,7 @@ namespace Myka
         entt::registry m_Registry;
         uint32_t m_ViewportWidth = 0, m_ViewportHeight = 0;
 
-        b2WorldId m_PhysicsWorldID = b2_nullWorldId;
+        Physics3D::World* m_Physics3DWorld;
+        b2WorldId m_Physics2DWorldID = b2_nullWorldId;
     };
 } // namespace Myka
