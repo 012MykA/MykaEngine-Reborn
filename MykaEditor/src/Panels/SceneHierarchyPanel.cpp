@@ -280,7 +280,7 @@ namespace Myka
 
             char buffer[256];
             memset(buffer, 0, sizeof(buffer));
-            strcpy(buffer, tag.c_str());
+            strcpy_s(buffer, tag.c_str());
 
             if (ImGui::InputText("##Tag", buffer, sizeof(buffer)))
             {
@@ -379,30 +379,72 @@ namespace Myka
 
             ImGui::Separator();
 
-            if (!m_SelectionContext.HasComponent<Rigidbody2DComponent>())
+            if (!m_SelectionContext.HasComponent<Rigidbody3DComponent>() ||
+                !m_SelectionContext.HasComponent<BoxCollider3DComponent>() ||
+                !m_SelectionContext.HasComponent<SphereCollider3DComponent>() ||
+                !m_SelectionContext.HasComponent<Rigidbody2DComponent>() ||
+                !m_SelectionContext.HasComponent<BoxCollider2DComponent>() ||
+                !m_SelectionContext.HasComponent<CircleCollider2DComponent>())
             {
-                if (ImGui::MenuItem("Rigidbody 2D"))
+                if (ImGui::BeginMenu("Physics"))
                 {
-                    m_SelectionContext.AddComponent<Rigidbody2DComponent>();
-                    ImGui::CloseCurrentPopup();
-                }
-            }
+                    // 3D
+                    if (!m_SelectionContext.HasComponent<Rigidbody3DComponent>())
+                    {
+                        if (ImGui::MenuItem("Rigidbody 3D"))
+                        {
+                            m_SelectionContext.AddComponent<Rigidbody3DComponent>();
+                            ImGui::CloseCurrentPopup();
+                        }
+                    }
 
-            if (!m_SelectionContext.HasComponent<BoxCollider2DComponent>())
-            {
-                if (ImGui::MenuItem("Box Collider 2D"))
-                {
-                    m_SelectionContext.AddComponent<BoxCollider2DComponent>();
-                    ImGui::CloseCurrentPopup();
-                }
-            }
+                    if (!m_SelectionContext.HasComponent<BoxCollider3DComponent>())
+                    {
+                        if (ImGui::MenuItem("Box Collider 3D"))
+                        {
+                            m_SelectionContext.AddComponent<BoxCollider3DComponent>();
+                            ImGui::CloseCurrentPopup();
+                        }
+                    }
 
-            if (!m_SelectionContext.HasComponent<CircleCollider2DComponent>())
-            {
-                if (ImGui::MenuItem("Circle Collider 2D"))
-                {
-                    m_SelectionContext.AddComponent<CircleCollider2DComponent>();
-                    ImGui::CloseCurrentPopup();
+                    if (!m_SelectionContext.HasComponent<SphereCollider3DComponent>())
+                    {
+                        if (ImGui::MenuItem("Sphere Collider 3D"))
+                        {
+                            m_SelectionContext.AddComponent<SphereCollider3DComponent>();
+                            ImGui::CloseCurrentPopup();
+                        }
+                    }
+
+                    // 2D
+                    if (!m_SelectionContext.HasComponent<Rigidbody2DComponent>())
+                    {
+                        if (ImGui::MenuItem("Rigidbody 2D"))
+                        {
+                            m_SelectionContext.AddComponent<Rigidbody2DComponent>();
+                            ImGui::CloseCurrentPopup();
+                        }
+                    }
+
+                    if (!m_SelectionContext.HasComponent<BoxCollider2DComponent>())
+                    {
+                        if (ImGui::MenuItem("Box Collider 2D"))
+                        {
+                            m_SelectionContext.AddComponent<BoxCollider2DComponent>();
+                            ImGui::CloseCurrentPopup();
+                        }
+                    }
+
+                    if (!m_SelectionContext.HasComponent<CircleCollider2DComponent>())
+                    {
+                        if (ImGui::MenuItem("Circle Collider 2D"))
+                        {
+                            m_SelectionContext.AddComponent<CircleCollider2DComponent>();
+                            ImGui::CloseCurrentPopup();
+                        }
+                    }
+
+                    ImGui::EndMenu();
                 }
             }
 
@@ -541,6 +583,31 @@ namespace Myka
             ImGui::DragFloat("Thickness", &component.Thickness, 0.025f, 0.0f, 1.0f);
             ImGui::DragFloat("Fade", &component.Fade, 0.00025f, 0.0f, 1.0f); });
 
+        DrawComponent<Rigidbody3DComponent>("Rigidbody 3D", entity, [](auto &component)
+                                            {
+            const char *bodyTypeStrings[] = {"Static", "Kinematic", "Dynamic"};
+            const char *currentBodyTypeString = bodyTypeStrings[(int)component.Type];
+            if (ImGui::BeginCombo("Body Type", currentBodyTypeString))
+            {
+                for (int i = 0; i < 3; ++i)
+                {
+                    bool isSelected = currentBodyTypeString == bodyTypeStrings[i];
+                    if (ImGui::Selectable(bodyTypeStrings[i], isSelected))
+                    {
+                        currentBodyTypeString = bodyTypeStrings[i];
+                        component.Type = (Rigidbody3DComponent::BodyType)i;
+                    }
+                    
+                    if (isSelected)
+                        ImGui::SetItemDefaultFocus();
+                }
+                ImGui::EndCombo();
+            } });
+
+        DrawComponent<BoxCollider3DComponent>("Box Collider 3D", entity, [](auto &component) {});
+
+        DrawComponent<SphereCollider3DComponent>("Sphere Collider 3D", entity, [](auto &component) {});
+
         DrawComponent<Rigidbody2DComponent>("Rigidbody 2D", entity, [](auto &component)
                                             {
             const char *bodyTypeStrings[] = {"Static", "Kinematic", "Dynamic"};
@@ -557,7 +624,7 @@ namespace Myka
                     }
                     
                     if (isSelected)
-                    ImGui::SetItemDefaultFocus();
+                        ImGui::SetItemDefaultFocus();
                 }
                 ImGui::EndCombo();
             }
@@ -575,7 +642,7 @@ namespace Myka
         DrawComponent<CircleCollider2DComponent>("Circle Collider 2D", entity, [](auto &component)
                                                  {
             ImGui::DragFloat2("Offset", glm::value_ptr(component.Offset));
-            ImGui::DragFloat("Radius", &component.Radius, 0.1f, 0.0f, 0.0f);
+            ImGui::DragFloat("Radius", &component.Radius, 0.1f, 0.0f, 1000.0f);
             ImGui::DragFloat("Density", &component.Density, 0.01f, 0.0f, 1.0f);
             ImGui::DragFloat("Friction", &component.Friction, 0.01f, 0.0f, 1.0f);
             ImGui::DragFloat("Restitution", &component.Restitution, 0.01f, 0.0f, 1.0f); });

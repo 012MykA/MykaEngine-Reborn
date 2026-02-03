@@ -185,6 +185,44 @@ namespace Myka
         }
     };
 
+    struct Rigidbody3DComponent
+    {
+        enum class BodyType
+        {
+            Static = 0,
+            Kinematic,
+            Dynamic
+        };
+        BodyType Type = BodyType::Static;
+
+        Rigidbody3DComponent() = default;
+        Rigidbody3DComponent(const Rigidbody3DComponent &) = default;
+    };
+
+    struct BoxCollider3DComponent
+    {
+        glm::vec3 Size = {0.5f, 0.5f, 0.5f};
+        glm::vec3 Offset = {0.0f, 0.0f, 0.0f};
+
+        float Friction = 0.0f;
+        float Restitution = 0.0f;
+
+        BoxCollider3DComponent() = default;
+        BoxCollider3DComponent(const BoxCollider3DComponent &) = default;
+    };
+
+    struct SphereCollider3DComponent
+    {
+        float Radius = 0.5f;
+        glm::vec3 Offset = {0.0f, 0.0f, 0.0f};
+
+        float Friction = 0.0f;
+        float Restitution = 0.0f;
+
+        SphereCollider3DComponent() = default;
+        SphereCollider3DComponent(const SphereCollider3DComponent &) = default;
+    };
+
     struct Rigidbody2DComponent
     {
         enum class BodyType
@@ -246,7 +284,7 @@ namespace Myka
                                          SpriteRendererComponent, CircleRendererComponent,
                                          CameraComponent,
                                          NativeScriptComponent,
-                                         Rigidbody2DComponent,
-                                         BoxCollider2DComponent, CircleCollider2DComponent>;
+                                         Rigidbody3DComponent, BoxCollider3DComponent, SphereCollider3DComponent,
+                                         Rigidbody2DComponent, BoxCollider2DComponent, CircleCollider2DComponent>;
 
 } // namespace Myka

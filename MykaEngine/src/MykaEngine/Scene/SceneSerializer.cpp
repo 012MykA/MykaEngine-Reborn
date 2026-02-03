@@ -68,6 +68,37 @@ namespace Myka
 {
     namespace Utils
     {
+        static std::string Rigidbody3DBodyTypeToString(Rigidbody3DComponent::BodyType type)
+        {
+            switch (type)
+            {
+            case Rigidbody3DComponent::BodyType::Static:
+                return "Static";
+            case Rigidbody3DComponent::BodyType::Kinematic:
+                return "Kinematic";
+            case Rigidbody3DComponent::BodyType::Dynamic:
+                return "Dynamic";
+
+            default:
+            {
+                MYKA_CORE_ASSERT(false, "Unknown body type");
+                return "";
+            }
+            }
+        }
+
+        static Rigidbody3DComponent::BodyType Rigidbody3DBodyTypeFromString(std::string type)
+        {
+            if (type == "Static")
+                return Rigidbody3DComponent::BodyType::Static;
+            if (type == "Kinematic")
+                return Rigidbody3DComponent::BodyType::Kinematic;
+            if (type == "Dynamic")
+                return Rigidbody3DComponent::BodyType::Dynamic;
+
+            return Rigidbody3DComponent::BodyType::Static;
+        }
+
         static std::string Rigidbody2DBodyTypeToString(Rigidbody2DComponent::BodyType type)
         {
             switch (type)
@@ -243,6 +274,38 @@ namespace Myka
             e["CircleRendererComponent"] = componentData;
         }
 
+        // 3D
+        if (entity.HasComponent<Rigidbody3DComponent>())
+        {
+            const auto &rb3d = entity.GetComponent<Rigidbody3DComponent>();
+
+            json componentData;
+            componentData["Temp"] = 0;
+            
+            e["Rigidbody3DComponent"] = componentData;
+        }
+
+        if (entity.HasComponent<BoxCollider3DComponent>())
+        {
+            const auto &bc3d = entity.GetComponent<BoxCollider3DComponent>();
+
+            json componentData;
+            componentData["Temp"] = 0;
+
+            e["BoxCollider3DComponent"] = componentData;
+        }
+
+        if (entity.HasComponent<SphereCollider3DComponent>())
+        {
+            const auto &sc3d = entity.GetComponent<SphereCollider3DComponent>();
+
+            json componentData;
+            componentData["Temp"] = 0;
+            
+            e["SphereCollider3DComponent"] = componentData;
+        }
+
+        // 2D
         if (entity.HasComponent<Rigidbody2DComponent>())
         {
             const auto &rb2d = entity.GetComponent<Rigidbody2DComponent>();
@@ -466,6 +529,24 @@ namespace Myka
                 crc.Color = circleRendererComponentJson["Color"];
                 crc.Thickness = circleRendererComponentJson["Thickness"];
                 crc.Fade = circleRendererComponentJson["Fade"];
+            }
+
+            auto rigidbody3DComponentComponentJson = entity["Rigidbody3DComponent"];
+            if (!rigidbody3DComponentComponentJson.is_null())
+            {
+                auto &rd3d = deserializedEntity.AddComponent<Rigidbody3DComponent>();
+            }
+
+            auto boxCollider3DComponentComponentJson = entity["BoxCollider3DComponent"];
+            if (!boxCollider3DComponentComponentJson.is_null())
+            {
+                auto &bc3d = deserializedEntity.AddComponent<BoxCollider3DComponent>();
+            }
+
+            auto sphereCollider3DComponentJson = entity["SphereCollider3DComponent"];
+            if (!sphereCollider3DComponentJson.is_null())
+            {
+                auto &sc3d = deserializedEntity.AddComponent<SphereCollider3DComponent>();
             }
 
             auto rigidbody2DComponentComponentJson = entity["Rigidbody2DComponent"];
