@@ -327,7 +327,6 @@ namespace Myka
     {
         // Creating World
         m_Physics3DWorld = new Physics3D::World();
-        m_Physics3DWorld->SetGravity({0.0f, -9.81f, 0.0f});
 
         auto view = m_Registry.view<Rigidbody3DComponent>();
         for (auto e : view)
@@ -336,16 +335,48 @@ namespace Myka
             auto &transform = entity.GetComponent<TransformComponent>();
             auto &rb3d = entity.GetComponent<Rigidbody3DComponent>();
 
-            rb3d.RuntimeBody.SetMass(rb3d.Mass);
-            rb3d.RuntimeBody.SetType((Physics3D::BodyType)rb3d.Type);
+            rb3d.RuntimeBody.Shapes.clear();
             rb3d.RuntimeBody.Position = transform.Position;
             rb3d.RuntimeBody.Velocity = rb3d.InitialVelocity;
+            rb3d.RuntimeBody.SetType((Physics3D::BodyType)rb3d.Type);
 
             if (entity.HasComponent<BoxCollider3DComponent>())
             {
                 auto &bc3d = entity.GetComponent<BoxCollider3DComponent>();
-                rb3d.RuntimeBody.Restitution = bc3d.Restitution;
-                rb3d.RuntimeBody.Friction = bc3d.Friction;
+
+                glm::vec3 halfSize = (bc3d.Size * transform.Scale) * 0.5f;
+                auto shape = Physics3D::Shape::CreateBox(halfSize);
+
+                shape.Density = bc3d.Density;
+                shape.Friction = bc3d.Friction;
+                shape.Restitution = bc3d.Restitution;
+                shape.Offset = bc3d.Offset;
+
+                rb3d.RuntimeBody.AddShape(shape);
+            }
+            if (entity.HasComponent<SphereCollider3DComponent>())
+            {
+                auto &sc3d = entity.GetComponent<SphereCollider3DComponent>();
+
+                float maxScale = std::max({transform.Scale.x, transform.Scale.y, transform.Scale.z});
+                auto shape = Physics3D::Shape::CreateSphere(sc3d.Radius * maxScale);
+
+                shape.Density = sc3d.Density;
+                shape.Friction = sc3d.Friction;
+                shape.Restitution = sc3d.Restitution;
+                shape.Offset = sc3d.Offset;
+
+                rb3d.RuntimeBody.AddShape(shape);
+            }
+
+            if (rb3d.AutoMass)
+            {
+                rb3d.RuntimeBody.CalculateMassFromShapes();
+                rb3d.Mass = rb3d.RuntimeBody.Mass;
+            }
+            else
+            {
+                rb3d.RuntimeBody.SetMass(rb3d.Mass);
             }
 
             m_Physics3DWorld->AddBody(&rb3d.RuntimeBody);

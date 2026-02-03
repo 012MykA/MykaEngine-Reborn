@@ -1,74 +1,7 @@
 {
     "Entities": [
         {
-            "DirectionalLightComponent": {
-                "CastShadows": true,
-                "Color": [
-                    1.0,
-                    1.0,
-                    1.0
-                ],
-                "Intensity": 1.0
-            },
-            "Entity": 14519332384780644000,
-            "TagComponent": {
-                "Tag": "Directional Light"
-            },
-            "TransformComponent": {
-                "Position": [
-                    0.0,
-                    1.7641003131866455,
-                    0.0
-                ],
-                "Rotation": [
-                    -0.5235987901687622,
-                    0.3490658402442932,
-                    0.0
-                ],
-                "Scale": [
-                    0.9999964237213135,
-                    0.9999924302101135,
-                    0.9999944567680359
-                ]
-            }
-        },
-        {
-            "Entity": 5106705893459426000,
-            "ModelComponent": {
-                "ModelPath": "assets\\models\\primitives\\Cube.glb"
-            },
-            "Rigidbody3DComponent": {
-                "BodyType": "Kinematic",
-                "InitialVelocity": [
-                    0.0,
-                    0.0,
-                    0.0
-                ],
-                "Mass": 1.0
-            },
-            "TagComponent": {
-                "Tag": "Floor"
-            },
-            "TransformComponent": {
-                "Position": [
-                    0.0,
-                    0.0,
-                    0.0
-                ],
-                "Rotation": [
-                    0.0,
-                    0.0,
-                    0.0
-                ],
-                "Scale": [
-                    10.0,
-                    0.20000000298023224,
-                    10.0
-                ]
-            }
-        },
-        {
-            "Entity": 721880589704711200,
+            "Entity": 721880589704711142,
             "SkyLightComponent": {
                 "Intensity": 1.0,
                 "SourcePath": "assets\\skyboxes\\ocean\\skybox.hdr"
@@ -108,15 +41,15 @@
                 "FixedAspectRatio": false,
                 "Primary": true
             },
-            "Entity": 3171310426583555600,
+            "Entity": 3171310426583555680,
             "TagComponent": {
                 "Tag": "Camera"
             },
             "TransformComponent": {
                 "Position": [
                     0.0,
-                    2.5,
-                    15.0
+                    5.0,
+                    25.0
                 ],
                 "Rotation": [
                     0.0,
@@ -131,27 +64,101 @@
             }
         },
         {
-            "Entity": 10318778234636902000,
+            "Entity": 16500317793439848684,
             "ModelComponent": {
                 "ModelPath": "assets\\models\\primitives\\Cube.glb"
             },
-            "Rigidbody3DComponent": {
-                "BodyType": "Dynamic",
-                "InitialVelocity": [
-                    0.0,
-                    0.0,
-                    0.0
-                ],
-                "Mass": 2.0
-            },
             "TagComponent": {
-                "Tag": "Body 1"
+                "Tag": "Floor"
             },
             "TransformComponent": {
                 "Position": [
-                    -5.0,
-                    5.0,
+                    0.0,
+                    0.0,
                     0.0
+                ],
+                "Rotation": [
+                    0.0,
+                    0.0,
+                    0.0
+                ],
+                "Scale": [
+                    10.0,
+                    0.20000000298023224,
+                    10.0
+                ]
+            }
+        },
+        {
+            "DirectionalLightComponent": {
+                "CastShadows": true,
+                "Color": [
+                    1.0,
+                    1.0,
+                    1.0
+                ],
+                "Intensity": 1.0
+            },
+            "Entity": 14908959919096114270,
+            "TagComponent": {
+                "Tag": "Directional Light"
+            },
+            "TransformComponent": {
+                "Position": [
+                    0.0,
+                    0.0,
+                    0.0
+                ],
+                "Rotation": [
+                    -0.5235987901687622,
+                    0.3490658402442932,
+                    0.0
+                ],
+                "Scale": [
+                    1.0,
+                    1.0,
+                    1.0
+                ]
+            }
+        },
+        {
+            "BoxCollider3DComponent": {
+                "Density": 19300.0,
+                "Friction": 0.5,
+                "Offset": [
+                    0.0,
+                    0.0,
+                    0.0
+                ],
+                "Restitution": 0.0,
+                "Size": [
+                    0.5,
+                    0.5,
+                    0.5
+                ]
+            },
+            "Entity": 16562920093478199710,
+            "ModelComponent": {
+                "ModelPath": "assets\\models\\primitives\\Cube.glb"
+            },
+            "Rigidbody3DComponent": {
+                "AutoMass": true,
+                "BodyType": "Dynamic",
+                "InitialVelocity": [
+                    5.0,
+                    0.0,
+                    0.0
+                ],
+                "Mass": 3.799999952316284
+            },
+            "TagComponent": {
+                "Tag": "Gold Cube"
+            },
+            "TransformComponent": {
+                "Position": [
+                    -4.856324195861816,
+                    4.944549083709717,
+                    -0.0744333267211914
                 ],
                 "Rotation": [
                     0.0,
@@ -166,11 +173,27 @@
             }
         },
         {
-            "Entity": 18416465587740820000,
+            "BoxCollider3DComponent": {
+                "Density": 2700.0,
+                "Friction": 0.5,
+                "Offset": [
+                    0.0,
+                    0.0,
+                    0.0
+                ],
+                "Restitution": 0.0,
+                "Size": [
+                    0.5,
+                    0.5,
+                    0.5
+                ]
+            },
+            "Entity": 8187184892184994778,
             "ModelComponent": {
                 "ModelPath": "assets\\models\\primitives\\Cube.glb"
             },
             "Rigidbody3DComponent": {
+                "AutoMass": true,
                 "BodyType": "Dynamic",
                 "InitialVelocity": [
                     0.0,
@@ -180,7 +203,7 @@
                 "Mass": 1.0
             },
             "TagComponent": {
-                "Tag": "Body 2"
+                "Tag": "Aluminum Cube"
             },
             "TransformComponent": {
                 "Position": [

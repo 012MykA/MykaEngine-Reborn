@@ -1,6 +1,11 @@
 #pragma once
 
+#include <vector>
+#include <cmath>
+
 #include <glm/glm.hpp>
+
+#include "Shape.hpp"
 
 namespace Myka
 {
@@ -23,14 +28,44 @@ namespace Myka
             float Mass = 1.0f;
             float InverseMass = 1.0f;
 
-            float Restitution = 0.5f;
-            float Friction = 0.2f;
+            std::vector<Shape> Shapes;
 
-            void ApplyForce(const glm::vec3 &force)
+            void AddShape(const Shape &shape) { Shapes.push_back(shape); }
+
+            void CalculateMassFromShapes()
             {
                 if (Type != BodyType::Dynamic)
+                {
+                    Mass = 0.0f;
+                    InverseMass = 0.0f;
                     return;
-                Force += force;
+                }
+
+                float totalMass = 0.0f;
+                for (const auto& shape : Shapes)
+                {
+                    float volume;
+                    if (shape.Type == ShapeType::Box)
+                    {
+                        /*
+                            As we have half size
+                            V(box) = 2a * 2b * 2c
+                        */
+                        glm::vec3 hSize = std::get<BoxGeometry>(shape.Geometry).HalfSize;
+                        volume = (2.0f * hSize.x) * (2.0f * hSize.y) * (2.0f * hSize.z);
+                    }
+                    else if (shape.Type == ShapeType::Box)
+                    {
+                        /*
+                            V(sphere) = (4 / 3) * PI * R^3
+                        */
+                        float radius = std::get<SphereGeometry>(shape.Geometry).Radius;
+                        volume = (4.0f / 3.0f) * std::pow(radius, 3.0f);
+                    }
+                    totalMass += volume * shape.Density;
+                }
+
+                SetMass(totalMass > 0 ? totalMass : 1.0f);
             }
 
             void SetType(BodyType type)
@@ -46,6 +81,13 @@ namespace Myka
                     InverseMass = 1.0f / Mass;
                 else
                     InverseMass = 0.0f;
+            }
+
+            void ApplyForce(const glm::vec3 &force)
+            {
+                if (Type != BodyType::Dynamic)
+                    return;
+                Force += force;
             }
         };
 

@@ -281,6 +281,7 @@ namespace Myka
 
             json componentData;
             componentData["BodyType"] = Utils::Rigidbody3DBodyTypeToString(rb3d.Type);
+            componentData["AutoMass"] = rb3d.AutoMass;
             componentData["Mass"] = rb3d.Mass;
             componentData["InitialVelocity"] = rb3d.InitialVelocity;
 
@@ -295,6 +296,7 @@ namespace Myka
             componentData["Size"] = bc3d.Size;
             componentData["Offset"] = bc3d.Offset;
 
+            componentData["Density"] = bc3d.Density;
             componentData["Friction"] = bc3d.Friction;
             componentData["Restitution"] = bc3d.Restitution;
 
@@ -309,6 +311,7 @@ namespace Myka
             componentData["Radius"] = sc3d.Radius;
             componentData["Offset"] = sc3d.Offset;
 
+            componentData["Density"] = sc3d.Density;
             componentData["Friction"] = sc3d.Friction;
             componentData["Restitution"] = sc3d.Restitution;
 
@@ -364,24 +367,31 @@ namespace Myka
     {
         json data;
 
-        // Scene
-        std::string sceneName = "Untilted";
-        data["Scene"] = sceneName;
-
-        // Entites
-        json entities = json::array();
-        for (auto entity : m_Scene->m_Registry.view<entt::entity>())
+        try
         {
-            Entity e = {entity, m_Scene.get()};
-            if (!e)
-            {
-                MYKA_CORE_WARN("Invalid Entity in Scene: {0}", sceneName);
-                continue;
-            }
+            // Scene
+            std::string sceneName = "Untilted";
+            data["Scene"] = sceneName;
 
-            SerializeEntity(entities, e);
+            // Entites
+            json entities = json::array();
+            for (auto entity : m_Scene->m_Registry.view<entt::entity>())
+            {
+                Entity e = {entity, m_Scene.get()};
+                if (!e)
+                {
+                    MYKA_CORE_WARN("Invalid Entity in Scene: {0}", sceneName);
+                    continue;
+                }
+
+                SerializeEntity(entities, e);
+            }
+            data["Entities"] = entities;
         }
-        data["Entities"] = entities;
+        catch (const json::exception &e)
+        {
+            MYKA_CORE_ERROR("JSON parsing error: {0}", e.what());
+        }
 
         // output
         std::ofstream out(filepath);
@@ -398,210 +408,222 @@ namespace Myka
     bool SceneSerializer::DeserializeJSON(const std::filesystem::path &filepath)
     {
         std::ifstream in(filepath);
-        json data = json::parse(in);
 
-        if (!data.contains("Scene") || data["Scene"].is_null())
+        try
         {
-            MYKA_CORE_ERROR("Cannot DeserializeJSON: {0}", filepath.generic_string());
-            return false;
+            json data = json::parse(in);
+
+            if (!data.contains("Scene") || data["Scene"].is_null())
+            {
+                MYKA_CORE_ERROR("Cannot DeserializeJSON: {0}", filepath.generic_string());
+                return false;
+            }
+
+            std::string sceneName = data["Scene"];
+            MYKA_CORE_TRACE("Deserializing scene: {0}", sceneName);
+
+            for (auto entity : data["Entities"])
+            {
+                uint64_t uuid = entity["Entity"];
+
+                std::string name;
+                auto tagComponent = entity["TagComponent"];
+                if (!tagComponent.is_null())
+                    name = tagComponent["Tag"];
+
+                Entity deserializedEntity = m_Scene->CreateEntityWithUUID(uuid, name);
+
+                auto transformComponentJson = entity["TransformComponent"];
+                if (!transformComponentJson.is_null())
+                {
+                    auto &tc = deserializedEntity.GetComponent<TransformComponent>();
+                    tc.Position = transformComponentJson["Position"];
+                    tc.Rotation = transformComponentJson["Rotation"];
+                    tc.Scale = transformComponentJson["Scale"];
+                }
+
+                auto cameraComponentJson = entity["CameraComponent"];
+                if (!cameraComponentJson.is_null())
+                {
+                    auto &cc = deserializedEntity.AddComponent<CameraComponent>();
+
+                    auto cameraJson = cameraComponentJson["Camera"];
+                    cc.Camera.SetProjectionType(static_cast<SceneCamera::ProjectionType>(cameraJson["ProjectionType"]));
+
+                    cc.Camera.SetPerspectiveFOV(cameraJson["PerspectiveFOV"]);
+                    cc.Camera.SetPerspectiveNear(cameraJson["PerspectiveNear"]);
+                    cc.Camera.SetPerspectiveFar(cameraJson["PerspectiveFar"]);
+
+                    cc.Camera.SetOrthographicSize(cameraJson["OrthographicSize"]);
+                    cc.Camera.SetOrthographicNear(cameraJson["OrthographicNear"]);
+                    cc.Camera.SetOrthographicFar(cameraJson["OrthographicFar"]);
+
+                    cc.Primary = cameraComponentJson["Primary"];
+                    cc.FixedAspectRatio = cameraComponentJson["FixedAspectRatio"];
+                }
+
+                auto pointLightComponentJson = entity["PointLightComponent"];
+                if (!pointLightComponentJson.is_null())
+                {
+                    auto &plc = deserializedEntity.AddComponent<PointLightComponent>();
+
+                    plc.Color = pointLightComponentJson["Color"];
+                    plc.Intensity = pointLightComponentJson["Intensity"];
+                    plc.Radius = pointLightComponentJson["Radius"];
+                    plc.Falloff = pointLightComponentJson["Falloff"];
+                }
+
+                auto directionalLightComponentJson = entity["DirectionalLightComponent"];
+                if (!directionalLightComponentJson.is_null())
+                {
+                    auto &dlc = deserializedEntity.AddComponent<DirectionalLightComponent>();
+
+                    dlc.Color = directionalLightComponentJson["Color"];
+                    dlc.Intensity = directionalLightComponentJson["Intensity"];
+                    dlc.CastShadows = directionalLightComponentJson["CastShadows"];
+                }
+
+                auto spotLightComponentJson = entity["SpotLightComponent"];
+                if (!spotLightComponentJson.is_null())
+                {
+                    auto &slc = deserializedEntity.AddComponent<SpotLightComponent>();
+
+                    slc.Color = spotLightComponentJson["Color"];
+                    slc.Intensity = spotLightComponentJson["Intensity"];
+                    slc.Range = spotLightComponentJson["Range"];
+                    slc.InnerCutoff = spotLightComponentJson["InnerCutoff"];
+                    slc.OuterCutoff = spotLightComponentJson["OuterCutoff"];
+                }
+
+                auto skyLightComponentJson = entity["SkyLightComponent"];
+                if (!skyLightComponentJson.is_null())
+                {
+                    auto &slc = deserializedEntity.AddComponent<SkyLightComponent>();
+                    slc.Intensity = skyLightComponentJson.value("Intensity", 1.0f);
+                    slc.SourcePath = skyLightComponentJson.value("SourcePath", "");
+
+                    if (!slc.SourcePath.empty())
+                    {
+                        auto panorama = Texture2D::Create(slc.SourcePath);
+
+                        TextureSpecification spec;
+                        spec.Width = 1024;
+                        spec.Height = 1024;
+                        spec.Format = ImageFormat::RGBA32F;
+                        spec.GenerateMips = true;
+                        slc.EnvironmentMap = CubeTexture::Create(spec);
+
+                        IBLBaker::ConvertPanoramaToCubemap(panorama, slc.EnvironmentMap);
+                        // IBLBaker::CreateIrradianceMap(slc.EnvironmentMap, slc.IrradianceMap);
+                    }
+                }
+
+                auto modelComponentJson = entity["ModelComponent"];
+                if (!modelComponentJson.is_null())
+                {
+                    auto &mc = deserializedEntity.AddComponent<ModelComponent>();
+
+                    std::filesystem::path modelPath = modelComponentJson.value("ModelPath", "");
+                    if (!modelPath.empty())
+                    {
+                        mc._Model = Model::Create(modelPath);
+                    }
+                }
+
+                auto spriteRendererComponentJson = entity["SpriteRendererComponent"];
+                if (!spriteRendererComponentJson.is_null())
+                {
+                    auto &src = deserializedEntity.AddComponent<SpriteRendererComponent>();
+
+                    std::filesystem::path texturePath = spriteRendererComponentJson.value("TexturePath", "");
+                    if (!texturePath.empty())
+                    {
+                        src.Texture = Texture2D::Create(texturePath);
+                    }
+                    src.Color = spriteRendererComponentJson["Color"];
+                    src.TilingFactor = spriteRendererComponentJson["TilingFactor"];
+                }
+
+                auto circleRendererComponentJson = entity["CircleRendererComponent"];
+                if (!circleRendererComponentJson.is_null())
+                {
+                    auto &crc = deserializedEntity.AddComponent<CircleRendererComponent>();
+
+                    crc.Color = circleRendererComponentJson["Color"];
+                    crc.Thickness = circleRendererComponentJson["Thickness"];
+                    crc.Fade = circleRendererComponentJson["Fade"];
+                }
+
+                auto rigidbody3DComponentJson = entity["Rigidbody3DComponent"];
+                if (!rigidbody3DComponentJson.is_null())
+                {
+                    auto &rd3d = deserializedEntity.AddComponent<Rigidbody3DComponent>();
+
+                    rd3d.Type = Utils::Rigidbody3DBodyTypeFromString(rigidbody3DComponentJson["BodyType"]);
+                    rd3d.AutoMass = rigidbody3DComponentJson["AutoMass"];
+                    rd3d.Mass = rigidbody3DComponentJson["Mass"];
+                    rd3d.InitialVelocity = rigidbody3DComponentJson["InitialVelocity"];
+                }
+
+                auto boxCollider3DComponentJson = entity["BoxCollider3DComponent"];
+                if (!boxCollider3DComponentJson.is_null())
+                {
+                    auto &bc3d = deserializedEntity.AddComponent<BoxCollider3DComponent>();
+
+                    bc3d.Size = boxCollider3DComponentJson["Size"];
+                    bc3d.Offset = boxCollider3DComponentJson["Offset"];
+                    bc3d.Density = boxCollider3DComponentJson["Density"];
+                    bc3d.Friction = boxCollider3DComponentJson["Friction"];
+                    bc3d.Restitution = boxCollider3DComponentJson["Restitution"];
+                }
+
+                auto sphereCollider3DComponentJson = entity["SphereCollider3DComponent"];
+                if (!sphereCollider3DComponentJson.is_null())
+                {
+                    auto &sc3d = deserializedEntity.AddComponent<SphereCollider3DComponent>();
+
+                    sc3d.Radius = sphereCollider3DComponentJson["Radius"];
+                    sc3d.Offset = sphereCollider3DComponentJson["Offset"];
+                    sc3d.Density = sphereCollider3DComponentJson["Density"];
+                    sc3d.Friction = sphereCollider3DComponentJson["Friction"];
+                    sc3d.Restitution = sphereCollider3DComponentJson["Restitution"];
+                }
+
+                auto rigidbody2DComponentJson = entity["Rigidbody2DComponent"];
+                if (!rigidbody2DComponentJson.is_null())
+                {
+                    auto &rb2d = deserializedEntity.AddComponent<Rigidbody2DComponent>();
+                    rb2d.Type = Utils::Rigidbody2DBodyTypeFromString(rigidbody2DComponentJson["BodyType"]);
+                    rb2d.FixedRotation = rigidbody2DComponentJson["FixedRotation"];
+                }
+
+                auto boxCollider2DComponentJson = entity["BoxCollider2DComponent"];
+                if (!boxCollider2DComponentJson.is_null())
+                {
+                    auto &bc2d = deserializedEntity.AddComponent<BoxCollider2DComponent>();
+                    bc2d.Offset = boxCollider2DComponentJson["Offset"];
+                    bc2d.Size = boxCollider2DComponentJson["Size"];
+                    bc2d.Density = boxCollider2DComponentJson["Density"];
+                    bc2d.Friction = boxCollider2DComponentJson["Friction"];
+                    bc2d.Restitution = boxCollider2DComponentJson["Restitution"];
+                }
+
+                auto circleCollider2DComponentJson = entity["CircleCollider2DComponent"];
+                if (!circleCollider2DComponentJson.is_null())
+                {
+                    auto &cc2d = deserializedEntity.AddComponent<CircleCollider2DComponent>();
+                    cc2d.Offset = circleCollider2DComponentJson["Offset"];
+                    cc2d.Radius = circleCollider2DComponentJson["Radius"];
+                    cc2d.Density = circleCollider2DComponentJson["Density"];
+                    cc2d.Friction = circleCollider2DComponentJson["Friction"];
+                    cc2d.Restitution = circleCollider2DComponentJson["Restitution"];
+                }
+            }
         }
-
-        std::string sceneName = data["Scene"];
-        MYKA_CORE_TRACE("Deserializing scene: {0}", sceneName);
-
-        for (auto entity : data["Entities"])
+        catch (const json::exception &e)
         {
-            uint64_t uuid = entity["Entity"];
-
-            std::string name;
-            auto tagComponent = entity["TagComponent"];
-            if (!tagComponent.is_null())
-                name = tagComponent["Tag"];
-
-            Entity deserializedEntity = m_Scene->CreateEntityWithUUID(uuid, name);
-
-            auto transformComponentJson = entity["TransformComponent"];
-            if (!transformComponentJson.is_null())
-            {
-                auto &tc = deserializedEntity.GetComponent<TransformComponent>();
-                tc.Position = transformComponentJson["Position"];
-                tc.Rotation = transformComponentJson["Rotation"];
-                tc.Scale = transformComponentJson["Scale"];
-            }
-
-            auto cameraComponentJson = entity["CameraComponent"];
-            if (!cameraComponentJson.is_null())
-            {
-                auto &cc = deserializedEntity.AddComponent<CameraComponent>();
-
-                auto cameraJson = cameraComponentJson["Camera"];
-                cc.Camera.SetProjectionType(static_cast<SceneCamera::ProjectionType>(cameraJson["ProjectionType"]));
-
-                cc.Camera.SetPerspectiveFOV(cameraJson["PerspectiveFOV"]);
-                cc.Camera.SetPerspectiveNear(cameraJson["PerspectiveNear"]);
-                cc.Camera.SetPerspectiveFar(cameraJson["PerspectiveFar"]);
-
-                cc.Camera.SetOrthographicSize(cameraJson["OrthographicSize"]);
-                cc.Camera.SetOrthographicNear(cameraJson["OrthographicNear"]);
-                cc.Camera.SetOrthographicFar(cameraJson["OrthographicFar"]);
-
-                cc.Primary = cameraComponentJson["Primary"];
-                cc.FixedAspectRatio = cameraComponentJson["FixedAspectRatio"];
-            }
-
-            auto pointLightComponentJson = entity["PointLightComponent"];
-            if (!pointLightComponentJson.is_null())
-            {
-                auto &plc = deserializedEntity.AddComponent<PointLightComponent>();
-
-                plc.Color = pointLightComponentJson["Color"];
-                plc.Intensity = pointLightComponentJson["Intensity"];
-                plc.Radius = pointLightComponentJson["Radius"];
-                plc.Falloff = pointLightComponentJson["Falloff"];
-            }
-
-            auto directionalLightComponentJson = entity["DirectionalLightComponent"];
-            if (!directionalLightComponentJson.is_null())
-            {
-                auto &dlc = deserializedEntity.AddComponent<DirectionalLightComponent>();
-
-                dlc.Color = directionalLightComponentJson["Color"];
-                dlc.Intensity = directionalLightComponentJson["Intensity"];
-                dlc.CastShadows = directionalLightComponentJson["CastShadows"];
-            }
-
-            auto spotLightComponentJson = entity["SpotLightComponent"];
-            if (!spotLightComponentJson.is_null())
-            {
-                auto &slc = deserializedEntity.AddComponent<SpotLightComponent>();
-
-                slc.Color = spotLightComponentJson["Color"];
-                slc.Intensity = spotLightComponentJson["Intensity"];
-                slc.Range = spotLightComponentJson["Range"];
-                slc.InnerCutoff = spotLightComponentJson["InnerCutoff"];
-                slc.OuterCutoff = spotLightComponentJson["OuterCutoff"];
-            }
-
-            auto skyLightComponentJson = entity["SkyLightComponent"];
-            if (!skyLightComponentJson.is_null())
-            {
-                auto &slc = deserializedEntity.AddComponent<SkyLightComponent>();
-                slc.Intensity = skyLightComponentJson.value("Intensity", 1.0f);
-                slc.SourcePath = skyLightComponentJson.value("SourcePath", "");
-
-                if (!slc.SourcePath.empty())
-                {
-                    auto panorama = Texture2D::Create(slc.SourcePath);
-
-                    TextureSpecification spec;
-                    spec.Width = 1024;
-                    spec.Height = 1024;
-                    spec.Format = ImageFormat::RGBA32F;
-                    spec.GenerateMips = true;
-                    slc.EnvironmentMap = CubeTexture::Create(spec);
-
-                    IBLBaker::ConvertPanoramaToCubemap(panorama, slc.EnvironmentMap);
-                    // IBLBaker::CreateIrradianceMap(slc.EnvironmentMap, slc.IrradianceMap);
-                }
-            }
-
-            auto modelComponentJson = entity["ModelComponent"];
-            if (!modelComponentJson.is_null())
-            {
-                auto &mc = deserializedEntity.AddComponent<ModelComponent>();
-
-                std::filesystem::path modelPath = modelComponentJson.value("ModelPath", "");
-                if (!modelPath.empty())
-                {
-                    mc._Model = Model::Create(modelPath);
-                }
-            }
-
-            auto spriteRendererComponentJson = entity["SpriteRendererComponent"];
-            if (!spriteRendererComponentJson.is_null())
-            {
-                auto &src = deserializedEntity.AddComponent<SpriteRendererComponent>();
-
-                std::filesystem::path texturePath = spriteRendererComponentJson.value("TexturePath", "");
-                if (!texturePath.empty())
-                {
-                    src.Texture = Texture2D::Create(texturePath);
-                }
-                src.Color = spriteRendererComponentJson["Color"];
-                src.TilingFactor = spriteRendererComponentJson["TilingFactor"];
-            }
-
-            auto circleRendererComponentJson = entity["CircleRendererComponent"];
-            if (!circleRendererComponentJson.is_null())
-            {
-                auto &crc = deserializedEntity.AddComponent<CircleRendererComponent>();
-
-                crc.Color = circleRendererComponentJson["Color"];
-                crc.Thickness = circleRendererComponentJson["Thickness"];
-                crc.Fade = circleRendererComponentJson["Fade"];
-            }
-
-            auto rigidbody3DComponentJson = entity["Rigidbody3DComponent"];
-            if (!rigidbody3DComponentJson.is_null())
-            {
-                auto &rd3d = deserializedEntity.AddComponent<Rigidbody3DComponent>();
-
-                rd3d.Type = Utils::Rigidbody3DBodyTypeFromString(rigidbody3DComponentJson["BodyType"]);
-                rd3d.Mass = rigidbody3DComponentJson["Mass"];
-                rd3d.InitialVelocity = rigidbody3DComponentJson["InitialVelocity"];
-            }
-
-            auto boxCollider3DComponentJson = entity["BoxCollider3DComponent"];
-            if (!boxCollider3DComponentJson.is_null())
-            {
-                auto &bc3d = deserializedEntity.AddComponent<BoxCollider3DComponent>();
-
-                bc3d.Size = boxCollider3DComponentJson["Size"];
-                bc3d.Offset = boxCollider3DComponentJson["Offset"];
-                bc3d.Friction = boxCollider3DComponentJson["Friction"];
-                bc3d.Restitution = boxCollider3DComponentJson["Restitution"];
-            }
-
-            auto sphereCollider3DComponentJson = entity["SphereCollider3DComponent"];
-            if (!sphereCollider3DComponentJson.is_null())
-            {
-                auto &sc3d = deserializedEntity.AddComponent<SphereCollider3DComponent>();
-
-                sc3d.Radius = sphereCollider3DComponentJson["Radius"];
-                sc3d.Offset = sphereCollider3DComponentJson["Offset"];
-                sc3d.Friction = sphereCollider3DComponentJson["Friction"];
-                sc3d.Restitution = sphereCollider3DComponentJson["Restitution"];
-            }
-
-            auto rigidbody2DComponentJson = entity["Rigidbody2DComponent"];
-            if (!rigidbody2DComponentJson.is_null())
-            {
-                auto &rb2d = deserializedEntity.AddComponent<Rigidbody2DComponent>();
-                rb2d.Type = Utils::Rigidbody2DBodyTypeFromString(rigidbody2DComponentJson["BodyType"]);
-                rb2d.FixedRotation = rigidbody2DComponentJson["FixedRotation"];
-            }
-
-            auto boxCollider2DComponentJson = entity["BoxCollider2DComponent"];
-            if (!boxCollider2DComponentJson.is_null())
-            {
-                auto &bc2d = deserializedEntity.AddComponent<BoxCollider2DComponent>();
-                bc2d.Offset = boxCollider2DComponentJson["Offset"];
-                bc2d.Size = boxCollider2DComponentJson["Size"];
-                bc2d.Density = boxCollider2DComponentJson["Density"];
-                bc2d.Friction = boxCollider2DComponentJson["Friction"];
-                bc2d.Restitution = boxCollider2DComponentJson["Restitution"];
-            }
-
-            auto circleCollider2DComponentJson = entity["CircleCollider2DComponent"];
-            if (!circleCollider2DComponentJson.is_null())
-            {
-                auto &cc2d = deserializedEntity.AddComponent<CircleCollider2DComponent>();
-                cc2d.Offset = circleCollider2DComponentJson["Offset"];
-                cc2d.Radius = circleCollider2DComponentJson["Radius"];
-                cc2d.Density = circleCollider2DComponentJson["Density"];
-                cc2d.Friction = circleCollider2DComponentJson["Friction"];
-                cc2d.Restitution = circleCollider2DComponentJson["Restitution"];
-            }
+            MYKA_CORE_ERROR("JSON parsing error: {0}", e.what());
+            return false;
         }
 
         return true;

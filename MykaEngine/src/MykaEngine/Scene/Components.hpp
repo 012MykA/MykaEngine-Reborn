@@ -195,6 +195,7 @@ namespace Myka
         };
         BodyType Type = BodyType::Static;
 
+        bool AutoMass = true;
         float Mass = 1.0f;
         glm::vec3 InitialVelocity{0.0f};
 
@@ -209,7 +210,8 @@ namespace Myka
         glm::vec3 Size = {0.5f, 0.5f, 0.5f};
         glm::vec3 Offset = {0.0f, 0.0f, 0.0f};
 
-        float Friction = 0.0f;
+        float Density = 1.0f;
+        float Friction = 0.5f;
         float Restitution = 0.0f;
 
         BoxCollider3DComponent() = default;
@@ -221,7 +223,8 @@ namespace Myka
         float Radius = 0.5f;
         glm::vec3 Offset = {0.0f, 0.0f, 0.0f};
 
-        float Friction = 0.0f;
+        float Density = 1.0f;
+        float Friction = 0.5f;
         float Restitution = 0.0f;
 
         SphereCollider3DComponent() = default;
