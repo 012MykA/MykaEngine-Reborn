@@ -398,7 +398,8 @@ namespace Myka
                         }
                     }
 
-                    if (!m_SelectionContext.HasComponent<BoxCollider3DComponent>())
+                    if (!m_SelectionContext.HasComponent<BoxCollider3DComponent>() &&
+                        !m_SelectionContext.HasComponent<SphereCollider3DComponent>())
                     {
                         if (ImGui::MenuItem("Box Collider 3D"))
                         {
@@ -407,7 +408,8 @@ namespace Myka
                         }
                     }
 
-                    if (!m_SelectionContext.HasComponent<SphereCollider3DComponent>())
+                    if (!m_SelectionContext.HasComponent<SphereCollider3DComponent>() &&
+                        !m_SelectionContext.HasComponent<BoxCollider3DComponent>())
                     {
                         if (ImGui::MenuItem("Sphere Collider 3D"))
                         {
@@ -605,8 +607,22 @@ namespace Myka
             }
 
             ImGui::Checkbox("Auto Mass Calculation", &component.AutoMass);
-            if (!component.AutoMass)
-                ImGui::DragFloat("Mass", &component.Mass, 0.1f, 0.001f, std::numeric_limits<float>::max());
+
+            if (component.AutoMass)
+            {
+                ImGui::BeginDisabled();
+
+                float calculatedMass = component.RuntimeBody.Mass;
+                ImGui::DragFloat("Calculated Mass", &calculatedMass);
+
+                ImGui::EndDisabled();
+                ImGui::SetItemTooltip("Mass is calculated based on Collider Density and Volume.");
+            }
+            else
+            {
+                if (ImGui::DragFloat("Mass", &component.Mass, 0.1f, 0.001f, 10000.0f))
+                    component.RuntimeBody.SetMass(component.Mass);
+            }
 
             ImGui::DragFloat3("Initial Velocity", glm::value_ptr(component.InitialVelocity), 0.1f);
 
@@ -614,6 +630,7 @@ namespace Myka
             {
                 if (component.AutoMass)
                     ImGui::Text("Mass: %.2f", component.RuntimeBody.Mass);
+
                 ImGui::Text("Velocity: %.2f, %.2f, %.2f",
                         component.RuntimeBody.Velocity.x,
                         component.RuntimeBody.Velocity.y,
@@ -626,7 +643,7 @@ namespace Myka
             ImGui::DragFloat3("Size", glm::value_ptr(component.Size), 0.1f, 0.0f, std::numeric_limits<float>::max());
             ImGui::DragFloat3("Offset", glm::value_ptr(component.Offset), 0.1f);
 
-            ImGui::DragFloat("Density", &component.Density, 0.01f, 0.001f, std::numeric_limits<float>::max());
+            ImGui::DragFloat("Density", &component.Density, 1.0f, 0.001f, std::numeric_limits<float>::max());
             ImGui::DragFloat("Friction", &component.Friction, 0.01f, 0.0f, 1.0f);
             ImGui::DragFloat("Restitution", &component.Restitution, 0.01f, 0.0f, 1.0f); });
 
@@ -635,7 +652,7 @@ namespace Myka
             ImGui::DragFloat("Radius", &component.Radius, 0.1f, 0.0f, std::numeric_limits<float>::max());
             ImGui::DragFloat3("Offset", glm::value_ptr(component.Offset), 0.1f);
 
-            ImGui::DragFloat("Density", &component.Density, 0.01f, 0.001f, std::numeric_limits<float>::max());
+            ImGui::DragFloat("Density", &component.Density, 1.0f, 0.001f, std::numeric_limits<float>::max());
             ImGui::DragFloat("Friction", &component.Friction, 0.01f, 0.0f, 1.0f);
             ImGui::DragFloat("Restitution", &component.Restitution, 0.01f, 0.0f, 1.0f); });
 
@@ -666,7 +683,7 @@ namespace Myka
                                               {
             ImGui::DragFloat2("Size", glm::value_ptr(component.Size), 0.1f, 0.0f, std::numeric_limits<float>::max());
             ImGui::DragFloat2("Offset", glm::value_ptr(component.Offset), 0.1f);
-            ImGui::DragFloat("Density", &component.Density, 0.01f, 0.001f, std::numeric_limits<float>::max());
+            ImGui::DragFloat("Density", &component.Density, 1.0f, 0.001f, std::numeric_limits<float>::max());
             ImGui::DragFloat("Friction", &component.Friction, 0.01f, 0.0f, 1.0f);
             ImGui::DragFloat("Restitution", &component.Restitution, 0.01f, 0.0f, 1.0f); });
 
@@ -674,7 +691,7 @@ namespace Myka
                                                  {
             ImGui::DragFloat("Radius", &component.Radius, 0.1f, 0.0f, std::numeric_limits<float>::max());
             ImGui::DragFloat2("Offset", glm::value_ptr(component.Offset), 0.1f);
-            ImGui::DragFloat("Density", &component.Density, 0.01f, 0.001f, std::numeric_limits<float>::max());
+            ImGui::DragFloat("Density", &component.Density, 1.0f, 0.001f, std::numeric_limits<float>::max());
             ImGui::DragFloat("Friction", &component.Friction, 0.01f, 0.0f, 1.0f);
             ImGui::DragFloat("Restitution", &component.Restitution, 0.01f, 0.0f, 1.0f); });
 

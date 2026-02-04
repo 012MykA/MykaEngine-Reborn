@@ -327,6 +327,7 @@ namespace Myka
     {
         // Creating World
         m_Physics3DWorld = new Physics3D::World();
+        m_Physics3DWorld->SetGravity(glm::vec3(0.0f));
 
         auto view = m_Registry.view<Rigidbody3DComponent>();
         for (auto e : view)
@@ -335,10 +336,10 @@ namespace Myka
             auto &transform = entity.GetComponent<TransformComponent>();
             auto &rb3d = entity.GetComponent<Rigidbody3DComponent>();
 
-            rb3d.RuntimeBody.Shapes.clear();
             rb3d.RuntimeBody.Position = transform.Position;
             rb3d.RuntimeBody.Velocity = rb3d.InitialVelocity;
-            rb3d.RuntimeBody.SetType((Physics3D::BodyType)rb3d.Type);
+
+            rb3d.RuntimeBody.SetType(static_cast<Physics3D::BodyType>(rb3d.Type));
 
             if (entity.HasComponent<BoxCollider3DComponent>())
             {
@@ -352,9 +353,9 @@ namespace Myka
                 shape.Restitution = bc3d.Restitution;
                 shape.Offset = bc3d.Offset;
 
-                rb3d.RuntimeBody.AddShape(shape);
+                rb3d.RuntimeBody.SetShape(shape);
             }
-            if (entity.HasComponent<SphereCollider3DComponent>())
+            else if (entity.HasComponent<SphereCollider3DComponent>())
             {
                 auto &sc3d = entity.GetComponent<SphereCollider3DComponent>();
 
@@ -366,13 +367,13 @@ namespace Myka
                 shape.Restitution = sc3d.Restitution;
                 shape.Offset = sc3d.Offset;
 
-                rb3d.RuntimeBody.AddShape(shape);
+                rb3d.RuntimeBody.SetShape(shape);
             }
 
             if (rb3d.AutoMass)
             {
-                rb3d.RuntimeBody.CalculateMassFromShapes();
-                rb3d.Mass = rb3d.RuntimeBody.Mass;
+                rb3d.RuntimeBody.CalculateMassFromShape();
+                rb3d.Mass = rb3d.RuntimeBody.Mass; // Synchronising with UI
             }
             else
             {
@@ -391,8 +392,8 @@ namespace Myka
         for (auto e : view)
         {
             Entity entity = {e, this};
-            auto& rb3d = entity.GetComponent<Rigidbody3DComponent>();
-            auto& transform = entity.GetComponent<TransformComponent>();
+            auto &rb3d = entity.GetComponent<Rigidbody3DComponent>();
+            auto &transform = entity.GetComponent<TransformComponent>();
 
             if (rb3d.Type == Rigidbody3DComponent::BodyType::Dynamic)
             {

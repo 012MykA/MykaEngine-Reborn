@@ -20,26 +20,20 @@ namespace Myka
 
         using GeometryType = std::variant<BoxGeometry, SphereGeometry>;
 
-        enum class ShapeType
-        {
-            Box = 0,
-            Sphere
-        };
-
         struct Shape
         {
             GeometryType Geometry;
-            ShapeType Type;
-
             float Density = 1.0f;
             float Friction = 0.5f;
             float Restitution = 0.0f;
             glm::vec3 Offset{0.0f};
 
+            bool IsBox() const { return std::holds_alternative<BoxGeometry>(Geometry); }
+            bool IsSphere() const { return std::holds_alternative<SphereGeometry>(Geometry); }
+
             static Shape CreateBox(const glm::vec3 &halfSize)
             {
                 Shape s;
-                s.Type = ShapeType::Box;
                 s.Geometry = BoxGeometry{halfSize};
                 return s;
             }
@@ -47,7 +41,6 @@ namespace Myka
             static Shape CreateSphere(float radius)
             {
                 Shape s;
-                s.Type;
                 s.Geometry = SphereGeometry{radius};
                 return s;
             }
