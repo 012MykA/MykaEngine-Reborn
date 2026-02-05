@@ -9,6 +9,8 @@ namespace Myka
     {
         void World::Step(Timestep ts)
         {
+            float dt = static_cast<float>(ts);
+
             for (auto body : m_Bodies)
             {
                 if (body->Type != BodyType::Dynamic)
@@ -42,62 +44,106 @@ namespace Myka
 
                     Shape &shapeA = a->_Shape;
                     Shape &shapeB = b->_Shape;
+
                     if (shapeA.IsSphere() && shapeB.IsSphere())
                     {
-                        // Radius
-                        float rA = std::get<SphereGeometry>(shapeA.Geometry).Radius;
-                        float rB = std::get<SphereGeometry>(shapeB.Geometry).Radius;
+                        float rA = std::get<SphereGeometry>(shapeA.Geometry).Radius * 2.0f;
+                        float rB = std::get<SphereGeometry>(shapeB.Geometry).Radius * 2.0f;
 
-                        // Center Position with offset
-                        glm::vec3 posA = a->Position + shapeA.Offset;
-                        glm::vec3 posB = b->Position + shapeB.Offset;
+                        glm::vec3 worldCenterA = a->Position + shapeA.Offset;
+                        glm::vec3 worldCenterB = b->Position + shapeB.Offset;
 
-                        // Vector from center a to center b
-                        glm::vec3 relativePos = posB - posA;
+                        glm::vec3 relativePos = worldCenterB - worldCenterA;
+                        float distance = glm::length(relativePos);
+                        float minDistance = rA + rB;
 
-                        // Distance between a and b;
-                        float distance = glm::length(relativePos) - (rA + rB);
-
-                        // Distance between radiusA and radiusB
-                        float collisionDistance = rA + rB;
-
-                        // Checking for collision
-                        if (distance < collisionDistance)
+                        if (distance < minDistance)
                         {
-                            CollisionContact contact;
+                            CollisionInfo contact;
                             contact.A = a;
                             contact.B = b;
-                            contact.Normal = glm::normalize(relativePos); // Normalizing to get only direction
-                            contact.Depth = distance - collisionDistance; // Depth
+                            if (distance > 0.0f)
+                            {
+                                contact.Normal = relativePos / distance;
+                                contact.Depth = minDistance - distance;
+                            }
+                            else
+                            {
+                                contact.Normal = glm::vec3(0, 1, 0);
+                                contact.Depth = minDistance;
+                            }
+                            SolveCollision(contact);
+                        }
+                    }
+                    else if ((shapeA.IsSphere() && shapeB.IsBox()) || (shapeA.IsBox() && shapeB.IsSphere()))
+                    {
+                        Body *sBody = shapeA.IsSphere() ? a : b;
+                        Body *bBody = shapeA.IsBox() ? a : b;
 
-                            SolveCollision(contact); // Solving the collision
+                        float radius = std::get<SphereGeometry>(sBody->_Shape.Geometry).Radius * 2.0f;
+                        glm::vec3 halfSize = std::get<BoxGeometry>(bBody->_Shape.Geometry).HalfSize * 4.0f;
+
+                        glm::vec3 sCenter = sBody->Position + sBody->_Shape.Offset;
+                        glm::vec3 bCenter = bBody->Position + bBody->_Shape.Offset;
+
+                        glm::vec3 relPos = sCenter - bCenter;
+
+                        glm::vec3 closest = glm::clamp(relPos, -halfSize, halfSize);
+
+                        glm::vec3 difference = relPos - closest;
+                        float distance = glm::length(difference);
+
+                        if (distance < radius)
+                        {
+                            CollisionInfo contact;
+                            contact.A = bBody;
+                            contact.B = sBody;
+
+                            if (distance > 0.0f)
+                            {
+                                contact.Normal = difference / distance;
+                                contact.Depth = radius - distance;
+                            }
+                            else
+                            {
+                                contact.Normal = glm::vec3(0, 1, 0);
+                                contact.Depth = radius;
+                            }
+                            SolveCollision(contact);
                         }
                     }
                 }
             }
         }
 
-        void World::SolveCollision(CollisionContact contact)
+        void World::SolveCollision(CollisionInfo contact)
         {
             Body *a = contact.A;
             Body *b = contact.B;
 
-            /*
-                a = g + F / m
-                v = v0 + at
-                x = x0 + vt
+            glm::vec3 relVelocity = b->Velocity - a->Velocity;
 
-                m1v1 + m2v2 = m1v1' + m2v2'
-                Ek = (mv * v) / 2
-                Ep = mgh
-                Em = Ek + Ep
-            */
+            float velAlongNormal = glm::dot(relVelocity, contact.Normal);
 
-            a->Velocity *= glm::vec3(-0.9f);
-            b->Velocity *= glm::vec3(-0.9f);
+            if (velAlongNormal > 0.0f)
+                return;
 
-            // a->Velocity *= glm::vec3(0.0f);
-            // b->Velocity *= glm::vec3(0.0f);
+            float e = std::min(a->_Shape.Restitution, b->_Shape.Restitution);
+            float inverseMassSum = a->InverseMass + b->InverseMass;
+
+            float j = (-(1.0f + e) * velAlongNormal) / inverseMassSum;
+
+            glm::vec3 impulse = j * contact.Normal;
+
+            a->Velocity -= a->InverseMass * impulse;
+            b->Velocity += b->InverseMass * impulse;
+
+            const float percent = 0.4f;
+            const float slop = 0.01f;
+            glm::vec3 correction = std::max(contact.Depth - slop, 0.0f) / inverseMassSum * percent * contact.Normal;
+
+            a->Position -= a->InverseMass * correction;
+            b->Position += b->InverseMass * correction;
         }
 
     } // namespace Physics3D

@@ -1,18 +1,111 @@
 {
     "Entities": [
         {
-            "DirectionalLightComponent": {
-                "CastShadows": true,
-                "Color": [
-                    1.0,
-                    1.0,
-                    1.0
-                ],
-                "Intensity": 1.0
+            "Entity": 529074839404583121,
+            "ModelComponent": {
+                "ModelPath": "assets\\models\\primitives\\Ultra\\Sphere.glb"
             },
-            "Entity": 12359035897726851485,
+            "Rigidbody3DComponent": {
+                "AutoMass": true,
+                "BodyType": "Dynamic",
+                "InitialVelocity": [
+                    20.0,
+                    0.0,
+                    0.0
+                ],
+                "Mass": 1.0
+            },
+            "SphereCollider3DComponent": {
+                "Density": 1000.0,
+                "Friction": 0.5,
+                "Offset": [
+                    0.0,
+                    0.0,
+                    0.0
+                ],
+                "Radius": 0.5,
+                "Restitution": 1.0
+            },
             "TagComponent": {
-                "Tag": "Directional Light"
+                "Tag": "Sphere A"
+            },
+            "TransformComponent": {
+                "Position": [
+                    -10.0,
+                    0.0,
+                    2.384185791015625e-07
+                ],
+                "Rotation": [
+                    0.0,
+                    0.0,
+                    0.0
+                ],
+                "Scale": [
+                    1.5,
+                    1.5,
+                    1.0
+                ]
+            }
+        },
+        {
+            "BoxCollider3DComponent": {
+                "Density": 1.0,
+                "Friction": 0.5,
+                "Offset": [
+                    0.0,
+                    0.0,
+                    0.0
+                ],
+                "Restitution": 1.0,
+                "Size": [
+                    0.5,
+                    0.5,
+                    0.5
+                ]
+            },
+            "Entity": 4993072858871335761,
+            "ModelComponent": {
+                "ModelPath": "assets\\models\\primitives\\Cube.glb"
+            },
+            "Rigidbody3DComponent": {
+                "AutoMass": true,
+                "BodyType": "Static",
+                "InitialVelocity": [
+                    20.0,
+                    0.0,
+                    0.0
+                ],
+                "Mass": 1.0
+            },
+            "TagComponent": {
+                "Tag": "Platform"
+            },
+            "TransformComponent": {
+                "Position": [
+                    -0.03562140464782715,
+                    -10.0,
+                    1.4901161193847656e-08
+                ],
+                "Rotation": [
+                    0.0,
+                    0.0,
+                    0.0
+                ],
+                "Scale": [
+                    20.0,
+                    0.4000000059604645,
+                    20.0
+                ]
+            }
+        },
+        {
+            "Entity": 721880589704711142,
+            "SkyLightComponent": {
+                "Intensity": 1.0,
+                "SourcePath": "assets\\skyboxes\\ocean\\skybox.hdr"
+            },
+            "TagComponent": {
+                "Tag": "Skybox"
             },
             "TransformComponent": {
                 "Position": [
@@ -21,8 +114,8 @@
                     0.0
                 ],
                 "Rotation": [
-                    -0.5235987901687622,
-                    0.3490658402442932,
+                    0.0,
+                    0.0,
                     0.0
                 ],
                 "Scale": [
@@ -69,12 +162,18 @@
             }
         },
         {
-            "Entity": 16500317793439848684,
-            "ModelComponent": {
-                "ModelPath": "assets\\models\\primitives\\Cube.glb"
+            "DirectionalLightComponent": {
+                "CastShadows": true,
+                "Color": [
+                    1.0,
+                    1.0,
+                    1.0
+                ],
+                "Intensity": 1.0
             },
+            "Entity": 8008590799585582969,
             "TagComponent": {
-                "Tag": "Floor"
+                "Tag": "Directional Light"
             },
             "TransformComponent": {
                 "Position": [
@@ -83,35 +182,8 @@
                     0.0
                 ],
                 "Rotation": [
-                    0.0,
-                    0.0,
-                    0.0
-                ],
-                "Scale": [
-                    10.0,
-                    0.20000000298023224,
-                    10.0
-                ]
-            }
-        },
-        {
-            "Entity": 721880589704711142,
-            "SkyLightComponent": {
-                "Intensity": 1.0,
-                "SourcePath": "assets\\skyboxes\\ocean\\skybox.hdr"
-            },
-            "TagComponent": {
-                "Tag": "Skybox"
-            },
-            "TransformComponent": {
-                "Position": [
-                    0.0,
-                    0.0,
-                    0.0
-                ],
-                "Rotation": [
-                    0.0,
-                    0.0,
+                    -0.5235987901687622,
+                    1.0821040868759155,
                     0.0
                 ],
                 "Scale": [
@@ -122,62 +194,15 @@
             }
         },
         {
-            "Entity": 16562920093478199710,
+            "Entity": 17539113663058908975,
             "ModelComponent": {
-                "ModelPath": "assets/models\\primitives\\High\\Sphere.glb"
+                "ModelPath": "assets\\models\\primitives\\Ultra\\Sphere.glb"
             },
             "Rigidbody3DComponent": {
                 "AutoMass": true,
                 "BodyType": "Dynamic",
                 "InitialVelocity": [
-                    2.0,
-                    0.0,
-                    0.0
-                ],
-                "Mass": 3.799999952316284
-            },
-            "SphereCollider3DComponent": {
-                "Density": 3000.0,
-                "Friction": 0.5,
-                "Offset": [
-                    0.0,
-                    0.0,
-                    0.0
-                ],
-                "Radius": 0.5,
-                "Restitution": 0.0
-            },
-            "TagComponent": {
-                "Tag": "Gold Cube"
-            },
-            "TransformComponent": {
-                "Position": [
-                    -5.0,
-                    5.0,
-                    -0.0744333267211914
-                ],
-                "Rotation": [
-                    0.0,
-                    0.0,
-                    0.0
-                ],
-                "Scale": [
-                    1.0,
-                    1.0,
-                    1.0
-                ]
-            }
-        },
-        {
-            "Entity": 8187184892184994778,
-            "ModelComponent": {
-                "ModelPath": "assets/models\\primitives\\High\\Sphere.glb"
-            },
-            "Rigidbody3DComponent": {
-                "AutoMass": true,
-                "BodyType": "Dynamic",
-                "InitialVelocity": [
-                    -2.0,
+                    -10.0,
                     0.0,
                     0.0
                 ],
@@ -192,15 +217,15 @@
                     0.0
                 ],
                 "Radius": 0.5,
-                "Restitution": 0.0
+                "Restitution": 1.0
             },
             "TagComponent": {
-                "Tag": "Aluminum Cube"
+                "Tag": "Sphere A"
             },
             "TransformComponent": {
                 "Position": [
-                    5.0,
-                    5.0,
+                    10.0,
+                    0.0,
                     0.0
                 ],
                 "Rotation": [
@@ -209,9 +234,9 @@
                     0.0
                 ],
                 "Scale": [
-                    1.0,
-                    1.0,
-                    1.0
+                    3.0,
+                    3.0,
+                    3.0
                 ]
             }
         }

@@ -327,7 +327,7 @@ namespace Myka
     {
         // Creating World
         m_Physics3DWorld = new Physics3D::World();
-        m_Physics3DWorld->SetGravity(glm::vec3(0.0f));
+        // m_Physics3DWorld->SetGravity(glm::vec3(0.0f));
 
         auto view = m_Registry.view<Rigidbody3DComponent>();
         for (auto e : view)

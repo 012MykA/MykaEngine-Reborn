@@ -13,7 +13,7 @@ namespace Myka
     {
         class World
         {
-            struct CollisionContact
+            struct CollisionInfo
             {
                 Body *A;
                 Body *B;
@@ -33,7 +33,7 @@ namespace Myka
 
         private:
             void HandleCollisions();
-            void SolveCollision(CollisionContact contact);
+            void SolveCollision(CollisionInfo contact);
 
             glm::vec3 m_Gravity = {0.0f, -9.81f, 0.0f};
             std::vector<Body *> m_Bodies;

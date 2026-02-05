@@ -1,17 +1,100 @@
 {
     "Entities": [
         {
-            "Entity": 1027725575646675743,
-            "SkyLightComponent": {
-                "Intensity": 1.0,
-                "SourcePath": "assets\\skyboxes\\ocean\\skybox.hdr"
+            "DirectionalLightComponent": {
+                "CastShadows": true,
+                "Color": [
+                    1.0,
+                    1.0,
+                    1.0
+                ],
+                "Intensity": 1.0
             },
+            "Entity": 5644977842137548231,
             "TagComponent": {
-                "Tag": "Skybox"
+                "Tag": "Light"
             },
             "TransformComponent": {
                 "Position": [
                     0.0,
+                    0.0,
+                    0.0
+                ],
+                "Rotation": [
+                    -0.34906187653541565,
+                    0.9889281392097473,
+                    1.084537899487259e-07
+                ],
+                "Scale": [
+                    0.9999983310699463,
+                    0.9999985098838806,
+                    0.9999984502792358
+                ]
+            }
+        },
+        {
+            "Entity": 3250943048492024152,
+            "ModelComponent": {
+                "ModelPath": "assets/models/primitives/Ultra\\Cone.glb"
+            },
+            "TagComponent": {
+                "Tag": "Cone"
+            },
+            "TransformComponent": {
+                "Position": [
+                    5.0,
+                    0.0,
+                    -5.0
+                ],
+                "Rotation": [
+                    0.0,
+                    0.0,
+                    0.0
+                ],
+                "Scale": [
+                    1.0,
+                    1.0,
+                    1.0
+                ]
+            }
+        },
+        {
+            "Entity": 10581535662344822571,
+            "ModelComponent": {
+                "ModelPath": "assets/models/primitives/Ultra\\Cylinder.glb"
+            },
+            "TagComponent": {
+                "Tag": "Cylinder"
+            },
+            "TransformComponent": {
+                "Position": [
+                    0.0,
+                    0.0,
+                    -5.0
+                ],
+                "Rotation": [
+                    0.0,
+                    0.0,
+                    0.0
+                ],
+                "Scale": [
+                    1.0,
+                    1.0,
+                    1.0
+                ]
+            }
+        },
+        {
+            "Entity": 12501503956177060974,
+            "ModelComponent": {
+                "ModelPath": "assets\\models\\primitives\\Cube.glb"
+            },
+            "TagComponent": {
+                "Tag": "Cube"
+            },
+            "TransformComponent": {
+                "Position": [
+                    -5.0,
                     0.0,
                     0.0
                 ],
@@ -28,16 +111,16 @@
             }
         },
         {
-            "Entity": 12977658510199323562,
+            "Entity": 12507921683949286907,
             "ModelComponent": {
-                "ModelPath": "assets/models/primitives/Ultra\\Torus.glb"
+                "ModelPath": "assets/models/primitives/Ultra\\Sphere.glb"
             },
             "TagComponent": {
-                "Tag": "Torus"
+                "Tag": "Sphere"
             },
             "TransformComponent": {
                 "Position": [
-                    5.0,
+                    0.0,
                     0.0,
                     0.0
                 ],
@@ -80,96 +163,18 @@
             }
         },
         {
-            "Entity": 12507921683949286907,
+            "Entity": 12977658510199323562,
             "ModelComponent": {
-                "ModelPath": "assets/models/primitives/Ultra\\Sphere.glb"
+                "ModelPath": "assets/models/primitives/Ultra\\Torus.glb"
             },
             "TagComponent": {
-                "Tag": "Sphere"
-            },
-            "TransformComponent": {
-                "Position": [
-                    0.0,
-                    0.0,
-                    0.0
-                ],
-                "Rotation": [
-                    0.0,
-                    0.0,
-                    0.0
-                ],
-                "Scale": [
-                    1.0,
-                    1.0,
-                    1.0
-                ]
-            }
-        },
-        {
-            "Entity": 12501503956177060974,
-            "ModelComponent": {
-                "ModelPath": "assets\\models\\primitives\\Cube.glb"
-            },
-            "TagComponent": {
-                "Tag": "Cube"
-            },
-            "TransformComponent": {
-                "Position": [
-                    -5.0,
-                    0.0,
-                    0.0
-                ],
-                "Rotation": [
-                    0.0,
-                    0.0,
-                    0.0
-                ],
-                "Scale": [
-                    1.0,
-                    1.0,
-                    1.0
-                ]
-            }
-        },
-        {
-            "Entity": 10581535662344822571,
-            "ModelComponent": {
-                "ModelPath": "assets/models/primitives/Ultra\\Cylinder.glb"
-            },
-            "TagComponent": {
-                "Tag": "Cylinder"
-            },
-            "TransformComponent": {
-                "Position": [
-                    0.0,
-                    0.0,
-                    -5.0
-                ],
-                "Rotation": [
-                    0.0,
-                    0.0,
-                    0.0
-                ],
-                "Scale": [
-                    1.0,
-                    1.0,
-                    1.0
-                ]
-            }
-        },
-        {
-            "Entity": 3250943048492024152,
-            "ModelComponent": {
-                "ModelPath": "assets/models/primitives/Ultra\\Cone.glb"
-            },
-            "TagComponent": {
-                "Tag": "Cone"
+                "Tag": "Torus"
             },
             "TransformComponent": {
                 "Position": [
                     5.0,
                     0.0,
-                    -5.0
+                    0.0
                 ],
                 "Rotation": [
                     0.0,
@@ -184,18 +189,13 @@
             }
         },
         {
-            "DirectionalLightComponent": {
-                "CastShadows": true,
-                "Color": [
-                    1.0,
-                    1.0,
-                    1.0
-                ],
-                "Intensity": 5.0
+            "Entity": 1027725575646675743,
+            "SkyLightComponent": {
+                "Intensity": 1.0,
+                "SourcePath": "assets\\skyboxes\\ocean\\skybox.hdr"
             },
-            "Entity": 5644977842137548231,
             "TagComponent": {
-                "Tag": "Light"
+                "Tag": "Skybox"
             },
             "TransformComponent": {
                 "Position": [
@@ -204,14 +204,14 @@
                     0.0
                 ],
                 "Rotation": [
-                    -0.34906187653541565,
-                    0.9889281392097473,
-                    1.084537899487259e-07
+                    0.0,
+                    0.0,
+                    0.0
                 ],
                 "Scale": [
-                    0.9999983310699463,
-                    0.9999985098838806,
-                    0.9999984502792358
+                    1.0,
+                    1.0,
+                    1.0
                 ]
             }
         }
