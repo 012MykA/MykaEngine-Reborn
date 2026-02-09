@@ -327,7 +327,7 @@ namespace Myka
     {
         // Creating World
         m_Physics3DWorld = new Physics3D::World();
-        // m_Physics3DWorld->SetGravity(glm::vec3(0.0f));
+        m_Physics3DWorld->SetGravity(m_Gravity);
 
         auto view = m_Registry.view<Rigidbody3DComponent>();
         for (auto e : view)
@@ -344,9 +344,7 @@ namespace Myka
             if (entity.HasComponent<BoxCollider3DComponent>())
             {
                 auto &bc3d = entity.GetComponent<BoxCollider3DComponent>();
-
-                glm::vec3 halfSize = (bc3d.Size * transform.Scale) * 0.5f;
-                auto shape = Physics3D::Shape::CreateBox(halfSize);
+                auto shape = Physics3D::Shape::CreateBox(bc3d.Size * transform.Scale);
 
                 shape.Density = bc3d.Density;
                 shape.Friction = bc3d.Friction;

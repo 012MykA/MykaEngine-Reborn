@@ -43,6 +43,10 @@ namespace Myka
 
         Entity GetPrimaryCameraEntity();
 
+        const glm::vec3 &GetGravity() const { return m_Gravity; }
+        glm::vec3& GetGravity() { return m_Gravity; }
+        void SetGravity(const glm::vec3 &gravity) { m_Gravity = gravity; }
+
         template <typename... Components>
         auto GetAllEntitiesWith()
         {
@@ -56,7 +60,7 @@ namespace Myka
         void OnPhysics3DStart();
         void OnPhysics3DUpdate(Timestep ts);
         void OnPhysics3DStop();
-        
+
         void OnPhysics2DStart();
         void OnPhysics2DUpdate(Timestep ts);
         void OnPhysics2DStop();
@@ -67,7 +71,8 @@ namespace Myka
         entt::registry m_Registry;
         uint32_t m_ViewportWidth = 0, m_ViewportHeight = 0;
 
-        Physics3D::World* m_Physics3DWorld;
+        Physics3D::World *m_Physics3DWorld;
+        glm::vec3 m_Gravity = {0.0f, -9.81f, 0.0f};
         b2WorldId m_Physics2DWorldID = b2_nullWorldId;
     };
 } // namespace Myka

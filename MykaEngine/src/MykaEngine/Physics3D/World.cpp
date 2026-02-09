@@ -9,8 +9,6 @@ namespace Myka
     {
         void World::Step(Timestep ts)
         {
-            float dt = static_cast<float>(ts);
-
             for (auto body : m_Bodies)
             {
                 if (body->Type != BodyType::Dynamic)
@@ -47,8 +45,8 @@ namespace Myka
 
                     if (shapeA.IsSphere() && shapeB.IsSphere())
                     {
-                        float rA = std::get<SphereGeometry>(shapeA.Geometry).Radius * 2.0f;
-                        float rB = std::get<SphereGeometry>(shapeB.Geometry).Radius * 2.0f;
+                        float rA = std::get<SphereGeometry>(shapeA.Geometry).Radius;
+                        float rB = std::get<SphereGeometry>(shapeB.Geometry).Radius;
 
                         glm::vec3 worldCenterA = a->Position + shapeA.Offset;
                         glm::vec3 worldCenterB = b->Position + shapeB.Offset;
@@ -72,45 +70,13 @@ namespace Myka
                                 contact.Normal = glm::vec3(0, 1, 0);
                                 contact.Depth = minDistance;
                             }
+
                             SolveCollision(contact);
                         }
                     }
-                    else if ((shapeA.IsSphere() && shapeB.IsBox()) || (shapeA.IsBox() && shapeB.IsSphere()))
+                    else
                     {
-                        Body *sBody = shapeA.IsSphere() ? a : b;
-                        Body *bBody = shapeA.IsBox() ? a : b;
-
-                        float radius = std::get<SphereGeometry>(sBody->_Shape.Geometry).Radius * 2.0f;
-                        glm::vec3 halfSize = std::get<BoxGeometry>(bBody->_Shape.Geometry).HalfSize * 4.0f;
-
-                        glm::vec3 sCenter = sBody->Position + sBody->_Shape.Offset;
-                        glm::vec3 bCenter = bBody->Position + bBody->_Shape.Offset;
-
-                        glm::vec3 relPos = sCenter - bCenter;
-
-                        glm::vec3 closest = glm::clamp(relPos, -halfSize, halfSize);
-
-                        glm::vec3 difference = relPos - closest;
-                        float distance = glm::length(difference);
-
-                        if (distance < radius)
-                        {
-                            CollisionInfo contact;
-                            contact.A = bBody;
-                            contact.B = sBody;
-
-                            if (distance > 0.0f)
-                            {
-                                contact.Normal = difference / distance;
-                                contact.Depth = radius - distance;
-                            }
-                            else
-                            {
-                                contact.Normal = glm::vec3(0, 1, 0);
-                                contact.Depth = radius;
-                            }
-                            SolveCollision(contact);
-                        }
+                        MYKA_CORE_WARN("Unnable handle Box - Box collision or Sphere - Box collision yet");
                     }
                 }
             }
@@ -121,27 +87,27 @@ namespace Myka
             Body *a = contact.A;
             Body *b = contact.B;
 
+            // 1. Относительная скорость
             glm::vec3 relVelocity = b->Velocity - a->Velocity;
-
+            // 2. Проекция на нормаль (скорость сближения)
             float velAlongNormal = glm::dot(relVelocity, contact.Normal);
 
             if (velAlongNormal > 0.0f)
                 return;
 
-            float e = std::min(a->_Shape.Restitution, b->_Shape.Restitution);
-            float inverseMassSum = a->InverseMass + b->InverseMass;
-
-            float j = (-(1.0f + e) * velAlongNormal) / inverseMassSum;
+            // 3. Импульс по ЗСИ и ЗСЭ (e = 1.0)
+            float invMassSum = a->InverseMass + b->InverseMass;
+            // Коэффициент 2.0f берется из вывода (1 + e), где e = 1 (упругий удар)
+            float j = -(2.0f * velAlongNormal) / invMassSum;
 
             glm::vec3 impulse = j * contact.Normal;
 
+            // Мгновенное изменение скоростей
             a->Velocity -= a->InverseMass * impulse;
             b->Velocity += b->InverseMass * impulse;
 
-            const float percent = 0.4f;
-            const float slop = 0.01f;
-            glm::vec3 correction = std::max(contact.Depth - slop, 0.0f) / inverseMassSum * percent * contact.Normal;
-
+            const float percent = 0.5f; // Коэффициент разделения
+            glm::vec3 correction = (contact.Depth / invMassSum) * percent * contact.Normal;
             a->Position -= a->InverseMass * correction;
             b->Position += b->InverseMass * correction;
         }

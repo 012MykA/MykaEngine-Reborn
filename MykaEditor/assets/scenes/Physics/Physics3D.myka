@@ -1,6 +1,261 @@
 {
     "Entities": [
         {
+            "BoxCollider3DComponent": {
+                "Density": 1.0,
+                "Friction": 0.5,
+                "Offset": [
+                    0.0,
+                    0.0,
+                    0.0
+                ],
+                "Restitution": 0.49000000953674316,
+                "Size": [
+                    0.5,
+                    0.5,
+                    0.5
+                ]
+            },
+            "Entity": 9618460762943672421,
+            "ModelComponent": {
+                "ModelPath": "assets\\models\\primitives\\Cube.glb"
+            },
+            "Rigidbody3DComponent": {
+                "AutoMass": true,
+                "BodyType": "Static",
+                "InitialVelocity": [
+                    20.0,
+                    0.0,
+                    0.0
+                ],
+                "Mass": 1.0
+            },
+            "TagComponent": {
+                "Tag": "Platform"
+            },
+            "TransformComponent": {
+                "Position": [
+                    0.0,
+                    0.0,
+                    -20.0
+                ],
+                "Rotation": [
+                    0.0,
+                    0.0,
+                    0.0
+                ],
+                "Scale": [
+                    20.0,
+                    20.0,
+                    0.20000000298023224
+                ]
+            }
+        },
+        {
+            "BoxCollider3DComponent": {
+                "Density": 1.0,
+                "Friction": 0.5,
+                "Offset": [
+                    0.0,
+                    0.0,
+                    0.0
+                ],
+                "Restitution": 0.49000000953674316,
+                "Size": [
+                    0.5,
+                    0.5,
+                    0.5
+                ]
+            },
+            "Entity": 12673800402888821561,
+            "ModelComponent": {
+                "ModelPath": "assets\\models\\primitives\\Cube.glb"
+            },
+            "Rigidbody3DComponent": {
+                "AutoMass": true,
+                "BodyType": "Static",
+                "InitialVelocity": [
+                    20.0,
+                    0.0,
+                    0.0
+                ],
+                "Mass": 1.0
+            },
+            "TagComponent": {
+                "Tag": "Platform"
+            },
+            "TransformComponent": {
+                "Position": [
+                    0.0,
+                    0.0,
+                    20.0
+                ],
+                "Rotation": [
+                    0.0,
+                    0.0,
+                    0.0
+                ],
+                "Scale": [
+                    20.0,
+                    20.0,
+                    0.20000000298023224
+                ]
+            }
+        },
+        {
+            "BoxCollider3DComponent": {
+                "Density": 1.0,
+                "Friction": 0.5,
+                "Offset": [
+                    0.0,
+                    0.0,
+                    0.0
+                ],
+                "Restitution": 0.49000000953674316,
+                "Size": [
+                    0.5,
+                    0.5,
+                    0.5
+                ]
+            },
+            "Entity": 16139349125128346975,
+            "ModelComponent": {
+                "ModelPath": "assets\\models\\primitives\\Cube.glb"
+            },
+            "Rigidbody3DComponent": {
+                "AutoMass": true,
+                "BodyType": "Static",
+                "InitialVelocity": [
+                    20.0,
+                    0.0,
+                    0.0
+                ],
+                "Mass": 1.0
+            },
+            "TagComponent": {
+                "Tag": "Platform"
+            },
+            "TransformComponent": {
+                "Position": [
+                    20.0,
+                    0.0,
+                    1.4901161193847656e-08
+                ],
+                "Rotation": [
+                    0.0,
+                    0.0,
+                    0.0
+                ],
+                "Scale": [
+                    0.20000000298023224,
+                    20.0,
+                    20.0
+                ]
+            }
+        },
+        {
+            "BoxCollider3DComponent": {
+                "Density": 1.0,
+                "Friction": 0.5,
+                "Offset": [
+                    0.0,
+                    0.0,
+                    0.0
+                ],
+                "Restitution": 0.49000000953674316,
+                "Size": [
+                    0.5,
+                    0.5,
+                    0.5
+                ]
+            },
+            "Entity": 1798185573359061836,
+            "ModelComponent": {
+                "ModelPath": "assets\\models\\primitives\\Cube.glb"
+            },
+            "Rigidbody3DComponent": {
+                "AutoMass": true,
+                "BodyType": "Static",
+                "InitialVelocity": [
+                    20.0,
+                    0.0,
+                    0.0
+                ],
+                "Mass": 1.0
+            },
+            "TagComponent": {
+                "Tag": "Platform"
+            },
+            "TransformComponent": {
+                "Position": [
+                    -20.0,
+                    0.0,
+                    1.4901161193847656e-08
+                ],
+                "Rotation": [
+                    0.0,
+                    0.0,
+                    0.0
+                ],
+                "Scale": [
+                    0.20000000298023224,
+                    20.0,
+                    20.0
+                ]
+            }
+        },
+        {
+            "BoxCollider3DComponent": {
+                "Density": 1.0,
+                "Friction": 0.5,
+                "Offset": [
+                    0.0,
+                    0.0,
+                    0.0
+                ],
+                "Restitution": 0.49000000953674316,
+                "Size": [
+                    0.5,
+                    0.5,
+                    0.5
+                ]
+            },
+            "Entity": 18120771313223539360,
+            "ModelComponent": {
+                "ModelPath": "assets\\models\\primitives\\Cube.glb"
+            },
+            "Rigidbody3DComponent": {
+                "AutoMass": true,
+                "BodyType": "Static",
+                "InitialVelocity": [
+                    20.0,
+                    0.0,
+                    0.0
+                ],
+                "Mass": 1.0
+            },
+            "TagComponent": {
+                "Tag": "Platform"
+            },
+            "TransformComponent": {
+                "Position": [
+                    -0.03562164306640625,
+                    20.0,
+                    1.4901161193847656e-08
+                ],
+                "Rotation": [
+                    0.0,
+                    0.0,
+                    0.0
+                ],
+                "Scale": [
+                    20.0,
+                    0.20000000298023224,
+                    20.0
+                ]
+            }
+        },
+        {
             "Entity": 529074839404583121,
             "ModelComponent": {
                 "ModelPath": "assets\\models\\primitives\\Ultra\\Sphere.glb"
@@ -10,13 +265,13 @@
                 "BodyType": "Dynamic",
                 "InitialVelocity": [
                     20.0,
-                    0.0,
+                    20.0,
                     0.0
                 ],
                 "Mass": 1.0
             },
             "SphereCollider3DComponent": {
-                "Density": 1000.0,
+                "Density": 2000.0,
                 "Friction": 0.5,
                 "Offset": [
                     0.0,
@@ -24,16 +279,16 @@
                     0.0
                 ],
                 "Radius": 0.5,
-                "Restitution": 1.0
+                "Restitution": 0.46000000834465027
             },
             "TagComponent": {
                 "Tag": "Sphere A"
             },
             "TransformComponent": {
                 "Position": [
-                    -10.0,
-                    0.0,
-                    2.384185791015625e-07
+                    -5.0,
+                    -5.0,
+                    -5.960464477539063e-08
                 ],
                 "Rotation": [
                     0.0,
@@ -41,8 +296,8 @@
                     0.0
                 ],
                 "Scale": [
-                    1.5,
-                    1.5,
+                    1.0,
+                    1.0,
                     1.0
                 ]
             }
@@ -56,7 +311,7 @@
                     0.0,
                     0.0
                 ],
-                "Restitution": 1.0,
+                "Restitution": 0.49000000953674316,
                 "Size": [
                     0.5,
                     0.5,
@@ -83,7 +338,7 @@
             "TransformComponent": {
                 "Position": [
                     -0.03562140464782715,
-                    -10.0,
+                    -20.0,
                     1.4901161193847656e-08
                 ],
                 "Rotation": [
@@ -93,7 +348,7 @@
                 ],
                 "Scale": [
                     20.0,
-                    0.4000000059604645,
+                    0.20000000298023224,
                     20.0
                 ]
             }
@@ -145,13 +400,13 @@
             },
             "TransformComponent": {
                 "Position": [
-                    0.0,
-                    5.0,
-                    25.0
+                    18.0,
+                    18.0,
+                    18.0
                 ],
                 "Rotation": [
-                    0.0,
-                    0.0,
+                    -0.7853981852531433,
+                    0.7853981852531433,
                     0.0
                 ],
                 "Scale": [
@@ -217,14 +472,14 @@
                     0.0
                 ],
                 "Radius": 0.5,
-                "Restitution": 1.0
+                "Restitution": 0.5600000023841858
             },
             "TagComponent": {
                 "Tag": "Sphere A"
             },
             "TransformComponent": {
                 "Position": [
-                    10.0,
+                    3.0,
                     0.0,
                     0.0
                 ],
@@ -234,9 +489,45 @@
                     0.0
                 ],
                 "Scale": [
-                    3.0,
-                    3.0,
-                    3.0
+                    2.0,
+                    2.0,
+                    2.0
+                ]
+            }
+        },
+        {
+            "CameraComponent": {
+                "Camera": {
+                    "OrthographicFar": 1000.0,
+                    "OrthographicNear": -1.0,
+                    "OrthographicSize": 10.0,
+                    "PerspectiveFOV": 0.7853981852531433,
+                    "PerspectiveFar": 1000.0,
+                    "PerspectiveNear": 0.009999999776482582,
+                    "ProjectionType": 0
+                },
+                "FixedAspectRatio": false,
+                "Primary": true
+            },
+            "Entity": 7579378903129694383,
+            "TagComponent": {
+                "Tag": "Camera"
+            },
+            "TransformComponent": {
+                "Position": [
+                    14.0,
+                    12.75735855102539,
+                    14.0
+                ],
+                "Rotation": [
+                    -0.3481322228908539,
+                    0.7853955030441284,
+                    -7.37567859232513e-07
+                ],
+                "Scale": [
+                    0.9999998807907104,
+                    1.0,
+                    0.9999998807907104
                 ]
             }
         }

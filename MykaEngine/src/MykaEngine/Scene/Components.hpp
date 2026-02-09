@@ -207,10 +207,10 @@ namespace Myka
 
     struct BoxCollider3DComponent
     {
-        glm::vec3 Size = {0.5f, 0.5f, 0.5f};
+        glm::vec3 Size = {1.0f, 1.0f, 1.0f};
         glm::vec3 Offset = {0.0f, 0.0f, 0.0f};
 
-        float Density = 1.0f;
+        float Density = 1000.0f;
         float Friction = 0.5f;
         float Restitution = 0.0f;
 
@@ -220,10 +220,10 @@ namespace Myka
 
     struct SphereCollider3DComponent
     {
-        float Radius = 0.5f;
+        float Radius = 1.0f;
         glm::vec3 Offset = {0.0f, 0.0f, 0.0f};
 
-        float Density = 1.0f;
+        float Density = 1000.0f;
         float Friction = 0.5f;
         float Restitution = 0.0f;
 
@@ -254,7 +254,7 @@ namespace Myka
         glm::vec2 Offset = {0.0f, 0.0f};
 
         // TODO: move into Physics Matrial;
-        float Density = 1.0f;
+        float Density = 1000.0f;
         float Friction = 0.5f;
         float Restitution = 0.0f;
 
@@ -270,7 +270,7 @@ namespace Myka
         glm::vec2 Offset = {0.0f, 0.0f};
 
         // TODO: move into Physics Matrial;
-        float Density = 1.0f;
+        float Density = 1000.0f;
         float Friction = 0.5f;
         float Restitution = 0.0f;
 
