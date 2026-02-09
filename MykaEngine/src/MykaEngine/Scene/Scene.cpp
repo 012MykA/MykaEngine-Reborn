@@ -338,6 +338,7 @@ namespace Myka
 
             rb3d.RuntimeBody.Position = transform.Position;
             rb3d.RuntimeBody.Velocity = rb3d.InitialVelocity;
+            rb3d.RuntimeBody.GravityEffect = rb3d.GravityEffect;
 
             rb3d.RuntimeBody.SetType(static_cast<Physics3D::BodyType>(rb3d.Type));
 

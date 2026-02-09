@@ -6,8 +6,9 @@
                 "ModelPath": "assets\\models\\primitives\\Ultra\\Sphere.glb"
             },
             "Rigidbody3DComponent": {
-                "AutoMass": true,
+                "AutoMass": false,
                 "BodyType": "Dynamic",
+                "GravityEffect": false,
                 "InitialVelocity": [
                     10.0,
                     0.0,
@@ -53,14 +54,15 @@
                 "ModelPath": "assets\\models\\primitives\\Ultra\\Sphere.glb"
             },
             "Rigidbody3DComponent": {
-                "AutoMass": true,
+                "AutoMass": false,
                 "BodyType": "Dynamic",
+                "GravityEffect": false,
                 "InitialVelocity": [
-                    -10.0,
+                    -2.0,
                     0.0,
                     0.0
                 ],
-                "Mass": 1.0
+                "Mass": 5.0
             },
             "SphereCollider3DComponent": {
                 "Density": 1000.0,
@@ -88,9 +90,9 @@
                     0.0
                 ],
                 "Scale": [
-                    1.0,
-                    1.0,
-                    1.0
+                    2.0,
+                    2.0,
+                    2.0
                 ]
             }
         },
@@ -144,6 +146,7 @@
             "Rigidbody3DComponent": {
                 "AutoMass": true,
                 "BodyType": "Static",
+                "GravityEffect": false,
                 "InitialVelocity": [
                     0.0,
                     0.0,

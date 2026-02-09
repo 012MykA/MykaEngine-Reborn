@@ -223,21 +223,6 @@ namespace Myka
 
         ImGui::End(); // Scene Hierarchy
 
-        ImGui::Begin("Scene Properties");
-        static glm::vec3& gravity = m_Context->GetGravity();
-        if (ImGui::DragFloat3("Gravity",
-                              glm::value_ptr(gravity), 0.01f))
-        {
-            // m_Context->SetGravity(gravity);
-            MYKA_CORE_INFO("DRAG FLOAT 3 CHANGED");
-        }
-        ImGui::SameLine();
-        if (ImGui::Button("reset"))
-        {
-            m_Context->SetGravity(glm::vec3(0.0f, -9.81f, 0.0f));
-        }
-        ImGui::End();
-
         ImGui::Begin("Properties");
         if (m_SelectionContext)
         {
@@ -638,6 +623,8 @@ namespace Myka
                 if (ImGui::DragFloat("Mass", &component.Mass, 0.1f, 0.001f, 10000.0f))
                     component.RuntimeBody.SetMass(component.Mass);
             }
+
+            ImGui::Checkbox("Gravity Effect", &component.GravityEffect);
 
             ImGui::DragFloat3("Initial Velocity", glm::value_ptr(component.InitialVelocity), 0.1f);
 

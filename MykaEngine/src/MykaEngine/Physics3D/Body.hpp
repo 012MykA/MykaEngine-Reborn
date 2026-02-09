@@ -26,6 +26,7 @@ namespace Myka
 
             float Mass = 1.0f;
             float InverseMass = 1.0f;
+            bool GravityEffect = false;
             Shape _Shape;
 
             void SetType(BodyType type)

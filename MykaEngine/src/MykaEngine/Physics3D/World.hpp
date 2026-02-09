@@ -25,9 +25,9 @@ namespace Myka
             World() = default;
             ~World() = default;
 
-            const glm::vec3 &GetGravity() const { return m_Gravity; }
-            glm::vec3 GetGravity() { return m_Gravity; }
-            void SetGravity(const glm::vec3 &gravity) { m_Gravity = gravity; }
+            const glm::vec3 &GetGravity() const { return m_WorldGravity; }
+            glm::vec3 GetGravity() { return m_WorldGravity; }
+            void SetGravity(const glm::vec3 &gravity) { m_WorldGravity = gravity; }
 
             void AddBody(Body *body) { m_Bodies.push_back(body); }
 
@@ -42,7 +42,7 @@ namespace Myka
                 contact.B->Velocity = glm::vec3(0.0f);
             }
 
-            glm::vec3 m_Gravity = {0.0f, -9.81f, 0.0f};
+            glm::vec3 m_WorldGravity = {0.0f, -9.81f, 0.0f};
             std::vector<Body *> m_Bodies;
         };
 

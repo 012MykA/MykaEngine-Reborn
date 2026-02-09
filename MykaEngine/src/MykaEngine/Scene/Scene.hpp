@@ -43,10 +43,6 @@ namespace Myka
 
         Entity GetPrimaryCameraEntity();
 
-        const glm::vec3 &GetGravity() const { return m_Gravity; }
-        glm::vec3& GetGravity() { return m_Gravity; }
-        void SetGravity(const glm::vec3 &gravity) { m_Gravity = gravity; }
-
         template <typename... Components>
         auto GetAllEntitiesWith()
         {

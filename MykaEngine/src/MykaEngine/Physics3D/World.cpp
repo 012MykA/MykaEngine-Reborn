@@ -18,8 +18,9 @@ namespace Myka
                     Velocity update: v = v0 + at
                     Position update: x = x0 + vt
                 */
-
-                body->Velocity += (m_Gravity + body->Force * body->InverseMass) * (float)ts;
+               
+                glm::vec3 gravity = body->GravityEffect ? m_WorldGravity : glm::vec3(0.0f);
+                body->Velocity += (gravity + body->Force * body->InverseMass) * (float)ts;
                 body->Position += body->Velocity * (float)ts;
 
                 body->Force = glm::vec3(0.0f);
@@ -74,10 +75,6 @@ namespace Myka
                             SolveCollision(contact);
                         }
                     }
-                    else
-                    {
-                        MYKA_CORE_WARN("Unnable handle Box - Box collision or Sphere - Box collision yet");
-                    }
                 }
             }
         }
@@ -87,26 +84,23 @@ namespace Myka
             Body *a = contact.A;
             Body *b = contact.B;
 
-            // 1. Относительная скорость
             glm::vec3 relVelocity = b->Velocity - a->Velocity;
-            // 2. Проекция на нормаль (скорость сближения)
             float velAlongNormal = glm::dot(relVelocity, contact.Normal);
 
             if (velAlongNormal > 0.0f)
                 return;
 
-            // 3. Импульс по ЗСИ и ЗСЭ (e = 1.0)
             float invMassSum = a->InverseMass + b->InverseMass;
-            // Коэффициент 2.0f берется из вывода (1 + e), где e = 1 (упругий удар)
+
+            // (1 + e), where e = 1
             float j = -(2.0f * velAlongNormal) / invMassSum;
 
             glm::vec3 impulse = j * contact.Normal;
 
-            // Мгновенное изменение скоростей
             a->Velocity -= a->InverseMass * impulse;
             b->Velocity += b->InverseMass * impulse;
 
-            const float percent = 0.5f; // Коэффициент разделения
+            const float percent = 0.5f;
             glm::vec3 correction = (contact.Depth / invMassSum) * percent * contact.Normal;
             a->Position -= a->InverseMass * correction;
             b->Position += b->InverseMass * correction;

@@ -28,7 +28,8 @@
                     0.0,
                     0.0
                 ],
-                "Mass": 1.0
+                "Mass": 1.0,
+                "GravityEffect": false
             },
             "TagComponent": {
                 "Tag": "Box 1"
@@ -79,7 +80,8 @@
                     0.0,
                     0.0
                 ],
-                "Mass": 1.0
+                "Mass": 1.0,
+                "GravityEffect": false
             },
             "TagComponent": {
                 "Tag": "Box 2"
@@ -157,7 +159,8 @@
                     0.0,
                     0.0
                 ],
-                "Mass": 1.0
+                "Mass": 1.0,
+                "GravityEffect": false
             },
             "TagComponent": {
                 "Tag": "Platform"

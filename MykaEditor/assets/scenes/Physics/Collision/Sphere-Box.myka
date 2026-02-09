@@ -60,7 +60,8 @@
                     0.0,
                     0.0
                 ],
-                "Mass": 1.0
+                "Mass": 1.0,
+                "GravityEffect": false
             },
             "TagComponent": {
                 "Tag": "Platform"
@@ -123,7 +124,8 @@
                     0.0,
                     0.0
                 ],
-                "Mass": 1.0
+                "Mass": 1.0,
+                "GravityEffect": false
             },
             "SphereCollider3DComponent": {
                 "Density": 1000.0,
@@ -185,7 +187,8 @@
                     0.0,
                     0.0
                 ],
-                "Mass": 1.0
+                "Mass": 1.0,
+                "GravityEffect": false
             },
             "TagComponent": {
                 "Tag": "Box"

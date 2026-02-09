@@ -197,6 +197,7 @@ namespace Myka
 
         bool AutoMass = true;
         float Mass = 1.0f;
+        bool GravityEffect = false;
         glm::vec3 InitialVelocity{0.0f};
 
         Physics3D::Body RuntimeBody;

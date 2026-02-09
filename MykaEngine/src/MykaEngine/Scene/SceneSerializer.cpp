@@ -283,6 +283,7 @@ namespace Myka
             componentData["BodyType"] = Utils::Rigidbody3DBodyTypeToString(rb3d.Type);
             componentData["AutoMass"] = rb3d.AutoMass;
             componentData["Mass"] = rb3d.Mass;
+            componentData["GravityEffect"] = rb3d.GravityEffect;
             componentData["InitialVelocity"] = rb3d.InitialVelocity;
 
             e["Rigidbody3DComponent"] = componentData;
@@ -562,6 +563,7 @@ namespace Myka
                     rd3d.Type = Utils::Rigidbody3DBodyTypeFromString(rigidbody3DComponentJson["BodyType"]);
                     rd3d.AutoMass = rigidbody3DComponentJson["AutoMass"];
                     rd3d.Mass = rigidbody3DComponentJson["Mass"];
+                    rd3d.GravityEffect = rigidbody3DComponentJson["GravityEffect"];
                     rd3d.InitialVelocity = rigidbody3DComponentJson["InitialVelocity"];
                 }
 
